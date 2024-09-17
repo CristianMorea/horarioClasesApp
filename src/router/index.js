@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import HomePage from '../views/HomePage.vue'
 import RegistroPage from '../views/RegistroPage.vue';
 import PerfilPage from '../views/PerfilPage.vue';
+import Ponderado from '../views/ponderado.vue';
 
 const routes=[
   {
@@ -23,6 +24,11 @@ const routes=[
     path: '/perfil',
     name: 'Perfil',
     component: PerfilPage
+  },
+  {
+    path: '/ponderado',
+    name: 'Ponderado',
+    component: Ponderado
   }
 ]
 
