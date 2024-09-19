@@ -2,17 +2,52 @@
 <template>
   <ion-page id="registro-page">
     <ion-header>
-      <ion-toolbar>
-        <ion-title>Registro</ion-title>
+      <ion-toolbar class="bg-white">
+        <ion-title class="text-gray-900">Registro</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
-      <div class="form-container">
-        <ion-input placeholder="NOMBRE" v-model="nombre"></ion-input>
-        <ion-input placeholder="CORREO ELECTRÓNICO" v-model="correo" type="email"></ion-input>
-        <ion-input placeholder="CONTRASEÑA" v-model="contraseña" type="password"></ion-input>
-        <ion-button expand="full" @click="handleCrear">Crear</ion-button>
-        <ion-button expand="full" @click="handleVolver">Volver</ion-button>
+    <ion-content class="bg-white">
+      <div class="flex flex-col items-center justify-center h-full px-6 py-8">
+        <div class="w-full bg-white rounded-lg shadow sm:max-w-md dark:bg-gray-100">
+          <div class="p-6 space-y-4">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900">
+              Crear una cuenta
+            </h1>
+            <form @submit.prevent="handleCrear" class="space-y-4">
+              <div>
+                <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900">Tu nombre</label>
+                <input
+                  id="nombre"
+                  placeholder="NOMBRE"
+                  v-model="nombre"
+                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                />
+              </div>
+              <div>
+                <label for="correo" class="block mb-2 text-sm font-medium text-gray-900">Correo electrónico</label>
+                <input
+                  id="correo"
+                  type="email"
+                  placeholder="CORREO ELECTRÓNICO"
+                  v-model="correo"
+                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                />
+              </div>
+              <div>
+                <label for="contraseña" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
+                <input
+                  id="contraseña"
+                  type="password"
+                  placeholder="CONTRASEÑA"
+                  v-model="contraseña"
+                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                />
+              </div>
+              <button type="submit" class="w-full bg-black text-white font-medium rounded-lg py-2.5">Crear</button>
+              <button type="button" @click="handleVolver" class="w-full bg-black text-white font-medium rounded-lg py-2.5">Volver</button>
+            </form>
+          </div>
+        </div>
       </div>
     </ion-content>
   </ion-page>
