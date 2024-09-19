@@ -31,7 +31,7 @@ const routes=[
     component: Ponderado
   },
    {
-    path: '/loginPage',
+    path: '/login',
     name: 'loginPage',
     component: LoginPage
   }
