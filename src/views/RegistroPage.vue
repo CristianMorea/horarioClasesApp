@@ -1,4 +1,3 @@
-// src/pages/RegistroPage.vue
 <template>
   <ion-page id="registro-page">
     <ion-header>
@@ -24,12 +23,30 @@
                 />
               </div>
               <div>
+                <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900">Tu apellido</label>
+                <input
+                  id="apellido"
+                  placeholder="APELLIDO"
+                  v-model="apellido"
+                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                />
+              </div>
+              <div>
                 <label for="correo" class="block mb-2 text-sm font-medium text-gray-900">Correo electrónico</label>
                 <input
                   id="correo"
                   type="email"
                   placeholder="CORREO ELECTRÓNICO"
                   v-model="correo"
+                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                />
+              </div>
+              <div>
+                <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900">Teléfono</label>
+                <input
+                  id="telefono"
+                  placeholder="TELÉFONO"
+                  v-model="telefono"
                   class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
                 />
               </div>
@@ -55,35 +72,62 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { IonInput, IonButton, IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import supabase from '../supabase';
+import { useRouter } from 'vue-router'; // Importar router para redirigir
+import supabase from '../supabase'; // Asegúrate de que este archivo esté bien configurado
 
 export default defineComponent({
-  components: {
-    IonInput,
-    IonButton,
-    IonPage,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-  },
   setup() {
     const nombre = ref('');
     const correo = ref('');
     const contraseña = ref('');
+    const apellido = ref('');
+    const telefono = ref('');
+    const router = useRouter(); // Uso de router
 
     const handleCrear = async () => {
       try {
-        const { data, error } = await supabase.auth.signUp({
+        // Paso 1: Registrar al usuario en Supabase Auth
+        const { data, error: authError } = await supabase.auth.signUp({
           email: correo.value,
           password: contraseña.value,
         });
 
-        if (error) throw error;
+        // Manejo de error de autenticación
+        if (authError) {
+          console.error('Error de autenticación:', authError);
+          alert(`Error: ${authError.message}`);
+          return;
+        }
 
-        console.log('Usuario registrado:', data);
+        // Verifica si el usuario se registró correctamente
+        const user = data?.user;
+        if (!user) {
+          alert('El usuario no se pudo registrar correctamente. Verifica los datos.');
+          return;
+        }
+
+        // Paso 2: Insertar en la tabla `usuarios` con el id de Auth
+        const { error: dbError } = await supabase.from('usuarios').insert([{
+          id: user.id,  // Usa el ID generado en Auth para vincularlo
+          nombre_usuario: nombre.value,
+          correo: correo.value,
+          apellido: apellido.value,
+          telefono: telefono.value,
+        }]);
+
+        // Manejo de error de inserción en la base de datos
+        if (dbError) {
+          console.error('Error al insertar en la tabla usuarios:', dbError);
+          alert(`Error al guardar los datos: ${dbError.message}`);
+          return;
+        }
+
+        console.log('Usuario registrado y datos insertados en usuarios:', user);
         alert('Usuario registrado con éxito');
+
+        // Redirigir al usuario después del registro
+        router.push('/home'); // Cambia la ruta según la lógica de tu app
+
       } catch (error) {
         console.error('Error al registrar el usuario:', error.message);
         alert('Hubo un error al registrar el usuario. Intenta nuevamente.');
@@ -91,13 +135,15 @@ export default defineComponent({
     };
 
     const handleVolver = () => {
-      console.log('Volver a la pantalla anterior');
+      router.push('/login'); // Redirigir a la pantalla de login
     };
 
     return {
       nombre,
       correo,
       contraseña,
+      apellido,
+      telefono,
       handleCrear,
       handleVolver,
     };
