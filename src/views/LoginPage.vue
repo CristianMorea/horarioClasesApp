@@ -1,37 +1,51 @@
 <template>
   <ion-page class="login">
     <ion-header>
-      <ion-toolbar>
-        <ion-title>Iniciar Sesión</ion-title>
+      <ion-toolbar class="bg-white">
+        <ion-title class="text-gray-900">Iniciar Sesión</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding">
-      <form @submit.prevent="login" ref="loginForm">
-        <ion-list>
-          <!-- Campo de Correo Electrónico -->
-          <ion-item>
-            <ion-label position="floating">Correo Electrónico</ion-label>
-            <ion-input type="email" v-model="email" required></ion-input>
-          </ion-item>
-
-          <!-- Campo de Contraseña -->
-          <ion-item>
-            <ion-label position="floating">Contraseña</ion-label>
-            <ion-input type="password" v-model="password" required></ion-input>
-          </ion-item>
-        </ion-list>
-
-        <!-- Botón para Iniciar Sesión -->
-        <ion-button expand="full" type="submit" :disabled="submitting">
-          Iniciar Sesión
-        </ion-button>
-
-        <!-- Botón para mostrar el formulario de registro -->
-        <ion-button expand="full" fill="outline" @click="showRegisterForm">
-          Registrarse
-        </ion-button>
-      </form>
+    <ion-content class="bg-white">
+      <div class="flex flex-col items-center justify-center h-full px-6 py-8">
+        <div class="w-full bg-white rounded-lg shadow sm:max-w-md dark:bg-gray-100">
+          <div class="p-6 space-y-4">
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900">
+              Iniciar sesión en tu cuenta
+            </h1>
+            <form @submit.prevent="login" class="space-y-4">
+              <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Correo Electrónico</label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="CORREO ELECTRÓNICO"
+                  v-model="email"
+                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                  required
+                />
+              </div>
+              <div>
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="CONTRASEÑA"
+                  v-model="password"
+                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                  required
+                />
+              </div>
+              <button type="submit" class="w-full bg-black text-white font-medium rounded-lg py-2.5" :disabled="submitting">
+                Iniciar Sesión
+              </button>
+              <button type="button" @click="showRegisterForm" class="w-full bg-black text-white font-medium rounded-lg py-2.5">
+                Registrarse
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </ion-content>
   </ion-page>
 </template>
@@ -39,6 +53,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import supabase from '../supabase'; // Asegúrate de que este archivo esté bien configurado
 
 export default defineComponent({
   setup() {
@@ -50,29 +65,35 @@ export default defineComponent({
     const login = async () => {
       submitting.value = true;
       try {
-const usuarios = supabase.channel('custom-insert-channel')
-  .on(
-    'postgres_changes',
-    { event: 'INSERT', schema: 'public', table: 'usuarios' },
-    (payload) => {
-      console.log('Change received!', payload)
-    }
-  )
-  .subscribe()
         console.log('Intentando iniciar sesión con:', email.value, password.value);
 
-        // Ejemplo de redirección tras iniciar sesión
-        router.push('/home');
+        // Iniciar sesión usando Supabase Auth
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.value,
+          password: password.value,
+        });
+
+        if (error) {
+          console.error('Error al iniciar sesión:', error.message);
+          alert(`Error: ${error.message}`);
+          return;
+        }
+
+        // Si el inicio de sesión fue exitoso
+        if (data?.user) {
+          console.log('Inicio de sesión exitoso para el usuario:', data.user);
+          router.push('/home'); // Redirigir a la página de inicio
+        }
       } catch (error) {
-        console.error('Error al iniciar sesión:', error);
+        console.error('Error en el proceso de inicio de sesión:', error);
+        alert('Hubo un error al intentar iniciar sesión. Intenta nuevamente.');
       } finally {
         submitting.value = false;
       }
     };
 
     const showRegisterForm = () => {
-      // Lógica para mostrar el formulario de registro o redirigir
-      router.push('/register');
+      router.push('/register'); // Redirigir a la página de registro
     };
 
     return {

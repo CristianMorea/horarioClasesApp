@@ -72,8 +72,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useRouter } from 'vue-router'; // Importar router para redirigir
-import supabase from '../supabase'; // Asegúrate de que este archivo esté bien configurado
+import { useRouter } from 'vue-router';
+import supabase from '../supabase';
 
 export default defineComponent({
   setup() {
@@ -82,60 +82,66 @@ export default defineComponent({
     const contraseña = ref('');
     const apellido = ref('');
     const telefono = ref('');
-    const router = useRouter(); // Uso de router
+    const router = useRouter();
 
     const handleCrear = async () => {
-      try {
-        // Paso 1: Registrar al usuario en Supabase Auth
-        const { data, error: authError } = await supabase.auth.signUp({
-          email: correo.value,
-          password: contraseña.value,
-        });
+  // Validar campos
+  if (!nombre.value || !correo.value || !contraseña.value) {
+    alert('Por favor, completa todos los campos requeridos.');
+    return;
+  }
 
-        // Manejo de error de autenticación
-        if (authError) {
-          console.error('Error de autenticación:', authError);
-          alert(`Error: ${authError.message}`);
-          return;
-        }
+  try {
+    // Paso 1: Registrar al usuario en Supabase Auth
+    const { data, error: authError } = await supabase.auth.signUp({
+      email: correo.value,
+      password: contraseña.value,
+    });
 
-        // Verifica si el usuario se registró correctamente
-        const user = data?.user;
-        if (!user) {
-          alert('El usuario no se pudo registrar correctamente. Verifica los datos.');
-          return;
-        }
+    // Manejo de error de autenticación
+    if (authError) {
+      console.error('Error de autenticación:', authError);
+      alert(`Error: ${authError.message}`);
+      return;
+    }
 
-        // Paso 2: Insertar en la tabla `usuarios` con el id de Auth
-        const { error: dbError } = await supabase.from('usuarios').insert([{
-          id: user.id,  // Usa el ID generado en Auth para vincularlo
-          nombre_usuario: nombre.value,
-          correo: correo.value,
-          apellido: apellido.value,
-          telefono: telefono.value,
-        }]);
+    const user = data?.user;
+    if (!user) {
+      alert('El usuario no se pudo registrar correctamente. Verifica los datos.');
+      return;
+    }
 
-        // Manejo de error de inserción en la base de datos
-        if (dbError) {
-          console.error('Error al insertar en la tabla usuarios:', dbError);
-          alert(`Error al guardar los datos: ${dbError.message}`);
-          return;
-        }
+    // Paso 2: Insertar en la tabla `usuarios`
+    const { error: dbError } = await supabase.from('usuarios').insert([{
+      id: user.id,
+      nombre_usuario: nombre.value,
+      correo: correo.value,
+      apellido: apellido.value,
+      telefono: telefono.value,
+      esta_verificado: false, // Inicialmente no está verificado
+    }]);
 
-        console.log('Usuario registrado y datos insertados en usuarios:', user);
-        alert('Usuario registrado con éxito');
+    // Manejo de error de inserción en la base de datos
+    if (dbError) {
+      console.error('Error al insertar en la tabla usuarios:', dbError);
+      alert(`Error al guardar los datos: ${dbError.message}`);
+      return;
+    }
 
-        // Redirigir al usuario después del registro
-        router.push('/home'); // Cambia la ruta según la lógica de tu app
+    alert('Usuario registrado con éxito, por favor verifica tu correo');
 
-      } catch (error) {
-        console.error('Error al registrar el usuario:', error.message);
-        alert('Hubo un error al registrar el usuario. Intenta nuevamente.');
-      }
-    };
+    // Redirigir al usuario a la página de confirmación
+    router.push('/Confirmar');
+
+  } catch (error) {
+    console.error('Error al registrar el usuario:', error.message);
+    alert('Hubo un error al registrar el usuario. Intenta nuevamente.');
+  }
+};
+
 
     const handleVolver = () => {
-      router.push('/login'); // Redirigir a la pantalla de login
+      router.push('/login');
     };
 
     return {

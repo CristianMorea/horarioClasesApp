@@ -5,6 +5,7 @@ import RegistroPage from '../views/RegistroPage.vue';
 import PerfilPage from '../views/PerfilPage.vue';
 import Ponderado from '../views/ponderado.vue';
 import LoginPage from '../views/LoginPage.vue';
+import ConfirmacionCorreo from '../views/ConfirmacionCorreo.vue';
 const routes=[
   {
     path: '/',
@@ -34,6 +35,11 @@ const routes=[
     path: '/login',
     name: 'loginPage',
     component: LoginPage
+  },
+  {
+    path: '/Confirmar',
+    name: 'ConfirmarCorreo',
+    component: ConfirmacionCorreo
   }
 ]
 
