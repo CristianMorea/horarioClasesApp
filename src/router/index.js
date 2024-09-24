@@ -20,6 +20,7 @@ const routes=[
     name: 'Registro Login',
     component: RegistroPage
   },
+  
   {
     path: '/perfil',
     name: 'Perfil',
