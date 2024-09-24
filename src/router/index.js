@@ -5,7 +5,11 @@ import RegistroPage from '../views/RegistroPage.vue';
 import PerfilPage from '../views/PerfilPage.vue';
 import Ponderado from '../views/ponderado.vue';
 import LoginPage from '../views/LoginPage.vue';
+
 import ConfirmacionCorreo from '../views/ConfirmacionCorreo.vue';
+import CalendarioPage from '../views/CalendarioPage.vue';
+import FechaPage from '../views/FechaPage.vue';
+
 const routes=[
   {
     path: '/',
@@ -37,10 +41,22 @@ const routes=[
     component: LoginPage
   },
   {
+
     path: '/Confirmar',
     name: 'ConfirmarCorreo',
     component: ConfirmacionCorreo
   }
+
+    path: '/calendario',
+    name: 'Calendario',
+    component: CalendarioPage 
+  },
+  {
+    path: '/fecha',
+    name: 'Fecha',
+    component: FechaPage
+  },
+
 ]
 
 const router = createRouter({
