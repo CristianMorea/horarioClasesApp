@@ -5,6 +5,7 @@ import RegistroPage from '../views/RegistroPage.vue';
 import PerfilPage from '../views/PerfilPage.vue';
 import Ponderado from '../views/ponderado.vue';
 import LoginPage from '../views/LoginPage.vue';
+import CalendarioPage from '../views/CalendarioPage.vue';
 const routes=[
   {
     path: '/',
@@ -34,7 +35,12 @@ const routes=[
     path: '/login',
     name: 'loginPage',
     component: LoginPage
-  }
+  },
+  {
+    path: '/calendario',
+    name: 'Calendario',
+    component: CalendarioPage 
+  },
 ]
 
 const router = createRouter({
