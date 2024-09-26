@@ -45,8 +45,8 @@ const routes=[
     path: '/Confirmar',
     name: 'ConfirmarCorreo',
     component: ConfirmacionCorreo
-  }
-
+  },
+  { 
     path: '/calendario',
     name: 'Calendario',
     component: CalendarioPage 
