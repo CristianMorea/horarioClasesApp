@@ -36,10 +36,18 @@
                   required
                 />
               </div>
-              <button type="submit" class="w-full bg-black text-white font-medium rounded-lg py-2.5" :disabled="submitting">
+              <button
+                type="submit"
+                class="w-full bg-black text-white font-medium rounded-lg py-2.5"
+                :disabled="submitting"
+              >
                 Iniciar Sesión
               </button>
-              <button type="button" @click="showRegisterForm" class="w-full bg-black text-white font-medium rounded-lg py-2.5">
+              <button
+                type="button"
+                @click="showRegisterForm"
+                class="w-full bg-black text-white font-medium rounded-lg py-2.5"
+              >
                 Registrarse
               </button>
             </form>
@@ -76,6 +84,12 @@ export default defineComponent({
         if (error) {
           console.error('Error al iniciar sesión:', error.message);
           alert(`Error: ${error.message}`);
+          return;
+        }
+
+        // Verificar si el correo del usuario está confirmado
+        if (!data.user?.email_confirmed_at) {
+          alert('Tu correo no ha sido verificado. Por favor, revisa tu bandeja de entrada y verifica tu correo electrónico.');
           return;
         }
 
