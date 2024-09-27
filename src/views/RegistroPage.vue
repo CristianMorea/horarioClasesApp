@@ -20,6 +20,7 @@
                   placeholder="NOMBRE"
                   v-model="nombre"
                   class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                  required
                 />
               </div>
               <div>
@@ -39,6 +40,7 @@
                   placeholder="CORREO ELECTRÓNICO"
                   v-model="correo"
                   class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                  required
                 />
               </div>
               <div>
@@ -58,6 +60,7 @@
                   placeholder="CONTRASEÑA"
                   v-model="contraseña"
                   class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                  required
                 />
               </div>
               <button type="submit" class="w-full bg-black text-white font-medium rounded-lg py-2.5">Crear</button>
@@ -85,60 +88,63 @@ export default defineComponent({
     const router = useRouter();
 
     const handleCrear = async () => {
-  // Validar campos
-  if (!nombre.value || !correo.value || !contraseña.value) {
-    alert('Por favor, completa todos los campos requeridos.');
-    return;
-  }
+      // Validar campos
+      if (!nombre.value || !correo.value || !contraseña.value) {
+        alert('Por favor, completa todos los campos requeridos.');
+        return;
+      }
 
-  try {
-    // Paso 1: Registrar al usuario en Supabase Auth
-    const { data, error: authError } = await supabase.auth.signUp({
-      email: correo.value,
-      password: contraseña.value,
-    });
+      try {
+        // Paso 1: Registrar al usuario en Supabase Auth
+        const { data, error: authError } = await supabase.auth.signUp({
+          email: correo.value,
+          password: contraseña.value,
+        });
 
-    // Manejo de error de autenticación
-    if (authError) {
-      console.error('Error de autenticación:', authError);
-      alert(`Error: ${authError.message}`);
-      return;
-    }
+        // Manejo de error de autenticación
+        if (authError) {
+          console.error('Error de autenticación:', authError);
+          alert(`Error: ${authError.message}`);
+          // Controlar el error 429
+          if (authError.message.includes('429')) {
+            alert('Demasiadas solicitudes. Por favor, espera un momento antes de volver a intentar.');
+          }
+          return;
+        }
 
-    const user = data?.user;
-    if (!user) {
-      alert('El usuario no se pudo registrar correctamente. Verifica los datos.');
-      return;
-    }
+        const user = data?.user;
+        if (!user) {
+          alert('El usuario no se pudo registrar correctamente. Verifica los datos.');
+          return;
+        }
 
-    // Paso 2: Insertar en la tabla `usuarios`
-    const { error: dbError } = await supabase.from('usuarios').insert([{
-      id: user.id,
-      nombre_usuario: nombre.value,
-      correo: correo.value,
-      apellido: apellido.value,
-      telefono: telefono.value,
-      esta_verificado: false, // Inicialmente no está verificado
-    }]);
+        // Paso 2: Insertar en la tabla `usuarios`
+        const { error: dbError } = await supabase.from('usuarios').insert([{
+          id: user.id, // Asigna el ID del usuario autenticado
+          nombre_usuario: nombre.value,
+          correo: correo.value,
+          apellido: apellido.value || null,
+          telefono: telefono.value || null,
+          esta_verificado: false, // Inicialmente no está verificado
+        }]);
 
-    // Manejo de error de inserción en la base de datos
-    if (dbError) {
-      console.error('Error al insertar en la tabla usuarios:', dbError);
-      alert(`Error al guardar los datos: ${dbError.message}`);
-      return;
-    }
+        // Manejo de error de inserción en la base de datos
+        if (dbError) {
+          console.error('Error al insertar en la tabla usuarios:', dbError);
+          alert(`Error al guardar los datos: ${dbError.message}`);
+          return;
+        }
 
-    alert('Usuario registrado con éxito, por favor verifica tu correo');
+        alert('Usuario registrado con éxito, por favor verifica tu correo');
 
-    // Redirigir al usuario a la página de confirmación
-    router.push('/Confirmar');
+        // Redirigir al usuario a la página de confirmación
+        router.push('/Confirmar');
 
-  } catch (error) {
-    console.error('Error al registrar el usuario:', error.message);
-    alert('Hubo un error al registrar el usuario. Intenta nuevamente.');
-  }
-};
-
+      } catch (error) {
+        console.error('Error al registrar el usuario:', error.message);
+        alert('Hubo un error al registrar el usuario. Intenta nuevamente.');
+      }
+    };
 
     const handleVolver = () => {
       router.push('/login');

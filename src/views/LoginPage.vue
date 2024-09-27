@@ -79,7 +79,26 @@ export default defineComponent({
           return;
         }
 
-        // Si el inicio de sesión fue exitoso
+        // Verificar si el usuario está en la tabla 'usuarios' y si su correo está verificado
+        const { data: usuarioData, error: usuarioError } = await supabase
+          .from('usuarios')
+          .select('esta_verificado')
+          .eq('correo', email.value)
+          .single();
+
+        if (usuarioError || !usuarioData) {
+          console.error('Error al verificar el usuario en la base de datos:', usuarioError?.message);
+          alert('Usuario no encontrado en la base de datos. Por favor, verifica tu información.');
+          return;
+        }
+
+        // Verificar si el correo del usuario está verificado
+        if (!usuarioData.esta_verificado) {
+          alert('Tu correo no ha sido verificado. Por favor, revisa tu bandeja de entrada y verifica tu correo electrónico.');
+          return;
+        }
+
+        // Si el inicio de sesión y la verificación fueron exitosos
         if (data?.user) {
           console.log('Inicio de sesión exitoso para el usuario:', data.user);
           router.push('/home'); // Redirigir a la página de inicio
