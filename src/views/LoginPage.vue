@@ -36,10 +36,18 @@
                   required
                 />
               </div>
-              <button type="submit" class="w-full bg-black text-white font-medium rounded-lg py-2.5" :disabled="submitting">
+              <button
+                type="submit"
+                class="w-full bg-black text-white font-medium rounded-lg py-2.5"
+                :disabled="submitting"
+              >
                 Iniciar Sesión
               </button>
-              <button type="button" @click="showRegisterForm" class="w-full bg-black text-white font-medium rounded-lg py-2.5">
+              <button
+                type="button"
+                @click="showRegisterForm"
+                class="w-full bg-black text-white font-medium rounded-lg py-2.5"
+              >
                 Registrarse
               </button>
             </form>
@@ -79,26 +87,13 @@ export default defineComponent({
           return;
         }
 
-        // Verificar si el usuario está en la tabla 'usuarios' y si su correo está verificado
-        const { data: usuarioData, error: usuarioError } = await supabase
-          .from('usuarios')
-          .select('esta_verificado')
-          .eq('correo', email.value)
-          .single();
-
-        if (usuarioError || !usuarioData) {
-          console.error('Error al verificar el usuario en la base de datos:', usuarioError?.message);
-          alert('Usuario no encontrado en la base de datos. Por favor, verifica tu información.');
-          return;
-        }
-
-        // Verificar si el correo del usuario está verificado
-        if (!usuarioData.esta_verificado) {
+        // Verificar si el correo del usuario está confirmado
+        if (!data.user?.email_confirmed_at) {
           alert('Tu correo no ha sido verificado. Por favor, revisa tu bandeja de entrada y verifica tu correo electrónico.');
           return;
         }
 
-        // Si el inicio de sesión y la verificación fueron exitosos
+        // Si el inicio de sesión fue exitoso
         if (data?.user) {
           console.log('Inicio de sesión exitoso para el usuario:', data.user);
           router.push('/home'); // Redirigir a la página de inicio
