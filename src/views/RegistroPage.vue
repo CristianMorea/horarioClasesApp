@@ -1,73 +1,64 @@
 <template>
-  <ion-page id="registro-page">
-    <ion-header>
-      <ion-toolbar class="bg-white">
-        <ion-title class="text-gray-900">Registro</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="bg-white">
-      <div class="flex flex-col items-center justify-center h-full px-6 py-8">
-        <div class="w-full bg-white rounded-lg shadow sm:max-w-md dark:bg-gray-100">
-          <div class="p-6 space-y-4">
-            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900">
-              Crear una cuenta
-            </h1>
-            <form @submit.prevent="handleCrear" class="space-y-4">
-              <div>
-                <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900">Tu nombre</label>
-                <input
-                  id="nombre"
-                  placeholder="NOMBRE"
-                  v-model="nombre"
-                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-                  required
-                />
-              </div>
-              <div>
-                <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900">Tu apellido</label>
-                <input
-                  id="apellido"
-                  placeholder="APELLIDO"
-                  v-model="apellido"
-                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-                />
-              </div>
-              <div>
-                <label for="correo" class="block mb-2 text-sm font-medium text-gray-900">Correo electrónico</label>
-                <input
-                  id="correo"
-                  type="email"
-                  placeholder="CORREO ELECTRÓNICO"
-                  v-model="correo"
-                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-                  required
-                />
-              </div>
-              <div>
-                <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900">Teléfono</label>
-                <input
-                  id="telefono"
-                  placeholder="TELÉFONO"
-                  v-model="telefono"
-                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-                />
-              </div>
-              <div>
-                <label for="contraseña" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
-                <input
-                  id="contraseña"
-                  type="password"
-                  placeholder="CONTRASEÑA"
-                  v-model="contraseña"
-                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-                  required
-                />
-              </div>
-              <button type="submit" class="w-full bg-black text-white font-medium rounded-lg py-2.5">Crear</button>
-              <button type="button" @click="handleVolver" class="w-full bg-black text-white font-medium rounded-lg py-2.5">Volver</button>
-            </form>
+  <ion-page class="h-screen bg-white">
+    <ion-content class="p-0 h-full flex items-center justify-center" style="--offset-top: 0px; --offset-bottom: 0px;">
+      <div class="w-full max-w-md bg-white rounded-lg shadow h-full flex flex-col justify-center p-6">
+        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 mb-6">
+          Crear una cuenta
+        </h1>
+        <form @submit.prevent="handleCrear" class="space-y-4 flex-grow">
+          <div>
+            <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900">Tu nombre</label>
+            <input
+              id="nombre"
+              placeholder="NOMBRE"
+              v-model="nombre"
+              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+              required
+            />
           </div>
-        </div>
+          <div>
+            <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900">Tu apellido</label>
+            <input
+              id="apellido"
+              placeholder="APELLIDO"
+              v-model="apellido"
+              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+            />
+          </div>
+          <div>
+            <label for="correo" class="block mb-2 text-sm font-medium text-gray-900">Correo electrónico</label>
+            <input
+              id="correo"
+              type="email"
+              placeholder="CORREO ELECTRÓNICO"
+              v-model="correo"
+              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+              required
+            />
+          </div>
+          <div>
+            <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900">Teléfono</label>
+            <input
+              id="telefono"
+              placeholder="TELÉFONO"
+              v-model="telefono"
+              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+            />
+          </div>
+          <div>
+            <label for="contraseña" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
+            <input
+              id="contraseña"
+              type="password"
+              placeholder="CONTRASEÑA"
+              v-model="contraseña"
+              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+              required
+            />
+          </div>
+          <button type="submit" class="w-full bg-black text-white font-medium rounded-lg py-2.5">Crear</button>
+          <button type="button" @click="handleVolver" class="w-full bg-black text-white font-medium rounded-lg py-2.5">Volver</button>
+        </form>
       </div>
     </ion-content>
   </ion-page>
@@ -105,10 +96,6 @@ export default defineComponent({
         if (authError) {
           console.error('Error de autenticación:', authError);
           alert(`Error: ${authError.message}`);
-          // Controlar el error 429
-          if (authError.message.includes('429')) {
-            alert('Demasiadas solicitudes. Por favor, espera un momento antes de volver a intentar.');
-          }
           return;
         }
 
@@ -120,12 +107,11 @@ export default defineComponent({
 
         // Paso 2: Insertar en la tabla `usuarios`
         const { error: dbError } = await supabase.from('usuarios').insert([{
-          id: user.id, // Asigna el ID del usuario autenticado
+          id: user.id,
           nombre_usuario: nombre.value,
           correo: correo.value,
           apellido: apellido.value || null,
           telefono: telefono.value || null,
-          esta_verificado: false, // Inicialmente no está verificado
         }]);
 
         // Manejo de error de inserción en la base de datos
@@ -136,8 +122,6 @@ export default defineComponent({
         }
 
         alert('Usuario registrado con éxito, por favor verifica tu correo');
-
-        // Redirigir al usuario a la página de confirmación
         router.push('/Confirmar');
 
       } catch (error) {
@@ -164,11 +148,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.form-container {
-  padding: 16px;
-}
-
-ion-input {
-  margin-bottom: 12px;
+h1 {
+  margin: 0;
 }
 </style>
