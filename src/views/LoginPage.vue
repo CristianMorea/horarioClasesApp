@@ -43,6 +43,7 @@
               >
                 Iniciar Sesión
               </button>
+              <!-- Botón para redirigir al formulario de registro -->
               <button
                 type="button"
                 @click="showRegisterForm"
@@ -106,8 +107,9 @@ export default defineComponent({
       }
     };
 
+    // Función para redirigir al formulario de registro
     const showRegisterForm = () => {
-      router.push('/register'); // Redirigir a la página de registro
+      router.push('/registro'); // Redirigir a la página de registro
     };
 
     return {
