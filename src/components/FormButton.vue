@@ -1,30 +1,26 @@
 <template>
-    <button
-      :type="type"
-      :disabled="disabled"
-      class="w-full bg-black text-white font-medium rounded-lg py-2.5"
-      @click="onClick"
-    >
-      <slot></slot>
-    </button>
-  </template>
-  
-  <script lang="ts">
-  export default {
-    props: {
-      type: {
-        type: String,
-        default: 'button'
-      },
-      disabled: {
-        type: Boolean,
-        default: false
-      },
-      onClick: {
-        type: Function,
-        default: () => {}
-      }
-    }
-  }
-  </script>
-  
+  <button
+    type="submit"
+    class="w-full bg-black text-white font-medium rounded-lg py-4"
+    :disabled="disabled"
+  >
+    Iniciar Sesión
+  </button>
+</template>
+
+<script lang="ts">
+import { defineComponent, toRefs } from 'vue';
+
+export default defineComponent({
+  props: {
+    disabled: { type: Boolean, default: false },
+  },
+  setup(props) {
+    const { disabled } = toRefs(props);
+
+    return {
+      disabled,
+    };
+  },
+});
+</script>

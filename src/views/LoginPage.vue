@@ -8,46 +8,30 @@
         </header>
 
         <form @submit.prevent="login" class="space-y-4 flex-grow">
-          <div>
-            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Usuario</label>
-            <div class="relative flex items-center">
-              <img :src="userIcon" alt="Usuario" class="w-8 h-8 absolute left-3" />
-              <input
-                id="email"
-                type="email"
-                placeholder="Ingresa tu Email"
-                v-model="email"
-                class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-4 pl-14"
-                required
-              />
-            </div>
-          </div>
+          <TextInput
+            id="email"
+            type="email"
+            placeholder="Ingresa tu Email"
+            v-model="email"
+            label="Usuario"
+            :icon="userIcon"
+            required
+          />
 
-          <div>
-            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
-            <div class="relative flex items-center">
-              <img :src="passwordIcon" alt="Contraseña" class="w-8 h-8 absolute left-3" />
-              <input
-                id="password"
-                type="password"
-                placeholder="*********"
-                v-model="password"
-                class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-4 pl-14"
-                required
-              />
-            </div>
-            <p class="mt-2 text-sm text-gray-500 cursor-pointer text-right" @click="resetPassword">
-              ¿Olvidaste tu contraseña?
-            </p>
-          </div>
+          <TextInput
+            id="password"
+            type="password"
+            placeholder="*********"
+            v-model="password"
+            label="Contraseña"
+            :icon="passwordIcon"
+            required
+          />
+          <p class="mt-2 text-sm text-gray-500 cursor-pointer text-right" @click="resetPassword">
+            ¿Olvidaste tu contraseña?
+          </p>
 
-          <button
-            type="submit"
-            class="w-full bg-black text-white font-medium rounded-lg py-4"
-            :disabled="submitting"
-          >
-            Iniciar Sesión
-          </button>
+          <SubmitButton :disabled="submitting" />
         </form>
 
         <div class="mt-4 text-center">
@@ -70,13 +54,18 @@
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
-
-// import para las imágenes
+import TextInput from '../components/TextInput.vue';
+import SubmitButton from '../components/FormButton.vue'
+// Importar imágenes
 import loginLogo from '../assets/img/login_logo.png';
 import userIcon from '../assets/iconos_login/usuario.png';
 import passwordIcon from '../assets/iconos_login/password.png';
 
 export default defineComponent({
+  components: {
+    TextInput,
+    SubmitButton,
+  },
   setup() {
     const email = ref('');
     const password = ref('');
@@ -84,47 +73,50 @@ export default defineComponent({
     const router = useRouter();
 
     const login = async () => {
-      submitting.value = true;
-      try {
-        console.log('Intentando iniciar sesión con:', email.value, password.value);
+  if (!email.value || !password.value) {
+    alert('Por favor, ingresa tu correo electrónico y contraseña.');
+    return;
+  }
 
-        // Iniciar sesión usando Supabase Auth
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email.value,
-          password: password.value,
-        });
+  submitting.value = true;
+  try {
+    console.log('Intentando iniciar sesión con:', email.value, password.value);
 
-        if (error) {
-          console.error('Error al iniciar sesión:', error.message);
-          alert(`Error: ${error.message}`);
-          return;
-        }
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: password.value,
+    });
 
-        // Verificar si el correo del usuario está confirmado
-        if (!data.user?.email_confirmed_at) {
-          alert('Tu correo no ha sido verificado. Por favor, revisa tu bandeja de entrada y verifica tu correo electrónico.');
-          return;
-        }
+    if (error) {
+      console.error('Error al iniciar sesión:', error.message);
+      alert(`Error: ${error.message}`);
+      return;
+    }
 
-        // Si el inicio de sesión fue exitoso
-        if (data?.user) {
-          console.log('Inicio de sesión exitoso para el usuario:', data.user);
-          router.push('/home'); // Redirigir a la página de inicio
-        }
-      } catch (error) {
-        console.error('Error en el proceso de inicio de sesión:', error);
-        alert('Hubo un error al intentar iniciar sesión. Intenta nuevamente.');
-      } finally {
-        submitting.value = false;
-      }
-    };
+    // Verificar si el correo del usuario está confirmado
+    if (!data.user?.email_confirmed_at) {
+      alert('Tu correo no ha sido verificado. Por favor, revisa tu bandeja de entrada y verifica tu correo electrónico.');
+      return;
+    }
 
-    // Función para redirigir al formulario de registro
+    // Si el inicio de sesión fue exitoso
+    if (data?.user) {
+      console.log('Inicio de sesión exitoso para el usuario:', data.user);
+      router.push('/home'); // Redirigir a la página de inicio
+    }
+  } catch (error) {
+    console.error('Error en el proceso de inicio de sesión:', error);
+    alert('Hubo un error al intentar iniciar sesión. Intenta nuevamente.');
+  } finally {
+    submitting.value = false;
+  }
+};
+
+
     const showRegisterForm = () => {
       router.push('/registro'); // Redirigir a la página de registro
     };
 
-    // Función para manejar el restablecimiento de contraseña
     const resetPassword = () => {
       router.push('/olvidoPassword'); // Redirigir a la página para recuperar la contraseña
     };
@@ -148,9 +140,4 @@ export default defineComponent({
 h1 {
   margin: 0;
 }
-
-.relative img {
-  width: 35px; /* Ajusta el tamaño si es necesario */
-  height: 35px; /* Ajusta el tamaño si es necesario */
-}
-</style>
+</style> 
