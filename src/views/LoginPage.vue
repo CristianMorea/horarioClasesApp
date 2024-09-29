@@ -71,7 +71,7 @@ import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
 
-// Cambia require por import para las imágenes
+// import para las imágenes
 import loginLogo from '../assets/img/login_logo.png';
 import userIcon from '../assets/iconos_login/usuario.png';
 import passwordIcon from '../assets/iconos_login/password.png';
@@ -126,8 +126,7 @@ export default defineComponent({
 
     // Función para manejar el restablecimiento de contraseña
     const resetPassword = () => {
-      alert('Funcionalidad de restablecimiento de contraseña aún no implementada.');
-      // Aquí puedes implementar la lógica para el restablecimiento de la contraseña
+      router.push('/olvidoPassword'); // Redirigir a la página para recuperar la contraseña
     };
 
     return {
