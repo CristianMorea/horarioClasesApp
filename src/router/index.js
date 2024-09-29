@@ -7,11 +7,12 @@ import LoginPage from '../views/LoginPage.vue';
 import CalendarioPage from '../views/CalendarioPage.vue';
 import FechaPage from '../views/FechaPage.vue';
 import OlvidoContraseña from '../views/olvidoContraseña.vue';
+import CambiarContraseña from '../views/CambiarContraseña.vue'
 
 const routes = [
   {
     path: '/',
-    redirect: '/home',
+    redirect: '/login',
   },
   {
     path: '/home',
@@ -49,10 +50,16 @@ const routes = [
     component: FechaPage,
   },
   {
-    path: '/olvidoContraseña',
+    path: '/olvidoPassword',
     name: 'olvidoContraseña',
     component: OlvidoContraseña,
   },
+  {
+    path: '/cambiarPassword',
+    name: 'cambiarPassworda',
+    component: CambiarContraseña,
+  }
+  
 ];
 
 const router = createRouter({

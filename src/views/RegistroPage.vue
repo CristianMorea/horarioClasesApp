@@ -1,65 +1,57 @@
 <template>
   <ion-page class="h-screen bg-white">
     <ion-content class="p-0 h-full flex items-center justify-center" style="--offset-top: 0px; --offset-bottom: 0px;">
-      <div class="w-full max-w-md bg-white rounded-lg shadow h-full flex flex-col justify-center p-6">
-        <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 mb-6">
-          Crear una cuenta
-        </h1>
+      <LoginLayout
+        :logo="userRegistro"
+        title="Crear una cuenta"
+        footerText="¿Ya tienes cuenta?"
+        footerActionText="Iniciar sesión"
+        :handleFooterClick="handleVolver"
+      >
         <form @submit.prevent="handleCrear" class="space-y-4 flex-grow">
-          <div>
-            <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900">Tu nombre</label>
-            <input
-              id="nombre"
-              placeholder="NOMBRE"
-              v-model="nombre"
-              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-              required
-            />
-          </div>
-          <div>
-            <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900">Tu apellido</label>
-            <input
-              id="apellido"
-              placeholder="APELLIDO"
-              v-model="apellido"
-              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-            />
-          </div>
-          <div>
-            <label for="correo" class="block mb-2 text-sm font-medium text-gray-900">Correo electrónico</label>
-            <input
-              id="correo"
-              type="email"
-              placeholder="CORREO ELECTRÓNICO"
-              v-model="correo"
-              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-              required
-            />
-          </div>
-          <div>
-            <label for="telefono" class="block mb-2 text-sm font-medium text-gray-900">Teléfono</label>
-            <input
-              id="telefono"
-              placeholder="TELÉFONO"
-              v-model="telefono"
-              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-            />
-          </div>
-          <div>
-            <label for="contraseña" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
-            <input
-              id="contraseña"
-              type="password"
-              placeholder="CONTRASEÑA"
-              v-model="contraseña"
-              class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
-              required
-            />
-          </div>
-          <button type="submit" class="w-full bg-black text-white font-medium rounded-lg py-2.5">Crear</button>
-          <button type="button" @click="handleVolver" class="w-full bg-black text-white font-medium rounded-lg py-2.5">Volver</button>
+          <TextInput
+            id="nombre"
+            label="Tu nombre"
+            :icon="userIcon"
+            placeholder="NOMBRE"
+            v-model="nombre"
+            required
+          />
+          <TextInput
+            id="apellido"
+            label="Tu apellido"
+            :icon="userIcon"
+            placeholder="APELLIDO"
+            v-model="apellido"
+          />
+          <TextInput
+            id="correo"
+            label="Correo electrónico"
+            type="email"
+            :icon="gmailIcon"
+            placeholder="CORREO ELECTRÓNICO"
+            v-model="correo"
+            required
+          />
+          <TextInput
+            id="telefono"
+            label="Teléfono"
+            :icon="phoneIcon"
+            placeholder="TELÉFONO"
+            v-model="telefono"
+          />
+          <TextInput
+            id="contraseña"
+            label="Contraseña"
+            type="password"
+            :icon="passwordIcon"
+            placeholder="CONTRASEÑA"
+            v-model="contraseña"
+            required
+          />
+          <!-- Eliminar el botón de enviar -->
         </form>
-      </div>
+      </LoginLayout>
     </ion-content>
   </ion-page>
 </template>
@@ -68,8 +60,19 @@
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
+import TextInput from '../components/TextInput.vue';
+import LoginLayout from '../components/LoginLayout.vue'; // Importar el LoginLayout
+import userIcon from '../assets/iconos_login/usuario.png';
+import gmailIcon from '../assets/iconos_registro/gmail.png';
+import phoneIcon from '../assets/iconos_registro/phone.png';
+import passwordIcon from '../assets/iconos_registro/password.png';
+import userRegistro from '../assets/iconos_registro/usuario_rEGISTRO.png'
 
 export default defineComponent({
+  components: {
+    TextInput,
+    LoginLayout, // Registrar el LoginLayout como componente
+  },
   setup() {
     const nombre = ref('');
     const correo = ref('');
@@ -142,6 +145,11 @@ export default defineComponent({
       telefono,
       handleCrear,
       handleVolver,
+      userIcon,
+      gmailIcon,
+      phoneIcon,
+      passwordIcon,
+      userRegistro
     };
   },
 });
@@ -150,5 +158,10 @@ export default defineComponent({
 <style scoped>
 h1 {
   margin: 0;
+}
+
+img {
+  width: 10px; /* Ajusta según sea necesario */
+  height: 10px; /* Ajusta según sea necesario */
 }
 </style>
