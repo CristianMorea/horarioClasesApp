@@ -6,6 +6,7 @@ import Ponderado from '../views/ponderado.vue';
 import LoginPage from '../views/LoginPage.vue';
 import CalendarioPage from '../views/CalendarioPage.vue';
 import FechaPage from '../views/FechaPage.vue';
+import OlvidoContraseña from '../views/olvidoContraseña.vue';
 
 const routes = [
   {
@@ -46,6 +47,11 @@ const routes = [
     path: '/fecha',
     name: 'Fecha',
     component: FechaPage,
+  },
+  {
+    path: '/olvidoContraseña',
+    name: 'olvidoContraseña',
+    component: OlvidoContraseña,
   },
 ];
 

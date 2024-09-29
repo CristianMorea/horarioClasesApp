@@ -11,28 +11,38 @@
         <div class="w-full bg-white rounded-lg shadow sm:max-w-md dark:bg-gray-100">
           <div class="p-6 space-y-4">
             <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900">
-              Iniciar sesión en tu cuenta
+              Bienvenido
             </h1>
             <form @submit.prevent="login" class="space-y-4">
-              <div>
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Correo Electrónico</label>
+              <h3 class="text-black">Usuario</h3>
+              <div class="relative flex items-center">
+                <img
+                  src="../assets/iconos_login/usuario.png"
+                  alt="Usuario"
+                  class="w-5 h-5 absolute left-3"
+                />
                 <input
                   id="email"
                   type="email"
-                  placeholder="CORREO ELECTRÓNICO"
+                  placeholder="Ingresa tu Email"
                   v-model="email"
-                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5 pl-10"
                   required
                 />
               </div>
-              <div>
-                <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Contraseña</label>
+              <h3 class="text-black">Contraseña</h3>
+              <div class="relative flex items-center">
+                <img
+                  src="../assets/iconos_login/contraseña.png"
+                  alt="Contraseña"
+                  class="w-5 h-5 absolute left-3"
+                />
                 <input
                   id="password"
                   type="password"
-                  placeholder="CONTRASEÑA"
+                  placeholder="*********"
                   v-model="password"
-                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5"
+                  class="bg-gray-50 border border-black text-gray-900 text-sm rounded-lg w-full p-2.5 pl-10"
                   required
                 />
               </div>
@@ -43,7 +53,6 @@
               >
                 Iniciar Sesión
               </button>
-              <!-- Botón para redirigir al formulario de registro -->
               <button
                 type="button"
                 @click="showRegisterForm"
@@ -140,5 +149,16 @@ ion-content {
 
 ion-button {
   margin-top: 20px;
+}
+
+/* Estilo adicional para mejorar la visibilidad de los iconos */
+.relative img {
+  width: 24px; /* Ajusta el tamaño si es necesario */
+  height: 24px; /* Ajusta el tamaño si es necesario */
+}
+
+/* Asegura que los h3 sean de color negro */
+h3 {
+  color: black; /* Cambia el color del texto a negro */
 }
 </style>
