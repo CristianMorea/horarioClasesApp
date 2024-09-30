@@ -1,9 +1,7 @@
 <template>
   <ion-page class="h-screen bg-white">
     <LoginLayout
-      
       title="Bienvenido"
-      buttonText="Iniciar Sesión"
       footerText="¿No tienes cuenta?"
       footerActionText="Registrarte"
       :submitting="submitting"
@@ -33,10 +31,17 @@
         :icon="passwordIcon"
         required
       />
-      
+
       <p class="mt-2 text-sm text-gray-500 cursor-pointer text-right" @click="resetPassword">
         ¿Olvidaste tu contraseña?
       </p>
+
+      <!-- Agregar el botón de inicio de sesión usando FormButton -->
+      <FormButton
+        :text="'Iniciar Sesión'"
+        :disabled="submitting"
+        @click="login"
+      />
     </LoginLayout>
   </ion-page>
 </template>
@@ -47,6 +52,7 @@ import { useRouter } from 'vue-router';
 import supabase from '../supabase';
 import LoginLayout from '../components/LoginLayout.vue';
 import TextInput from '../components/TextInput.vue';
+import FormButton from '../components/FormButton.vue'; // Importa el componente FormButton
 // Importar imágenes
 import loginLogo from '../assets/img/login_logo.png';
 import userIcon from '../assets/iconos_login/usuario.png';
@@ -56,6 +62,7 @@ export default defineComponent({
   components: {
     LoginLayout,
     TextInput,
+    FormButton, // Agrega FormButton a los componentes
   },
   setup() {
     const email = ref('');
