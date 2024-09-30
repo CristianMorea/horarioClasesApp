@@ -1,59 +1,71 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-
-import HomePage from '../views/HomePage.vue'
+import HomePage from '../views/HomePage.vue';
 import RegistroPage from '../views/RegistroPage.vue';
 import PerfilPage from '../views/PerfilPage.vue';
 import Ponderado from '../views/ponderado.vue';
 import LoginPage from '../views/LoginPage.vue';
 import CalendarioPage from '../views/CalendarioPage.vue';
 import FechaPage from '../views/FechaPage.vue';
+import OlvidoContraseña from '../views/olvidoContraseña.vue';
+import CambiarContraseña from '../views/CambiarContraseña.vue'
 
-const routes=[
+const routes = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/login',
   },
   {
     path: '/home',
     name: 'Home',
-    component: HomePage
+    component: HomePage,
   },
   {
     path: '/registro',
     name: 'Registro Login',
-    component: RegistroPage
+    component: RegistroPage,
   },
   
   {
     path: '/perfil',
     name: 'Perfil',
-    component: PerfilPage
+    component: PerfilPage,
   },
   {
     path: '/ponderado',
     name: 'Ponderado',
-    component: Ponderado
+    component: Ponderado,
   },
-   {
+  {
     path: '/login',
     name: 'loginPage',
-    component: LoginPage
+    component: LoginPage,
   },
   {
     path: '/calendario',
     name: 'Calendario',
-    component: CalendarioPage 
+    component: CalendarioPage,
   },
   {
     path: '/fecha',
     name: 'Fecha',
-    component: FechaPage
+    component: FechaPage,
   },
-]
+  {
+    path: '/olvidoPassword',
+    name: 'olvidoContraseña',
+    component: OlvidoContraseña,
+  },
+  {
+    path: '/cambiarPassword',
+    name: 'cambiarPassworda',
+    component: CambiarContraseña,
+  }
+  
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

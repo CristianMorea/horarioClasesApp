@@ -1,46 +1,62 @@
 <template>
-  <ion-page class="login">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Iniciar Sesión</ion-title>
-      </ion-toolbar>
-    </ion-header>
+  <ion-page class="h-screen bg-white">
+    <LoginLayout
+      
+      title="Bienvenido"
+      buttonText="Iniciar Sesión"
+      footerText="¿No tienes cuenta?"
+      footerActionText="Registrarte"
+      :submitting="submitting"
+      :handleSubmit="login"
+      :handleFooterClick="showRegisterForm"
+    >
+      <div class="logo-container">
+        <img :src="loginLogo" class="logo" alt="Logo" />
+      </div>
 
-    <ion-content class="ion-padding">
-      <form @submit.prevent="login" ref="loginForm">
-        <ion-list>
-          <!-- Campo de Correo Electrónico -->
-          <ion-item>
-            <ion-label position="floating">Correo Electrónico</ion-label>
-            <ion-input type="email" v-model="email" required></ion-input>
-          </ion-item>
+      <TextInput
+        id="email"
+        type="email"
+        placeholder="Ingresa tu Email"
+        v-model="email"
+        label="Usuario"
+        :icon="userIcon"
+        required
+      />
 
-          <!-- Campo de Contraseña -->
-          <ion-item>
-            <ion-label position="floating">Contraseña</ion-label>
-            <ion-input type="password" v-model="password" required></ion-input>
-          </ion-item>
-        </ion-list>
-
-        <!-- Botón para Iniciar Sesión -->
-        <ion-button expand="full" type="submit" :disabled="submitting">
-          Iniciar Sesión
-        </ion-button>
-
-        <!-- Botón para mostrar el formulario de registro -->
-        <ion-button expand="full" fill="outline" @click="showRegisterForm">
-          Registrarse
-        </ion-button>
-      </form>
-    </ion-content>
+      <TextInput
+        id="password"
+        type="password"
+        placeholder="*********"
+        v-model="password"
+        label="Contraseña"
+        :icon="passwordIcon"
+        required
+      />
+      
+      <p class="mt-2 text-sm text-gray-500 cursor-pointer text-right" @click="resetPassword">
+        ¿Olvidaste tu contraseña?
+      </p>
+    </LoginLayout>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import supabase from '../supabase';
+import LoginLayout from '../components/LoginLayout.vue';
+import TextInput from '../components/TextInput.vue';
+// Importar imágenes
+import loginLogo from '../assets/img/login_logo.png';
+import userIcon from '../assets/iconos_login/usuario.png';
+import passwordIcon from '../assets/iconos_login/password.png';
 
 export default defineComponent({
+  components: {
+    LoginLayout,
+    TextInput,
+  },
   setup() {
     const email = ref('');
     const password = ref('');
@@ -48,31 +64,51 @@ export default defineComponent({
     const router = useRouter();
 
     const login = async () => {
+      if (!email.value || !password.value) {
+        alert('Por favor, ingresa tu correo electrónico y contraseña.');
+        return;
+      }
+
       submitting.value = true;
       try {
-const usuarios = supabase.channel('custom-insert-channel')
-  .on(
-    'postgres_changes',
-    { event: 'INSERT', schema: 'public', table: 'usuarios' },
-    (payload) => {
-      console.log('Change received!', payload)
-    }
-  )
-  .subscribe()
         console.log('Intentando iniciar sesión con:', email.value, password.value);
 
-        // Ejemplo de redirección tras iniciar sesión
-        router.push('/home');
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email.value,
+          password: password.value,
+        });
+
+        if (error) {
+          console.error('Error al iniciar sesión:', error.message);
+          alert(`Error: ${error.message}`);
+          return;
+        }
+
+        // Verificar si el correo del usuario está confirmado
+        if (!data.user?.email_confirmed_at) {
+          alert('Tu correo no ha sido verificado. Por favor, revisa tu bandeja de entrada y verifica tu correo electrónico.');
+          return;
+        }
+
+        // Si el inicio de sesión fue exitoso
+        if (data?.user) {
+          console.log('Inicio de sesión exitoso para el usuario:', data.user);
+          router.push('/home'); // Redirigir a la página de inicio
+        }
       } catch (error) {
-        console.error('Error al iniciar sesión:', error);
+        console.error('Error en el proceso de inicio de sesión:', error);
+        alert('Hubo un error al intentar iniciar sesión. Intenta nuevamente.');
       } finally {
         submitting.value = false;
       }
     };
 
     const showRegisterForm = () => {
-      // Lógica para mostrar el formulario de registro o redirigir
-      router.push('/register');
+      router.push('/registro'); // Redirigir a la página de registro
+    };
+
+    const resetPassword = () => {
+      router.push('/olvidoPassword'); // Redirigir a la página para recuperar la contraseña
     };
 
     return {
@@ -81,27 +117,28 @@ const usuarios = supabase.channel('custom-insert-channel')
       submitting,
       login,
       showRegisterForm,
+      resetPassword,
+      loginLogo,
+      userIcon,
+      passwordIcon,
     };
   },
 });
 </script>
 
 <style scoped>
-.login {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+h1 {
+  margin: 0;
 }
 
-ion-content {
+.logo-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* Centra horizontalmente el logo */
+  margin-bottom: 20px; /* Espacio debajo del logo */
 }
 
-ion-button {
-  margin-top: 20px;
+.logo {
+  width: 60%; /* Ajusta el tamaño según tus necesidades */
+  height: auto; /* Mantiene la proporción del logo */
 }
 </style>
