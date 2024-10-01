@@ -24,6 +24,11 @@
           v-model="email"
           required
         />
+        <FormButton
+          text="Enviar enlace de recuperación"
+          :disabled="submitting"
+          @click="resetPassword"
+        />
       </LoginLayout>
     </ion-content>
   </ion-page>
@@ -33,6 +38,7 @@
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
+import FormButton from '../components/FormButton.vue'
 import TextInput from '../components/TextInput.vue';
 import LoginLayout from '../components/LoginLayout.vue';
 import gmailIcon from '../assets/iconos_registro/gmail.png';
@@ -41,6 +47,7 @@ export default defineComponent({
   components: {
     TextInput,
     LoginLayout,
+    FormButton
   },
   setup() {
     const email = ref('');
