@@ -8,6 +8,7 @@ import CalendarioPage from '../views/CalendarioPage.vue';
 import FechaPage from '../views/FechaPage.vue';
 import OlvidoContraseña from '../views/olvidoContraseña.vue';
 import CambiarContraseña from '../views/CambiarContraseña.vue'
+import CrearHorario from '../components/CrearHorario.vue';
 
 const routes = [
   {
@@ -24,6 +25,7 @@ const routes = [
     name: 'Registro Login',
     component: RegistroPage,
   },
+  
   {
     path: '/perfil',
     name: 'Perfil',
@@ -58,6 +60,10 @@ const routes = [
     path: '/cambiarPassword',
     name: 'cambiarPassworda',
     component: CambiarContraseña,
+  },
+  {
+    path: '/crearhorario', 
+    component: CrearHorario
   }
   
 ];
