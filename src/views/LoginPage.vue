@@ -36,7 +36,6 @@
         ¿Olvidaste tu contraseña?
       </p>
 
-      <!-- Agregar el botón de inicio de sesión usando FormButton -->
       <FormButton
         :text="'Iniciar Sesión'"
         :disabled="submitting"
@@ -52,8 +51,7 @@ import { useRouter } from 'vue-router';
 import supabase from '../supabase';
 import LoginLayout from '../components/LoginLayout.vue';
 import TextInput from '../components/TextInput.vue';
-import FormButton from '../components/FormButton.vue'; // Importa el componente FormButton
-// Importar imágenes
+import FormButton from '../components/FormButton.vue';
 import loginLogo from '../assets/img/login_logo.png';
 import userIcon from '../assets/iconos_login/usuario.png';
 import passwordIcon from '../assets/iconos_login/password.png';
@@ -62,7 +60,7 @@ export default defineComponent({
   components: {
     LoginLayout,
     TextInput,
-    FormButton, // Agrega FormButton a los componentes
+    FormButton,
   },
   setup() {
     const email = ref('');
@@ -78,15 +76,12 @@ export default defineComponent({
 
       submitting.value = true;
       try {
-        console.log('Intentando iniciar sesión con:', email.value, password.value);
-
         const { data, error } = await supabase.auth.signInWithPassword({
           email: email.value,
           password: password.value,
         });
 
         if (error) {
-          console.error('Error al iniciar sesión:', error.message);
           alert(`Error: ${error.message}`);
           return;
         }
@@ -99,34 +94,32 @@ export default defineComponent({
 
         // Si el inicio de sesión fue exitoso
         if (data?.user) {
+          // Actualizar último inicio de sesión
+          const { error: updateError } = await supabase
+            .from('usuarios') // Cambia 'usuarios' por el nombre de tu tabla
+            .update({ ultimo_inicio_sesion: new Date() })
+            .eq('id', data.user.id); // Asegúrate de usar la clave primaria
+
+          if (updateError) {
+            console.error('Error al actualizar último inicio de sesión:', updateError);
+          }
+
           console.log('Inicio de sesión exitoso para el usuario:', data.user);
           router.push('/home'); // Redirigir a la página de inicio
         }
       } catch (error) {
-        console.error('Error en el proceso de inicio de sesión:', error);
         alert('Hubo un error al intentar iniciar sesión. Intenta nuevamente.');
       } finally {
         submitting.value = false;
       }
     };
-      const logout = async () => {
-        try {
-          await supabase.auth.signOut(); // Cerrar sesión
-          router.push('/login'); // Redirigir al usuario a la página de inicio de sesión
-          alert('Has cerrado sesión con éxito.');
-        } catch (error) {
-          console.error('Error al cerrar sesión:', error);
-          alert('Hubo un problema al cerrar sesión. Inténtalo de nuevo.');
-        }
-    };
-
 
     const showRegisterForm = () => {
-      router.push('/registro'); // Redirigir a la página de registro
+      router.push('/registro');
     };
 
     const resetPassword = () => {
-      router.push('/olvidoPassword'); // Redirigir a la página para recuperar la contraseña
+      router.push('/olvidoPassword');
     };
 
     return {
@@ -134,7 +127,6 @@ export default defineComponent({
       password,
       submitting,
       login,
-      logout,
       showRegisterForm,
       resetPassword,
       loginLogo,
@@ -152,12 +144,12 @@ h1 {
 
 .logo-container {
   display: flex;
-  justify-content: center; /* Centra horizontalmente el logo */
-  margin-bottom: 20px; /* Espacio debajo del logo */
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .logo {
-  width: 60%; /* Ajusta el tamaño según tus necesidades */
-  height: auto; /* Mantiene la proporción del logo */
+  width: 60%;
+  height: auto;
 }
 </style>
