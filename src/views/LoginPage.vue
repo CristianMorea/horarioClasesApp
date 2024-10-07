@@ -109,6 +109,17 @@ export default defineComponent({
         submitting.value = false;
       }
     };
+      const logout = async () => {
+        try {
+          await supabase.auth.signOut(); // Cerrar sesión
+          router.push('/login'); // Redirigir al usuario a la página de inicio de sesión
+          alert('Has cerrado sesión con éxito.');
+        } catch (error) {
+          console.error('Error al cerrar sesión:', error);
+          alert('Hubo un problema al cerrar sesión. Inténtalo de nuevo.');
+        }
+    };
+
 
     const showRegisterForm = () => {
       router.push('/registro'); // Redirigir a la página de registro
@@ -123,6 +134,7 @@ export default defineComponent({
       password,
       submitting,
       login,
+      logout,
       showRegisterForm,
       resetPassword,
       loginLogo,

@@ -9,16 +9,21 @@ import FechaPage from '../views/FechaPage.vue';
 import OlvidoContraseña from '../views/olvidoContraseña.vue';
 import CambiarContraseña from '../views/CambiarContraseña.vue'
 import CrearHorario from '../components/CrearHorario.vue';
+import { requireAuth } from './authGuard';
 
 const routes = [
+
   {
     path: '/',
-    redirect: '/login',
+    name: 'Home',
+    component: HomePage,
+    beforeEnter: requireAuth,
   },
   {
     path: '/home',
     name: 'Home',
     component: HomePage,
+    beforeEnter: requireAuth,
   },
   {
     path: '/registro',
