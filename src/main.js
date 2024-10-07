@@ -2,6 +2,8 @@ import { createApp } from 'vue'; // Importación única de createApp
 import App from './App.vue';
 import router from './router';
 import { IonicVue } from '@ionic/vue';
+import store from './service/Store'; // Asegúrate de que la ruta sea correcta
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -29,9 +31,9 @@ import '@ionic/vue/css/palettes/dark.system.css';
 import './theme/variables.css';
 
 const app = createApp(App)
+  .use(store) // Registra el store
   .use(IonicVue)
   .use(router);
-
 router.isReady().then(() => {
   app.mount('#app');
 });
