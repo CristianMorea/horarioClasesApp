@@ -1,8 +1,12 @@
 <template>
   <ion-page>
+    <MenuComponent />
     <ion-header>
       <ion-toolbar>
         <ion-title>PERFIL</ion-title>
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
         <ion-buttons slot="end">
           <ion-button>
             <ion-icon slot="icon-only" name="search-outline"></ion-icon>
@@ -11,7 +15,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content id="main-content">
       <!-- Zona de Notas -->
       <div class="notas-container">
         <ion-card>
@@ -65,9 +69,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonTextarea, IonList, IonItem, IonLabel, IonInput } from '@ionic/vue';
+import MenuComponent from '../components/MenuComponent.vue';;
 
 export default defineComponent({
   components: {
+    MenuComponent,
     IonPage,
     IonHeader,
     IonToolbar,

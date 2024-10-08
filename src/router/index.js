@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
+import { requireAuth } from './authGuard';
 import HomePage from '../views/HomePage.vue';
 import RegistroPage from '../views/RegistroPage.vue';
 import PerfilPage from '../views/PerfilPage.vue';
@@ -9,7 +10,7 @@ import FechaPage from '../views/FechaPage.vue';
 import OlvidoContraseña from '../views/olvidoContraseña.vue';
 import CambiarContraseña from '../views/CambiarContraseña.vue'
 import CrearHorario from '../components/CrearHorario.vue';
-import { requireAuth } from './authGuard';
+import PruebaMenu from '../views/pruebaMenu.vue';
 
 const routes = [
 
@@ -69,6 +70,10 @@ const routes = [
   {
     path: '/crearhorario', 
     component: CrearHorario
+  },
+  {
+    path: '/prueba', 
+    component: PruebaMenu
   }
   
 ];
