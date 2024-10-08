@@ -11,6 +11,7 @@ import OlvidoContraseña from '../views/olvidoContraseña.vue';
 import CambiarContraseña from '../views/CambiarContraseña.vue'
 import CrearHorario from '../components/CrearHorario.vue';
 import PruebaMenu from '../views/pruebaMenu.vue';
+import HorarioEditar from '../components/HorarioEditar.vue';
 
 const routes = [
 
@@ -74,6 +75,10 @@ const routes = [
   {
     path: '/prueba', 
     component: PruebaMenu
+  },
+  {
+    path: '/horarioeditar', 
+    component: HorarioEditar
   }
   
 ];
