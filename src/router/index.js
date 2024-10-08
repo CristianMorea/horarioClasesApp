@@ -12,6 +12,7 @@ import CambiarContraseña from '../views/CambiarContraseña.vue'
 import CrearHorario from '../components/CrearHorario.vue';
 import PruebaMenu from '../views/pruebaMenu.vue';
 import HorarioEditar from '../components/HorarioEditar.vue';
+import HorarioPage from '../views/HorarioPage.vue';
 
 const routes = [
 
@@ -79,6 +80,10 @@ const routes = [
   {
     path: '/horarioeditar', 
     component: HorarioEditar
+  },
+  {
+    path: '/horario',
+    component: HorarioPage
   }
   
 ];
