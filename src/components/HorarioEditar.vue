@@ -1,8 +1,8 @@
 <template>
-  <ion-page>
+  <ion-page class="h-screen bg-white">
     <ion-header>
       <ion-toolbar>
-        <ion-title>EDITAR</ion-title>
+        <ion-title>EDITAR Y VISUALIZACION</ion-title>
       </ion-toolbar>
     </ion-header>
 

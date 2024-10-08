@@ -30,6 +30,9 @@ import '@ionic/vue/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 
+/*Custom Styles*/
+import './assets/styles/styles.css';
+
 const app = createApp(App)
   .use(store) // Registra el store
   .use(IonicVue)
