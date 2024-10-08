@@ -111,7 +111,18 @@
           mensaje.value = 'Por favor, completa todos los campos obligatorios.';
           return;
         }
-  
+         // Obtener el ID del usuario logueado
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+        if (userError) {
+          mensaje.value = 'Error al obtener usuario: ' + userError.message;
+          return;
+        }
+
+        if (!user) {
+          mensaje.value = 'Debes estar logueado para crear una clase.';
+          return;
+        }
         // Crear la nueva clase en la tabla 'clases'
         const { data: claseData, error: claseError } = await supabase
           .from('clases')
@@ -123,6 +134,7 @@
             hora_fin: horaFin.value,
             creado_en: new Date().toISOString(),
             actualizado_en: new Date().toISOString(),
+            id_usuario: user.id, // Agregar el ID del usuario
           }])
           .select('id'); // Seleccionar el ID de la nueva clase
   
@@ -142,6 +154,7 @@
             profesor_id: profesorId.value,
             creado_en: new Date().toISOString(),
             actualizado_en: new Date().toISOString(),
+            id_usuario: user.id, // Agregar el ID del usuario
           }]);
   
         if (horarioError) {
