@@ -83,7 +83,24 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import supabase from '@/supabase';
 import { useRouter } from 'vue-router';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonInput, IonButton, IonAlert, IonSelect, IonSelectOption, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/vue';
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonButton,
+  IonAlert,
+  IonSelect,
+  IonSelectOption,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent
+} from '@ionic/vue';
 
 export default defineComponent({
   components: {
@@ -105,9 +122,9 @@ export default defineComponent({
     IonCardContent
   },
   setup() {
-    const clases = ref([]);  // Lista de clases existentes
-    const claseSeleccionada = ref(null);  // Clase que el usuario selecciona para editar
-    const profesores = ref([]);  // Lista de profesores disponibles
+    const clases = ref([]); // Lista de clases existentes
+    const claseSeleccionada = ref(null); // Clase que el usuario selecciona para editar
+    const profesores = ref([]); // Lista de profesores disponibles
     const mensaje = ref('');
     const router = useRouter(); // Obtener el enrutador
 
@@ -115,7 +132,7 @@ export default defineComponent({
       const { data, error } = await supabase
         .from('clases')
         .select('*');
-      
+
       if (error) {
         console.error('Error al cargar clases:', error.message);
       } else {
@@ -127,7 +144,7 @@ export default defineComponent({
       const { data, error } = await supabase
         .from('profesores')
         .select('id, nombre');
-  
+
       if (error) {
         console.error('Error al cargar profesores:', error.message);
       } else {
@@ -136,7 +153,7 @@ export default defineComponent({
     };
 
     const seleccionarClase = (clase) => {
-      claseSeleccionada.value = { ...clase };  // Crear una copia del horario seleccionado
+      claseSeleccionada.value = { ...clase }; // Crear una copia del horario seleccionado
     };
 
     const editarClaseYHorario = async () => {
@@ -166,7 +183,6 @@ export default defineComponent({
         .from('horarios_clases')
         .update({
           dia_de_clase: claseSeleccionada.value.dia_de_clase,
-          profesor_id: claseSeleccionada.value.profesor_id,
           actualizado_en: new Date().toISOString(),
         })
         .eq('clase_id', claseSeleccionada.value.id);
@@ -175,13 +191,13 @@ export default defineComponent({
         mensaje.value = 'Error al editar el horario: ' + horarioError.message;
       } else {
         mensaje.value = 'Clase y horario editados con éxito.';
-        claseSeleccionada.value = null;  // Limpiar la selección después de editar
-        cargarClases();  // Recargar la lista de clases
+        claseSeleccionada.value = null; // Limpiar la selección después de editar
+        cargarClases(); // Recargar la lista de clases
       }
     };
 
     const cerrar = () => {
-      router.push('/horariodetails/:id'); // Redirigir a la vista de horario editar
+      router.push('/horario'); // Redirigir a la lista de horarios
     };
 
     onMounted(() => {
@@ -205,3 +221,4 @@ export default defineComponent({
 <style scoped>
 /* Estilos personalizados si es necesario */
 </style>
+

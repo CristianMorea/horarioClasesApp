@@ -8,16 +8,19 @@
 
     <ion-content>
       <div class="clases-container" v-if="clases.length > 0">
-        <ion-item v-for="(clase, index) in clases" :key="index" class="item-clase" @click="verDetalle(clase.id)">
-          <ion-label>
-            <h2 class="text-lg font-bold text-white">{{ clase.nombre.toUpperCase() }}</h2>
-            <p class="text-gray-300"><strong>Día:</strong> {{ clase.horarios_clases[0]?.dia_de_clase }}</p>
-            <p class="text-gray-300"><strong>Hora:</strong> {{ clase.hora_inicio }} - {{ clase.hora_fin }}</p>
-            <p v-if="clase.ubicacion" class="text-gray-300"><strong>Ubicación:</strong> {{ clase.ubicacion }}</p>
-            <p v-if="clase.profesor" class="text-gray-300"><strong>Profesor:</strong> {{ clase.profesor.nombre }}</p>
-          </ion-label>
-        </ion-item>
-      </div>
+    <ion-item v-for="(clase, index) in clases" :key="index" class="item-clase">
+      <ion-label @click="verDetalle(clase.id)">
+        <h2 class="text-lg font-bold text-white">{{ clase.nombre ? clase.nombre.toUpperCase() : 'Sin Nombre' }}</h2>
+        <p class="text-gray-300"><strong>Día:</strong> {{ clase.horarios_clases && clase.horarios_clases[0] ? clase.horarios_clases[0].dia_de_clase : 'Día no disponible' }}</p>
+        <p class="text-gray-300"><strong>Hora:</strong> {{ clase.hora_inicio && clase.hora_fin ? `${clase.hora_inicio} - ${clase.hora_fin}` : 'Hora no disponible' }}</p>
+        <p v-if="clase.ubicacion" class="text-gray-300"><strong>Ubicación:</strong> {{ clase.ubicacion }}</p>
+        <p v-if="clase.profesor" class="text-gray-300"><strong>Profesor:</strong> {{ clase.profesor.nombre }}</p>
+      </ion-label>
+      <ion-button slot="end" color="danger" @click="confirmarEliminacion(clase.id)">
+        Eliminar
+      </ion-button>
+    </ion-item>
+  </div>
 
       <ion-card v-else>
         <ion-card-header>
@@ -27,6 +30,35 @@
           <p class="text-center">No tienes clases programadas en este momento.</p>
         </ion-card-content>
       </ion-card>
+
+      <ion-alert
+        :is-open="alertVisible"
+        @didDismiss="() => (alertVisible.value = false)"
+        header="Confirmar Eliminación"
+        message="¿Estás seguro de que deseas eliminar esta clase?"
+        :buttons="[
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            handler: () => {
+              console.log('Eliminación cancelada');
+            },
+          },
+          {
+            text: 'Eliminar',
+            handler: () => {
+              eliminarClase(claseIdToDelete.value);
+            },
+          },
+        ]"
+      ></ion-alert>
+
+      <ion-toast
+        :is-open="mensaje !== ''"
+        :message="mensaje"
+        duration="2000"
+        @didDismiss="() => (mensaje.value = '')"
+      />
     </ion-content>
   </ion-page>
 </template>
@@ -35,7 +67,7 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '@/supabase';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonButton, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonAlert, IonToast } from '@ionic/vue';
 
 export default defineComponent({
   components: {
@@ -46,14 +78,19 @@ export default defineComponent({
     IonContent,
     IonItem,
     IonLabel,
+    IonButton,
     IonCard,
     IonCardHeader,
     IonCardTitle,
-    IonCardContent
+    IonCardContent,
+    IonAlert,
+    IonToast
   },
   setup() {
     const clases = ref([]);  // Lista de clases existentes
     const mensaje = ref('');
+    const alertVisible = ref(false);
+    const claseIdToDelete = ref(null);
     const router = useRouter(); // Obtener el enrutador
 
     const cargarHorario = async () => {
@@ -74,7 +111,28 @@ export default defineComponent({
     };
 
     const verDetalle = (id) => {
-      router.push(`/horariodetails/:id`); // Cambia esta ruta si es necesario
+      router.push(`/horariodetails/${id}`); // Cambia esta ruta si es necesario
+    };
+
+    const confirmarEliminacion = (id) => {
+      claseIdToDelete.value = id;
+      alertVisible.value = true; // Mostrar la alerta de confirmación
+    };
+
+    const eliminarClase = async (id) => {
+      const { error } = await supabase
+        .from('clases')
+        .delete()
+        .eq('id', id); // Asegúrate de que 'id' es el nombre de la columna en tu base de datos
+
+      if (error) {
+        mensaje.value = 'Error al eliminar la clase: ' + error.message;
+      } else {
+        mensaje.value = 'Clase eliminada con éxito';
+        cargarHorario(); // Recargar el horario después de eliminar
+      }
+
+      alertVisible.value = false; // Ocultar la alerta después de procesar la eliminación
     };
 
     onMounted(() => {
@@ -84,7 +142,11 @@ export default defineComponent({
     return {
       clases,
       mensaje,
+      alertVisible,
+      claseIdToDelete,
       verDetalle,
+      confirmarEliminacion,
+      eliminarClase,
     };
   },
 });
