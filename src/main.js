@@ -30,13 +30,14 @@ import '@ionic/vue/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 
-/*Custom Styles*/
-import './assets/styles/styles.css';
+/* Custom Styles */
+import './assets/styles/styles.css';  // Importa los estilos personalizados correctamente
 
 const app = createApp(App)
   .use(store) // Registra el store
   .use(IonicVue)
   .use(router);
+
 router.isReady().then(() => {
   app.mount('#app');
 });

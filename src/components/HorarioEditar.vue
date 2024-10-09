@@ -2,7 +2,7 @@
   <ion-page class="h-screen bg-white">
     <ion-header>
       <ion-toolbar>
-        <ion-title>EDITAR Y VISUALIZACION</ion-title>
+        <ion-title class="text-center text-2xl font-bold text-white">EDITAR Y VISUALIZACION</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -73,6 +73,8 @@
           @didDismiss="mensaje = ''"
         ></ion-alert>
       </form>
+
+      <ion-button expand="full" @click="cerrar">Cerrar</ion-button>
     </ion-content>
   </ion-page>
 </template>
@@ -80,6 +82,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import supabase from '@/supabase';
+import { useRouter } from 'vue-router';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonInput, IonButton, IonAlert, IonSelect, IonSelectOption, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/vue';
 
 export default defineComponent({
@@ -106,6 +109,7 @@ export default defineComponent({
     const claseSeleccionada = ref(null);  // Clase que el usuario selecciona para editar
     const profesores = ref([]);  // Lista de profesores disponibles
     const mensaje = ref('');
+    const router = useRouter(); // Obtener el enrutador
 
     const cargarClases = async () => {
       const { data, error } = await supabase
@@ -176,6 +180,10 @@ export default defineComponent({
       }
     };
 
+    const cerrar = () => {
+      router.push('/horariodetails/:id'); // Redirigir a la vista de horario editar
+    };
+
     onMounted(() => {
       cargarClases();
       cargarProfesores();
@@ -187,7 +195,8 @@ export default defineComponent({
       profesores,
       mensaje,
       seleccionarClase,
-      editarClaseYHorario
+      editarClaseYHorario,
+      cerrar,
     };
   },
 });

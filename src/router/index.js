@@ -13,6 +13,7 @@ import CrearHorario from '../components/CrearHorario.vue';
 import PruebaMenu from '../views/pruebaMenu.vue';
 import HorarioEditar from '../components/HorarioEditar.vue';
 import HorarioPage from '../views/HorarioPage.vue';
+import HorarioDetails from '../components/HorarioDetails.vue';
 
 const routes = [
 
@@ -84,8 +85,12 @@ const routes = [
   {
     path: '/horario',
     component: HorarioPage
+  },
+  {
+    path: '/horariodetails/:id',
+    name: 'HorarioDetalle',
+    component: HorarioDetails
   }
-  
 ];
 
 const router = createRouter({
