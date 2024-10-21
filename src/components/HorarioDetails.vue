@@ -21,6 +21,7 @@
 
       <!-- Botones de Modificar y Cerrar -->
       <ion-button expand="full" @click="editarHorario">Modificar</ion-button>
+      <ion-button expand="full" color="secondary" @click="configurarRecordatorio">Configurar Recordatorio</ion-button>
       <ion-button expand="full" color="primary" @click="cerrarDetalle">Cerrar</ion-button>
     </ion-content>
   </ion-page>
@@ -55,6 +56,11 @@ export default defineComponent({
       router.push(`/horarioeditar`); // Cambia la ruta según tu estructura de rutas
     };
 
+    // Función para redirigir a la vista de configuración de recordatorio
+    const configurarRecordatorio = () => {
+      router.push(`/configurar-recordatorio/${clase.value.id}`); // Pasar el ID de la clase
+    };
+
     // Función para cerrar los detalles y volver al listado
     const cerrarDetalle = () => {
       router.push('/horario'); // Cambia la ruta a donde quieres redirigir al cerrar
@@ -67,12 +73,10 @@ export default defineComponent({
     return {
       clase,
       editarHorario,
+      configurarRecordatorio,
       cerrarDetalle,
     };
   },
 });
 </script>
 
-<style scoped>
-/* Añade cualquier estilo adicional aquí si es necesario */
-</style>
