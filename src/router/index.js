@@ -14,6 +14,7 @@ import PruebaMenu from '../views/pruebaMenu.vue';
 import HorarioEditar from '../components/HorarioEditar.vue';
 import HorarioPage from '../views/HorarioPage.vue';
 import HorarioDetails from '../components/HorarioDetails.vue';
+import RecordatorioConfiguracion from '../components/RecordatorioConfiguracion.vue';
 
 const routes = [
 
@@ -90,6 +91,10 @@ const routes = [
     path: '/horariodetails/:id',
     name: 'HorarioDetalle',
     component: HorarioDetails
+  },
+  {
+    path: '/configurar-recordatorio/:id',
+    component: RecordatorioConfiguracion
   }
 ];
 
