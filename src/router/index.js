@@ -15,6 +15,7 @@ import HorarioEditar from '../components/HorarioEditar.vue';
 import HorarioPage from '../views/HorarioPage.vue';
 import HorarioDetails from '../components/HorarioDetails.vue';
 import RecordatorioConfiguracion from '../components/RecordatorioConfiguracion.vue';
+import UpdatePerfil from '../views/updatePerfil.vue';
 
 const routes = [
 
@@ -95,7 +96,13 @@ const routes = [
   {
     path: '/configurar-recordatorio/:id',
     component: RecordatorioConfiguracion
+  },
+  {
+    path: '/modificar-perfil',
+    name: 'ModificarPerfil',
+    component: UpdatePerfil
   }
+  
 ];
 
 const router = createRouter({
