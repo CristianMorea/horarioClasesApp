@@ -81,7 +81,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
-import supabase from '@/supabase';
+import supabase from '../supabase';
 import { useRouter } from 'vue-router';
 import {
   IonPage,
