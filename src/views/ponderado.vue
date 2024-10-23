@@ -47,7 +47,7 @@
         </ion-list>
   
         <!-- Switch para promedio -->
-        <ion-item lines="none" class="average-switch">
+        <ion-item lines="none" class="average-switch" @ionChange="horarioP">
           <ion-label>PROMEDIO</ion-label>
           <ion-toggle v-model="showAverage"></ion-toggle>
         </ion-item>
@@ -56,8 +56,29 @@
   </template>
   
   <script>
-  import { defineComponent } from 'vue';
-  import {
+import { defineComponent, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonButton,
+  IonIcon,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonCard,
+  IonItem,
+  IonAvatar,
+  IonLabel,
+  IonNote,
+  IonToggle,
+} from '@ionic/vue';
+import { settingsOutline, searchOutline } from 'ionicons/icons';
+
+export default defineComponent({
+  components: {
     IonPage,
     IonHeader,
     IonToolbar,
@@ -73,44 +94,34 @@
     IonLabel,
     IonNote,
     IonToggle,
-  } from '@ionic/vue';
-  import { settingsOutline, searchOutline } from 'ionicons/icons';
-  
-  export default defineComponent({
-    components: {
-      IonPage,
-      IonHeader,
-      IonToolbar,
-      IonButtons,
-      IonButton,
-      IonIcon,
-      IonTitle,
-      IonContent,
-      IonList,
-      IonCard,
-      IonItem,
-      IonAvatar,
-      IonLabel,
-      IonNote,
-      IonToggle,
-    },
-    data() {
-      return {
-        settingsOutline, // Definición del icono de configuración
-        searchOutline, // Definición del icono de búsqueda
-        subjects: [
-          { name: 'Materia 1', note: '0.00' },
-          { name: 'Materia 2', note: '0.00' },
-          { name: 'Materia 3', note: '0.00' },
-          { name: 'Materia 4', note: '0.00' },
-        ],
-        currentTime: new Date().toLocaleTimeString(),
-        showAverage: false,
-      };
-    },
-  });
-  </script>
-  
+  },
+  setup() {
+    const router = useRouter();
+    const showAverage = ref(false); // Reactive variable for the toggle
+    const subjects = ref([
+      { name: 'Materia 1', note: '0.00' },
+      { name: 'Materia 2', note: '0.00' },
+      { name: 'Materia 3', note: '0.00' },
+      { name: 'Materia 4', note: '0.00' },
+    ]);
+    const currentTime = ref(new Date().toLocaleTimeString());
+
+    const horarioP = () => {
+      router.push('/horario'); // Redirection logic
+    };
+
+    return {
+      showAverage,
+      subjects,
+      currentTime,
+      horarioP,
+      settingsOutline, // Icono de configuración
+      searchOutline,   // Icono de búsqueda
+    };
+  },
+});
+</script>
+
   <style scoped>
   /* Estilos del título "PONDERADO" */
   .ponderado-title {

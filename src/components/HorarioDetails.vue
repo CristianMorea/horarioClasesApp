@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router'; // Añadido useRouter para redirigir
-import supabase from '@/supabase';
+import supabase from '../supabase';
 
 export default defineComponent({
   setup() {
