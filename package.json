@@ -22,7 +22,7 @@
     "@ionic/vue-router": "^8.0.0",
     "@supabase/supabase-js": "^2.45.4",
     "daisyui": "^4.12.10",
-    "ionicons": "^7.0.0",
+    "ionicons": "^7.4.0",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0",
     "vuex": "^4.0.2"

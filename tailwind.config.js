@@ -7,5 +7,6 @@ module.exports = {
   theme: {
     extend: {},
   },
+  darkMode: 'class', // Aquí activas el modo oscuro basado en la clase
   plugins: [require("daisyui")],
 }

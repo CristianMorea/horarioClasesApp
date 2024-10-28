@@ -1,48 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+/* assets/styles/styles.css */
 
-body, h1, ion-title {
-    font-family: 'Architects Daughter', cursive;
-    background-color: white;
-    margin: 0;
-    padding: 0;
-    background-size: cover;
-    background-repeat: no-repeat;
-}
-
-/* Estilo para asegurar el fondo blanco de ion-page */
-ion-page {
-    height: 100vh;
-    background-color: rgb(255, 255, 255) !important; /* Forzar color de fondo blanco */
-}
-
-/* Estilo de las tarjetas */
-ion-card, .custom-card {
-    margin: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(222, 60, 60, 0.1);
-    background-color: #444444 !important; /* Forzar color de fondo oscuro */
-}
-
-/* Estilo de los títulos en ion-label y tarjetas */
-ion-label h2, .custom-label ion-label h2, ion-card h2 {
-    font-size: 1.5rem;
-    color: #bb2a2a !important; /* Asegurar color del texto rojo */
-}
-
-/* Estilo de los párrafos */
-ion-label p {
-    font-size: 1rem;
-    color: #666 !important; /* Color gris claro para los párrafos */
-}
-
-/* Estilo del encabezado */
-ion-header, ion-title {
-    background-color: #202020;
-    color: white;
-    font-family: 'Architects Daughter', cursive !important; /* Prioridad a la fuente */
-}
-
-/* Añadir más especificidad a ion-title dentro del encabezado */
-ion-header ion-title {
-    font-family: 'Architects Daughter', cursive !important;
-}
+/* Estilos para el tema claro */
+body {
+    --ion-background-color: white; /* Fondo blanco */
+    --ion-text-color: black; /* Texto negro */
+  }
+  
+  /* Estilos para el tema oscuro */
+  body.dark {
+    --ion-background-color: #000; /* Fondo negro */
+    --ion-text-color: white; /* Texto blanco */
+  }
+  
+  /* Estilos para los elementos del menú y otros componentes */
+  .custom-menu {
+    --background: var(--ion-background-color);
+  }
+  
+  .menu-content {
+    --ion-background-color: var(--ion-background-color);
+  }
+  
+  ion-item {
+    --background: var(--ion-background-color);
+    transition: background-color 0.3s;
+    color: var(--ion-text-color); /* Asegúrate de que el texto tenga color */
+  }
+  
