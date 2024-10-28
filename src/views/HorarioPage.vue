@@ -2,15 +2,27 @@
   <ion-page class="h-screen bg-white flex">
     <ion-header>
       <ion-toolbar>
-        <ion-title class="text-center text-2xl font-bold text-white">Mi Horario</ion-title>
+        <ion-buttons slot="start">
+          <ion-button @click="openSettings">
+            <ion-icon :icon="settingsOutline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-title class="text-center text-2xl font-bold custom-title">Mi Horario</ion-title>
+        <ion-buttons slot="end">
+          <ion-button @click="search">
+            <ion-icon :icon="searchOutline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
     <ion-content class="flex-grow">
+        <img :src="notaImage" @click="notaEdit" class="custom-button" style="cursor: pointer;"/>
+
       <div class="clases-container" v-if="clases.length > 0">
         <ion-item v-for="(clase, index) in clases" :key="index" class="item-clase">
           <ion-label @click="verDetalle(clase.id)">
-            <h2 class="text-lg font-bold text-white">{{ clase.nombre ? clase.nombre.toUpperCase() : 'Sin Nombre' }}</h2>
+            <h2 class="text-lg font-bold text-materia">{{ clase.nombre ? clase.nombre.toUpperCase() : 'Sin Nombre' }}</h2>
             <p class="text-gray-300"><strong>Día:</strong> {{ clase.horarios_clases && clase.horarios_clases[0] ? clase.horarios_clases[0].dia_de_clase : 'Día no disponible' }}</p>
             <p class="text-gray-300"><strong>Hora:</strong> {{ clase.hora_inicio && clase.hora_fin ? `${clase.hora_inicio} - ${clase.hora_fin}` : 'Hora no disponible' }}</p>
             <p v-if="clase.ubicacion" class="text-gray-300"><strong>Ubicación:</strong> {{ clase.ubicacion }}</p>
@@ -36,21 +48,15 @@
         @didDismiss="() => (alertVisible = false)"
         header="Confirmar Eliminación"
         message="¿Estás seguro de que deseas eliminar esta clase?"
-        :buttons="[
-          {
-            text: 'Cancelar',
-            role: 'cancel',
-            handler: () => {
-              console.log('Eliminación cancelada');
-            },
-          },
-          {
-            text: 'Eliminar',
-            handler: () => {
-              eliminarClase(claseIdToDelete);
-            },
-          }
-        ]"
+        :buttons="[{
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => { console.log('Eliminación cancelada'); }
+        },
+        {
+          text: 'Eliminar',
+          handler: () => { eliminarClase(claseIdToDelete); }
+        }]"
       ></ion-alert>
 
       <ion-toast
@@ -62,13 +68,9 @@
     </ion-content>
 
     <div class="left-button-container">
-      <!-- Botón pequeño encima del botón ponderado -->
-      <ion-button expand="full" color="danger" class="rounded-button vertical-button small-button" @click="editarP">
-        <div class="vertical-text">NOTAS</div>
-      </ion-button>
-
-      <ion-button expand="full" color="danger" class="rounded-button vertical-button" @click="ponderadoPage">
-        <div class="vertical-text">PONDERADO</div>
+      <img :src="lapizImage" @click="editarP" class="button-image" style="cursor: pointer;"/>
+      <ion-button color="danger" class="rounded-button vertical-button" @click="ponderadoPage">
+        <div class="vertical-text font-bold text-ponde">PONDERADO</div>
       </ion-button>
     </div>
   </ion-page>
@@ -78,11 +80,14 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
+import lapizImage from '@/assets/img/Lapiz.png';
+import notaImage from '@/assets/img/Notas.png';
 import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
   IonItem, IonLabel, IonButton, IonCard, IonCardHeader,
   IonCardTitle, IonCardContent, IonAlert, IonToast
 } from '@ionic/vue';
+import { settingsOutline, searchOutline } from 'ionicons/icons';
 
 export default defineComponent({
   components: {
@@ -102,19 +107,19 @@ export default defineComponent({
     IonToast
   },
   setup() {
-    const clases = ref([]);  // Lista de clases existentes
+    const clases = ref([]);
     const mensaje = ref('');
     const alertVisible = ref(false);
     const claseIdToDelete = ref(null);
     const router = useRouter();
+    const notaImageRef = ref(notaImage);
+    const lapizImageRef = ref(lapizImage);
 
     const cargarHorario = async () => {
       const { data, error } = await supabase
         .from('clases')
-        .select(`
-          *,
-          horarios_clases (dia_de_clase)  /* Join con la tabla de horarios */
-        `);
+        .select(`*,
+          horarios_clases (dia_de_clase)`);
 
       if (error) {
         mensaje.value = 'Error al cargar el horario: ' + error.message;
@@ -127,16 +132,20 @@ export default defineComponent({
       router.push(`/horariodetails/${id}`);
     };
 
-    const abrirNotas = () => {
-      router.push('/notas'); // Cambia '/notas' por la ruta correspondiente
+    const notaEdit = () => {
+      router.push('/blog');
     };
 
     const editarP = () => {
-      router.push('/')
+      router.push('/horarioeditar');
     };
 
     const ponderadoPage = () => {
-      router.push('/ponderado'); // Cambia '/notas' por la ruta correspondiente
+      router.push('/ponderado');
+    };
+
+    const abrirOtraVista = () => {
+      router.push('/otra-vista'); // Cambia a la ruta deseada para abrir la nueva vista
     };
 
     const confirmarEliminacion = (id) => {
@@ -160,6 +169,17 @@ export default defineComponent({
       alertVisible.value = false;
     };
 
+    const openSettings = () => {
+      console.log('Configuraciones abiertas');
+      router.push('/configuracion'); // Cambia a la ruta deseada
+    };
+
+    const search = () => {
+      console.log('Buscar acción iniciada');
+      // Aquí puedes abrir un cuadro de búsqueda o filtrar la lista de materias
+      // router.push('/buscar'); // Cambia a la ruta deseada
+    };
+
     onMounted(() => {
       cargarHorario();
     });
@@ -170,41 +190,60 @@ export default defineComponent({
       alertVisible,
       claseIdToDelete,
       verDetalle,
-      abrirNotas,
+      notaEdit,
+      editarP,
+      notaImage : notaImageRef,
+      lapizImage: lapizImageRef,
       confirmarEliminacion,
       eliminarClase,
       ponderadoPage,
-      editarP,
+      openSettings,
+      search,
+      abrirOtraVista, // Añadir la función aquí
+      settingsOutline,
+      searchOutline,
     };
   },
 });
 </script>
 
 <style scoped>
-.clases-container {
-  padding: 25px; /* Espacio alrededor de las materias */
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+
+body {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
 }
 
-.item-clase {
+.clases-container {
+  padding: 10px; /* Espacio alrededor de las materias */
+  margin-top: 0px; /* Cambia este valor para desplazar hacia abajo */
+  
+}
+
+ion-item.item-clase {
   border-radius: 30px; /* Borde redondeado de cada materia */
-  background-color: #444444; /* Color de fondo para las materias */
-  margin-bottom: 10px;
+  background-color: #868181; /* Color de fondo para las materias */
+  margin-bottom: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra más ligera */
   overflow: hidden; /* Para que el contenido no sobresalga del borde redondeado */
   color: white; /* Color del texto dentro del item-clase */
-  width: 90%; /* Ajusta el ancho de los cuadros de materias */
-  margin-left: 10%; /* Desplaza los cuadros a la derecha */
+  width: 100%; /* Ajusta el ancho de los cuadros de materias */
+  border: 2px solid #7b7676; /* Borde de 2px con color rojo oscuro */
 }
 
 .left-button-container {
   position: absolute;
-  top: 30%;
-  left: 1.8px;
+  top: 19%;
+  left: 5.7px;
   transform: translateY(-50%); /* Centra el botón verticalmente */
 }
 
 .vertical-button {
   height: 150px; /* Ajusta la altura del botón vertical */
+  width: 45px; /* Ajusta el ancho si es necesario */
+  border-radius: 45px; /* Aplica el borde redondeado aquí */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
+  
 }
 
 .small-button {
@@ -213,13 +252,67 @@ export default defineComponent({
   margin-bottom: 10px; /* Espacio entre los botones */
 }
 
+.button-image {
+  height: 50px; /* Ajusta la altura deseada */
+  width: 45px; /* Mantiene la proporción de la imagen */
+  margin-left: 2px; /* Espacio entre los botones */
+  border-radius: 15px; /* Ajusta el valor para el redondeado de los bordes */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
+}
+
 .vertical-text {
   writing-mode: vertical-rl; /* Hace que el texto esté en vertical */
   transform: rotate(180deg); /* Rota el texto para que quede correctamente alineado */
-  color: white; /* Color del texto */
+  color:#f0f0f0
+  
+}
+
+.custom-title {
+  color: #000000; /* Color rojo */
+}
+
+ion-content {
+  padding: 0; /* Elimina el padding por defecto */
+  margin: 0; /* Elimina el margen por defecto */
+}
+
+.custom-button {
+  width: 318px; /* Ajusta el ancho según tus necesidades */ 
+  height: 325px; /* Ajusta la altura del botón pequeño */
+  margin-top: 11px; /* Cambia este valor para desplazar hacia abajo */
+  margin-left: 16%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
+  border-radius: 15px; /* Ajusta el valor para el redondeado de los bordes */
+  border: 3px solid #7b7676; /* Borde de 2px con color rojo oscuro */
+}
+
+ion-icon {
+  color: #000000; /* Cambia este valor por el color que desees */
+  
+}
+
+.text-materia {
+  color: #bb2a2a; /* Cambia este color al que desees */
+  font-weight: bold; /* Esto asegura que el texto esté en negrita */
 }
 
 .ion-page {
   background-color: #f0f0f0; /* Color de fondo */
+  height: 100vh; /* Asegura que la página ocupe toda la altura de la ventana */
 }
+
+.custom-title {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente al título */
+}
+
+.text-materia {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
+}
+
+.text-ponde {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
+}
+
+/* Asegúrate de ajustar otros estilos según sea necesario */
 </style>
+
