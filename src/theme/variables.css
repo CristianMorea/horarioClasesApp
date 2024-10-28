@@ -1,20 +1,46 @@
-/* variables.css */
+/* Tema Claro */
+.light {
+  --ion-background-color: #ffffff !important;
+  --ion-background-color-rgb: 255, 255, 255 !important;
+  --ion-text-color: #000000 !important;
+  --ion-text-color-rgb: 0, 0, 0 !important;
+  --ion-background-color-step-50: #f3f3f3 !important;
+  --ion-background-color-step-100: #e7e7e7 !important;
+  --ion-background-color-step-150: #dbdbdb !important;
+  --ion-background-color-step-200: #d0d0d0 !important;
+  --ion-background-color-step-250: #c4c4c4 !important;
+  --ion-background-color-step-300: #b8b8b8 !important;
+  --ion-background-color-step-350: #acacac !important;
+  --ion-background-color-step-400: #a0a0a0 !important;
+  --ion-background-color-step-450: #949494 !important;
+  --ion-background-color-step-500: #898989 !important;
+  --ion-background-color-step-550: #7d7d7d !important;
+  --ion-background-color-step-600: #717171 !important;
+  --ion-background-color-step-650: #656565 !important;
+  --ion-background-color-step-700: #595959 !important;
+  --ion-background-color-step-750: #4d4d4d !important;
+  --ion-background-color-step-800: #414141 !important;
+  --ion-background-color-step-850: #363636 !important;
+  --ion-background-color-step-900: #2a2a2a !important;
+  --ion-background-color-step-950: #1e1e1e !important;
+  --ion-item-background: #ffffff !important;
+  --ion-toolbar-background: #f8f8f8 !important;
+  --ion-tab-bar-background: #f8f8f8 !important;
+  --ion-card-background: #ffffff !important;
+  /* Define otras variables de color claro */
+}
 
-/* Estilos para el tema claro */
-:root {
-    --ion-background-color: #ffffff;
-    --ion-text-color: #000000;
-    --ion-toolbar-background: #f8f8f8;
-    --ion-toolbar-text-color: #222428;
-    /* Añade más variables si es necesario */
-  }
-  
-  /* Estilos para el tema oscuro */
-  body.dark {
-    --ion-background-color: #000000;
-    --ion-text-color: #ffffff;
-    --ion-toolbar-background: #1c1c1d;
-    --ion-toolbar-text-color: #f4f4f5;
-    /* Añade más variables para el tema oscuro si es necesario */
-  }
+/* Tema oscuro */
+.dark {
+  --ion-background-color: #121212;
+  --ion-text-color: #ffffff;
+  --ion-toolbar-background: #1f1f1f;
+  --ion-item-background: #1e1e1e;
+  --ion-card-background: #1e1e1e;
+  --ion-tab-bar-background: #1f1f1f;
+  /* Ajusta otras propiedades necesarias */
+}
+
+
+
   

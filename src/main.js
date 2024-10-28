@@ -26,18 +26,15 @@ import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
 
-/* Tailwind CSS */
-import './index.css';  // Aquí importas Tailwind
+/* Ionic Dark Mode */
+import '@ionic/vue/css/palettes/dark.system.css';
 
 
 
 /* Theme variables */
 import './theme/variables.css';
-
-/* Custom Styles */
-import './assets/styles/styles.css';  // Importa los estilos personalizados correctamente
-/* Ionic Dark Mode */
-import '@ionic/vue/css/palettes/dark.system.css';
+/* Tailwind CSS */
+import './index.css';  // Aquí importas Tailwind
 
 const app = createApp(App)
   .use(store) // Registra el store

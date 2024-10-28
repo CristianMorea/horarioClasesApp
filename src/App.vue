@@ -7,5 +7,5 @@
 
 <script setup>
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
-import './assets/styles/styles.css';
+
 </script>
