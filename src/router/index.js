@@ -16,6 +16,7 @@ import HorarioPage from '../views/HorarioPage.vue';
 import HorarioDetails from '../components/HorarioDetails.vue';
 import RecordatorioConfiguracion from '../components/RecordatorioConfiguracion.vue';
 import UpdatePerfil from '../views/updatePerfil.vue';
+import BlogPage from '../views/BlogPage.vue';
 
 const routes = [
 
@@ -75,6 +76,10 @@ const routes = [
   {
     path: '/crearhorario', 
     component: CrearHorario
+  },
+  {
+    path: '/blog', 
+    component: BlogPage
   },
   {
     path: '/prueba', 

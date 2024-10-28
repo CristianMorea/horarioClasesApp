@@ -151,5 +151,7 @@ h1 {
 .logo {
   width: 60%;
   height: auto;
+  border-radius: 20px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); 
 }
 </style>
