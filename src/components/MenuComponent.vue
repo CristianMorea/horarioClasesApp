@@ -17,7 +17,6 @@
             <ion-icon slot="start" name="language-outline"></ion-icon>
             <ion-label>Idioma</ion-label>
           </ion-item>
-          <!-- Aquí el botón de tema -->
           <ion-item button @click="toggleTheme">
             <ion-icon slot="start" :name="isDarkMode ? 'sunny-outline' : 'moon-outline'"></ion-icon>
             <ion-label>{{ isDarkMode ? 'Tema Claro' : 'Tema Oscuro' }}</ion-label>
@@ -55,11 +54,17 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
-    const isDarkMode = ref(false); // Estado para el modo oscuro
+    const isDarkMode = ref(false);
 
-    // Comprobar el tema inicial al montar el componente
     onMounted(() => {
-      isDarkMode.value = document.body.classList.contains('dark');
+      const temaGuardado = localStorage.getItem('tema');
+      if (temaGuardado === 'dark') {
+        document.body.classList.add('dark');
+        isDarkMode.value = true;
+      } else {
+        document.body.classList.add('light');
+        isDarkMode.value = false;
+      }
     });
 
     const handleLogout = async () => {
@@ -72,11 +77,11 @@ export default defineComponent({
       router.push('/modificar-perfil');
     };
 
-    // Función para alternar entre el tema claro y oscuro
     const toggleTheme = () => {
       isDarkMode.value = !isDarkMode.value;
-      document.body.classList.toggle('dark', isDarkMode.value); // Agrega o remueve la clase 'dark' en el cuerpo del documento
-      console.log(`Dark mode: ${isDarkMode.value}, Body classes: ${document.body.className}`);
+      document.body.classList.toggle('dark', isDarkMode.value);
+      document.body.classList.toggle('light', !isDarkMode.value);
+      localStorage.setItem('tema', isDarkMode.value ? 'dark' : 'light');
     };
 
     return { handleLogout, goToPerfil, toggleTheme, isDarkMode };
@@ -86,7 +91,7 @@ export default defineComponent({
 
 <style scoped>
 .custom-menu {
-  --background: #f0f4f8; /* Color de fondo del menú */
+  --background: #f0f4f8;
 }
 
 .menu-title {
@@ -96,35 +101,54 @@ export default defineComponent({
 }
 
 .menu-content {
-  --ion-background-color: #ffffff; /* Color de fondo del contenido */
+  --ion-background-color: #ffffff;
 }
 
 ion-item {
-  --background: #e3f2fd; /* Color de fondo de los ítems */
+  --background: #e3f2fd;
   border-radius: 8px;
   margin: 10px 0;
   transition: background-color 0.3s;
 }
 
 ion-item:hover {
-  --background: #bbdefb; /* Color al pasar el cursor sobre los ítems */
+  --background: #bbdefb;
 }
 
 ion-icon {
   font-size: 1.2rem;
 }
 
-/* Estilos para el tema claro y oscuro */
-body.light {
-  --ion-background-color: white;
-  --ion-text-color: black;
+/* Estilos específicos para el modo oscuro */
+body.dark .custom-menu {
+  --background: #1e1e1e; /* Fondo del menú en modo oscuro */
 }
 
-body.dark {
-  --ion-background-color: #000;
-  --ion-text-color: white;
+body.dark .menu-title {
+  color: #ffffff;
+}
+
+body.dark .menu-content {
+  --ion-background-color: #2b2b2b; /* Fondo del contenido en modo oscuro */
+}
+
+body.dark ion-item {
+  --background: #3a3a3a; /* Fondo de los ítems en modo oscuro */
+  color: #ffffff;
+}
+
+body.dark ion-item:hover {
+  --background: #505050; /* Fondo de los ítems al pasar el cursor en modo oscuro */
+}
+
+body.dark ion-icon {
+  color: #ffffff;
+}
+body.dark ion-list {
+  background: #2b2b2b;
 }
 </style>
+
 
 
 
