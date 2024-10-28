@@ -1,6 +1,6 @@
 <template>
   <ion-page>
-    <MenuComponent />
+    <MenuComponent/>
     <ion-header>
       <ion-toolbar>
         <ion-title>PERFIL</ion-title>

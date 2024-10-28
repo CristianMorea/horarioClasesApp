@@ -1,11 +1,10 @@
 <template>
   <ion-page class="h-screen bg-white flex">
+    <MenuComponent/>
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button @click="openSettings">
-            <ion-icon :icon="settingsOutline"></ion-icon>
-          </ion-button>
+          <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title class="text-center text-2xl font-bold custom-title">Mi Horario</ion-title>
         <ion-buttons slot="end">
@@ -16,7 +15,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="flex-grow">
+    <ion-content id="main-content" class="flex-grow">
         <img :src="notaImage" @click="notaEdit" class="custom-button" style="cursor: pointer;"/>
 
       <div class="clases-container" v-if="clases.length > 0">
@@ -77,6 +76,7 @@
 </template>
 
 <script lang="ts">
+
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
@@ -85,12 +85,17 @@ import notaImage from '@/assets/img/Notas.png';
 import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
   IonItem, IonLabel, IonButton, IonCard, IonCardHeader,
-  IonCardTitle, IonCardContent, IonAlert, IonToast
+  IonCardTitle, IonCardContent, IonAlert, IonToast,IonMenuButton,IonButtons,IonIcon
 } from '@ionic/vue';
 import { settingsOutline, searchOutline } from 'ionicons/icons';
+import MenuComponent from '../components/MenuComponent.vue';
 
 export default defineComponent({
   components: {
+    IonIcon,
+    IonButtons,
+    IonMenuButton,
+    MenuComponent,
     IonPage,
     IonHeader,
     IonToolbar,
@@ -169,10 +174,7 @@ export default defineComponent({
       alertVisible.value = false;
     };
 
-    const openSettings = () => {
-      console.log('Configuraciones abiertas');
-      router.push('/configuracion'); // Cambia a la ruta deseada
-    };
+    
 
     const search = () => {
       console.log('Buscar acción iniciada');
@@ -197,7 +199,7 @@ export default defineComponent({
       confirmarEliminacion,
       eliminarClase,
       ponderadoPage,
-      openSettings,
+      
       search,
       abrirOtraVista, // Añadir la función aquí
       settingsOutline,
