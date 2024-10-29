@@ -22,8 +22,8 @@ const routes = [
 
   {
     path: '/',
-    name: 'Home',
-    component: HomePage,
+    name: 'horario',
+    component: HorarioPage,
     beforeEnter: requireAuth,
   },
   {
@@ -88,10 +88,6 @@ const routes = [
   {
     path: '/horarioeditar', 
     component: HorarioEditar
-  },
-  {
-    path: '/horario',
-    component: HorarioPage
   },
   {
     path: '/horariodetails/:id',
