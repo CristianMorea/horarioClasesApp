@@ -105,7 +105,7 @@ export default defineComponent({
           }
 
           console.log('Inicio de sesión exitoso para el usuario:', data.user);
-          router.push('/home'); // Redirigir a la página de inicio
+          router.push('/'); // Redirigir a la página de inicio
         }
       } catch (error) {
         alert('Hubo un error al intentar iniciar sesión. Intenta nuevamente.');
