@@ -17,6 +17,7 @@
 
     <ion-content id="main-content" class="flex-grow">
         <img :src="notaImage" @click="notaEdit" class="custom-button" style="cursor: pointer;"/>
+        <div class="font-bold text-title">MATERIAS</div>
 
       <div class="clases-container" v-if="clases.length > 0">
         <ion-item v-for="(clase, index) in clases" :key="index" class="item-clase">
@@ -199,7 +200,6 @@ export default defineComponent({
       confirmarEliminacion,
       eliminarClase,
       ponderadoPage,
-      
       search,
       abrirOtraVista, // Añadir la función aquí
       settingsOutline,
@@ -280,7 +280,7 @@ ion-content {
 
 .custom-button {
   width: 318px; /* Ajusta el ancho según tus necesidades */ 
-  height: 325px; /* Ajusta la altura del botón pequeño */
+  height: 250px; /* Ajusta la altura del botón pequeño */
   margin-top: 11px; /* Cambia este valor para desplazar hacia abajo */
   margin-left: 16%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
@@ -293,9 +293,18 @@ ion-icon {
   
 }
 
+.text-title {
+  margin-left: 32%;
+  margin-top: 15px; 
+  font-size: 30px;
+  font-weight: bold; /* Esto asegura que el texto esté en negrita */
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
+}
+
 .text-materia {
   color: #bb2a2a; /* Cambia este color al que desees */
   font-weight: bold; /* Esto asegura que el texto esté en negrita */
+
 }
 
 .ion-page {
