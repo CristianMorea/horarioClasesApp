@@ -24,13 +24,13 @@ const routes = [
     path: '/',
     name: 'horario',
     component: HorarioPage,
-    //beforeEnter: requireAuth,
+    beforeEnter: requireAuth,
   },
   {
     path: '/home',
     name: 'Home',
     component: HomePage,
-    //beforeEnter: requireAuth,
+    beforeEnter: requireAuth,
   },
   {
     path: '/registro',
