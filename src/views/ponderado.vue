@@ -107,7 +107,7 @@ export default defineComponent({
     const currentTime = ref(new Date().toLocaleTimeString());
 
     const horarioP = () => {
-      router.push('/horario'); // Redirection logic
+      router.push('/'); // Redirection logic
     };
 
     return {
@@ -171,7 +171,7 @@ ion-label p {
 
 /* Estilo del switch de promedio */
 .average-switch {
-  margin-top: 190px;
+  margin-top: 150px;
   display: flex;
   justify-content: center;
   font-size: 18px;

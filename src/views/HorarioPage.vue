@@ -143,7 +143,7 @@ export default defineComponent({
     };
 
     const editarP = () => {
-      router.push('/horarioeditar');
+      router.push('/crearhorario');
     };
 
     const ponderadoPage = () => {
@@ -241,7 +241,7 @@ ion-item.item-clase {
 }
 
 .vertical-button {
-  height: 150px; /* Ajusta la altura del botón vertical */
+  height: 130px; /* Ajusta la altura del botón vertical */
   width: 45px; /* Ajusta el ancho si es necesario */
   border-radius: 45px; /* Aplica el borde redondeado aquí */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
