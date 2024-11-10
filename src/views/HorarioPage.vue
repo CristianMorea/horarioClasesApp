@@ -28,7 +28,7 @@
             <p v-if="clase.ubicacion" class="text-gray-300"><strong>Ubicación:</strong> {{ clase.ubicacion }}</p>
             <p v-if="clase.profesor" class="text-gray-300"><strong>Profesor:</strong> {{ clase.profesor.nombre }}</p>
           </ion-label>
-          <ion-button slot="end" color="danger" @click="confirmarEliminacion(clase.id)">
+          <ion-button slot="end" color = danger  class = "button-edit" @click="confirmarEliminacion(clase.id)">
             Eliminar
           </ion-button>
         </ion-item>
@@ -143,7 +143,7 @@ export default defineComponent({
     };
 
     const editarP = () => {
-      router.push('/horarioeditar');
+      router.push('/crearhorario');
     };
 
     const ponderadoPage = () => {
@@ -241,7 +241,7 @@ ion-item.item-clase {
 }
 
 .vertical-button {
-  height: 150px; /* Ajusta la altura del botón vertical */
+  height: 130px; /* Ajusta la altura del botón vertical */
   width: 45px; /* Ajusta el ancho si es necesario */
   border-radius: 45px; /* Aplica el borde redondeado aquí */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
@@ -306,6 +306,12 @@ ion-icon {
   font-weight: bold; /* Esto asegura que el texto esté en negrita */
 
 }
+
+.button-edit{
+  color: #ffffff; /* Cambia este color al que desees */
+
+}
+
 
 .ion-page {
   background-color: #f0f0f0; /* Color de fondo */

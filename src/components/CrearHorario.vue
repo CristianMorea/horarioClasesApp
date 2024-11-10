@@ -1,7 +1,11 @@
 <template>
     <ion-page>
+
       <ion-header>
         <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button @click="$router.push('/')">Atrás</ion-button>
+          </ion-buttons>
           <ion-title>Crear Clase y Horario</ion-title>
         </ion-toolbar>
       </ion-header>

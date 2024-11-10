@@ -197,7 +197,7 @@ export default defineComponent({
     };
 
     const cerrar = () => {
-      router.push('/horario'); // Redirigir a la lista de horarios
+      router.push('/'); // Redirigir a la lista de horarios
     };
 
     onMounted(() => {
