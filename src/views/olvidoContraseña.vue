@@ -1,7 +1,5 @@
 <template>
   <ion-page class="forgot-password">
-    
-
     <ion-content class="bg-white">
       <LoginLayout
         :logo="gmailIcon"
@@ -38,7 +36,7 @@
 import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
-import FormButton from '../components/FormButton.vue'
+import FormButton from '../components/FormButton.vue';
 import TextInput from '../components/TextInput.vue';
 import LoginLayout from '../components/LoginLayout.vue';
 import gmailIcon from '../assets/iconos_registro/gmail.png';
@@ -47,7 +45,7 @@ export default defineComponent({
   components: {
     TextInput,
     LoginLayout,
-    FormButton
+    FormButton,
   },
   setup() {
     const email = ref('');
@@ -59,7 +57,6 @@ export default defineComponent({
       try {
         console.log('Enviando enlace de recuperación a:', email.value);
 
-        // Añade la URL de redirección
         const { error } = await supabase.auth.resetPasswordForEmail(email.value, {
           redirectTo: 'http://localhost:5173/cambiarPassword',
         });
@@ -93,19 +90,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-.forgot-password {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
-ion-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>
