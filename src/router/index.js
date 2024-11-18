@@ -16,6 +16,9 @@ import RecordatorioConfiguracion from '../components/RecordatorioConfiguracion.v
 import UpdatePerfil from '../views/updatePerfil.vue';
 import BlogPage from '../views/BlogPage.vue';
 import FiltersPage from '../views/FiltersPage.vue';
+import calificaciones from '../views/calificaciones.vue';
+import CardCalificaciones from '../components/CardCalificaciones.vue';
+
 
 const routes = [
 
@@ -95,7 +98,20 @@ const routes = [
     path: '/modificar-perfil',
     name: 'ModificarPerfil',
     component: UpdatePerfil
+  },
+  {
+    path: '/calificaciones',
+    name: 'calificaciones',
+    component: calificaciones
+    
+  },
+  {
+    path: '/card',
+    name: 'card',
+    component: CardCalificaciones
+    
   }
+  
   
 ];
 
