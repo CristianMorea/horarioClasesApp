@@ -67,7 +67,7 @@ const routes = [
     component: CambiarContraseña,
   },
   {
-    path: '/crearhorario', /*Falta*/
+    path: '/crearhorario',
     component: CrearHorario
   },
   {
@@ -79,11 +79,11 @@ const routes = [
     component: PruebaMenu
   },
   {
-    path: '/horarioeditar', /*Falta*/
+    path: '/horarioeditar', 
     component: HorarioEditar
   },
   {
-    path: '/horariodetails/:id', /*Falta*/
+    path: '/horariodetails/:id',
     name: 'HorarioDetalle',
     component: HorarioDetails
   },
