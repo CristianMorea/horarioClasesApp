@@ -21,12 +21,12 @@ import CardCalificaciones from '../components/CardCalificaciones.vue';
 
 
 const routes = [
-
   {
     path: '/',
     name: 'loginPage',
     component: LoginPage,
   },
+  
   {
     path: '/home',
     name: 'Home',

@@ -66,19 +66,14 @@
         @didDismiss="() => (mensaje = '')"
       />
     </ion-content>
-    
+
     <div class="left-button-container">
       <img :src="lapizImage" @click="editarP" class="button-image" style="cursor: pointer;"/>
       <ion-button color="danger" class="rounded-button vertical-button" @click="ponderadoPage">
         <div class="vertical-text font-bold text-ponde">PONDERADO</div>
       </ion-button>
     </div>
-
-    <!-- Imagen al final de la página -->
-    <div class="bottom-image-container2">
-      <img :src="calendarioImage" @click="calendarioPage" class="button-image2" style="cursor: pointer;"/>
-    </div>
-
+    <TabBar />
   </ion-page>
 </template>
 
@@ -88,7 +83,6 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
 import lapizImage from '@/assets/img/Lapiz.png';
-import calendarioImage from '@/assets/img/botonCalendario.png';
 import notaImage from '@/assets/img/Notas.png';
 import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
@@ -97,9 +91,11 @@ import {
 } from '@ionic/vue';
 import { settingsOutline, searchOutline } from 'ionicons/icons';
 import MenuComponent from '../components/MenuComponent.vue';
+import TabBar from '../components/TabBar.vue';
 
 export default defineComponent({
   components: {
+    TabBar,
     IonIcon,
     IonButtons,
     IonMenuButton,
@@ -127,7 +123,6 @@ export default defineComponent({
     const router = useRouter();
     const notaImageRef = ref(notaImage);
     const lapizImageRef = ref(lapizImage);
-    const calendarioImageRef = ref(calendarioImage);
 
     const cargarHorario = async () => {
       const { data, error } = await supabase
@@ -146,10 +141,6 @@ export default defineComponent({
       router.push(`/horariodetails/${id}`);
     };
 
-    const search = () => {
-      router.push('/filter');
-    };
-
     const notaEdit = () => {
       router.push('/blog');
     };
@@ -162,8 +153,8 @@ export default defineComponent({
       router.push('/ponderado');
     };
 
-    const calendarioPage = () => {
-      router.push('/calendario'); // Cambia a la ruta deseada para abrir la nueva vista
+    const abrirOtraVista = () => {
+      router.push('/otra-vista'); // Cambia a la ruta deseada para abrir la nueva vista
     };
 
     const confirmarEliminacion = (id) => {
@@ -187,7 +178,13 @@ export default defineComponent({
       alertVisible.value = false;
     };
 
+    
 
+    const search = () => {
+      console.log('Buscar acción iniciada');
+      // Aquí puedes abrir un cuadro de búsqueda o filtrar la lista de materias
+      // router.push('/buscar'); // Cambia a la ruta deseada
+    };
 
     onMounted(() => {
       cargarHorario();
@@ -203,12 +200,11 @@ export default defineComponent({
       editarP,
       notaImage : notaImageRef,
       lapizImage: lapizImageRef,
-      calendarioImage: calendarioImageRef,
       confirmarEliminacion,
       eliminarClase,
       ponderadoPage,
-      calendarioPage,
       search,
+      abrirOtraVista, // Añadir la función aquí
       settingsOutline,
       searchOutline,
     };
@@ -285,18 +281,6 @@ ion-content {
   margin: 0; /* Elimina el margen por defecto */
 }
 
-.bottom-image-container2 {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    transform: translateX(-50%);
-    padding: 10px;
-    height: auto;
-    border-radius: 15px;
-    width: 70px; /* Ajusta el ancho según tus necesidades */ 
-  }
-
 .custom-button {
   width: 318px; /* Ajusta el ancho según tus necesidades */ 
   height: 250px; /* Ajusta la altura del botón pequeño */
@@ -330,6 +314,7 @@ ion-icon {
   color: #ffffff; /* Cambia este color al que desees */
 
 }
+
 
 .ion-page {
   background-color: #f0f0f0; /* Color de fondo */

@@ -1,18 +1,17 @@
 <template>
   <ion-menu content-id="main-content" side="start" class="custom-menu">
     <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title class="menu-title">Menú</ion-title>
+      <ion-toolbar class="menu-header">
+        <div class="logo-container">
+          <img src="../assets/img/login_logo.png" alt="Logo" class="app-logo" />
+          <span class="app-name">EduTimble</span>
+        </div>
       </ion-toolbar>
     </ion-header>
 
     <ion-content class="menu-content">
-      <ion-list>
+      <ion-list lines="none">
         <ion-menu-toggle>
-          <ion-item button @click="goToPerfil">
-            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-            <ion-label>Perfil</ion-label>
-          </ion-item>
           <ion-item button>
             <ion-icon slot="start" name="language-outline"></ion-icon>
             <ion-label>Idioma</ion-label>
@@ -36,11 +35,10 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { menuController } from '@ionic/core';
-import { IonMenu, IonContent, IonList, IonMenuToggle, IonItem, IonLabel, IonIcon, IonHeader, IonToolbar, IonTitle } from '@ionic/vue';
+import { IonMenu, IonContent, IonList, IonMenuToggle, IonItem, IonLabel, IonIcon, IonHeader, IonToolbar } from '@ionic/vue';
 
 export default defineComponent({
   components: {
-    IonTitle,
     IonMenu,
     IonContent,
     IonList,
@@ -72,11 +70,6 @@ export default defineComponent({
       router.push('/');
     };
 
-    const goToPerfil = async () => {
-      await menuController.close();
-      router.push('/modificar-perfil');
-    };
-
     const toggleTheme = () => {
       isDarkMode.value = !isDarkMode.value;
       document.body.classList.toggle('dark', isDarkMode.value);
@@ -84,70 +77,102 @@ export default defineComponent({
       localStorage.setItem('tema', isDarkMode.value ? 'dark' : 'light');
     };
 
-    return { handleLogout, goToPerfil, toggleTheme, isDarkMode };
-  }
+    return { handleLogout, toggleTheme, isDarkMode };
+  },
 });
 </script>
 
 <style scoped>
+/* Fondo del menú */
 .custom-menu {
-  --background: #f0f4f8;
+  --background: var(--ion-color-light, #f5f5f5);
 }
 
-.menu-title {
+/* Encabezado con logo y nombre */
+.menu-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: var(--ion-color-light, #ffffff);
+  border-bottom: 1px solid var(--ion-color-medium, #ccc);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.app-name {
+  font-size: 1.2rem;
   font-weight: bold;
-  color: white;
-  font-size: 1.5rem;
 }
 
-.menu-content {
-  --ion-background-color: #ffffff;
-}
-
+/* Fondo y estilo de los ítems */
 ion-item {
-  --background: #e3f2fd;
-  border-radius: 8px;
-  margin: 10px 0;
-  transition: background-color 0.3s;
+  --background: transparent;
+  color: var(--ion-color-medium, #333);
+  border-radius: 0;
+  padding: 8px 16px;
+  font-size: 1rem;
+  transition: color 0.3s, background-color 0.3s;
 }
 
 ion-item:hover {
-  --background: #bbdefb;
+  --background: var(--ion-color-primary-shade, #e0e0e0);
+  color: var(--ion-color-primary, #3880ff);
 }
 
+/* Íconos */
 ion-icon {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  color: var(--ion-color-medium, #888);
+  transition: color 0.3s;
 }
 
-/* Estilos específicos para el modo oscuro */
+ion-item:hover ion-icon {
+  color: var(--ion-color-primary, #3880ff);
+}
+
+/* Estilo del modo oscuro */
 body.dark .custom-menu {
-  --background: #1e1e1e; /* Fondo del menú en modo oscuro */
+  --background: #1e1e1e;
 }
 
-body.dark .menu-title {
+body.dark .menu-header {
+  background: #2b2b2b;
+  border-bottom: 1px solid #444;
+}
+
+body.dark .app-name {
   color: #ffffff;
-}
-
-body.dark .menu-content {
-  --ion-background-color: #2b2b2b; /* Fondo del contenido en modo oscuro */
 }
 
 body.dark ion-item {
-  --background: #3a3a3a; /* Fondo de los ítems en modo oscuro */
-  color: #ffffff;
+  color: #e0e0e0;
 }
 
 body.dark ion-item:hover {
-  --background: #505050; /* Fondo de los ítems al pasar el cursor en modo oscuro */
+  --background: #333333;
+  color: var(--ion-color-light, #ffffff);
 }
 
 body.dark ion-icon {
-  color: #ffffff;
+  color: #b0b0b0;
 }
-body.dark ion-list {
-  background: #2b2b2b;
+
+body.dark ion-item:hover ion-icon {
+  color: var(--ion-color-light, #ffffff);
 }
 </style>
+
 
 
 
