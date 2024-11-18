@@ -19,13 +19,13 @@ import UpdatePerfil from '../views/updatePerfil.vue';
 import BlogPage from '../views/BlogPage.vue';
 
 const routes = [
-
   {
     path: '/',
     name: 'horario',
     component: HorarioPage,
     beforeEnter: requireAuth,
   },
+  
   {
     path: '/home',
     name: 'Home',

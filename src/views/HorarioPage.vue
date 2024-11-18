@@ -73,6 +73,7 @@
         <div class="vertical-text font-bold text-ponde">PONDERADO</div>
       </ion-button>
     </div>
+    <TabBar />
   </ion-page>
 </template>
 
@@ -90,9 +91,11 @@ import {
 } from '@ionic/vue';
 import { settingsOutline, searchOutline } from 'ionicons/icons';
 import MenuComponent from '../components/MenuComponent.vue';
+import TabBar from '../components/TabBar.vue';
 
 export default defineComponent({
   components: {
+    TabBar,
     IonIcon,
     IonButtons,
     IonMenuButton,

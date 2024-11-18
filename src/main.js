@@ -5,8 +5,8 @@ import { IonicVue } from '@ionic/vue';
 import store from './service/Store'; // Asegúrate de que la ruta sea correcta
 import { addIcons } from 'ionicons';
 
-import { personCircleOutline, languageOutline, colorPaletteOutline, logOutOutline,sunnyOutline,moonOutline  } from 'ionicons/icons';
-
+import { personCircleOutline, languageOutline, colorPaletteOutline, logOutOutline,sunnyOutline,moonOutline, homeOutline, personOutline, calculatorOutline } from 'ionicons/icons';
+import 'ionicons';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -47,7 +47,10 @@ const app = createApp(App)
     colorPaletteOutline,
     logOutOutline,
     sunnyOutline,
-    moonOutline 
+    moonOutline,
+    homeOutline, 
+    personOutline, 
+    calculatorOutline 
   });
 
 router.isReady().then(() => {

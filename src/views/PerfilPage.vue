@@ -63,6 +63,7 @@
         </ion-button>
       </div>
     </ion-content>
+    <TabBar />
   </ion-page>
 </template>
 
@@ -70,9 +71,11 @@
 import { defineComponent } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, IonIcon, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonTextarea, IonList, IonItem, IonLabel, IonInput } from '@ionic/vue';
 import MenuComponent from '../components/MenuComponent.vue';;
+import TabBar from '../components/TabBar.vue';
 
 export default defineComponent({
   components: {
+    TabBar,
     MenuComponent,
     IonPage,
     IonHeader,
