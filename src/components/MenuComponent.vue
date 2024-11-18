@@ -67,7 +67,7 @@ export default defineComponent({
 
     const handleLogout = async () => {
       await store.dispatch('logout');
-      router.push('/login');
+      router.push('/');
     };
 
     const toggleTheme = () => {

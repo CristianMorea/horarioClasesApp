@@ -2,7 +2,7 @@
   <ion-page class="h-screen bg-white">
     <ion-header>
       <ion-toolbar>
-        <ion-title class="text-center text-2xl font-bold text-white">EDITAR Y VISUALIZACION</ion-title>
+        <ion-title class="text-center text-2xl font-bold custom-title">EDITAR</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -63,7 +63,7 @@
           </ion-select>
         </ion-item>
 
-        <ion-button expand="full" type="submit">Guardar Cambios</ion-button>
+        <ion-button class="centrar-boton2" type="submit">Guardar Cambios</ion-button>
 
         <ion-alert
           v-if="mensaje"
@@ -74,7 +74,8 @@
         ></ion-alert>
       </form>
 
-      <ion-button expand="full" @click="cerrar">Cerrar</ion-button>
+      <ion-button @click="cerrar" class="centrar-boton">Cerrar</ion-button>
+
     </ion-content>
   </ion-page>
 </template>
@@ -197,7 +198,7 @@ export default defineComponent({
     };
 
     const cerrar = () => {
-      router.push('/'); // Redirigir a la lista de horarios
+      router.push('/horario'); // Redirigir a la lista de horarios
     };
 
     onMounted(() => {
@@ -219,6 +220,108 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Estilos personalizados si es necesario */
-</style>
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
 
+body {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
+}
+
+
+ion-title {
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+ion-content {
+  padding: 1rem;
+  
+}
+
+
+:root {
+  --ion-color-step-50: #ffffff; /* Fondo blanco para temas claros */
+}
+
+.dark {
+  --ion-color-step-50: #000000; /* Fondo negro para temas oscuros */
+}
+
+ion-card {
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  border: 2px solid #bb2a2a; /* Color del borde */
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 10px; /* Espaciado interno para hacer que el borde se vea mejor */
+}
+
+ion-card-header {
+  border-bottom: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+ion-card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+ion-item {
+  --border-color: rgba(0, 0, 0, 0.08);
+  margin: 0.5rem 0;
+  border-radius: 8px;
+  border: 2px solid #bb2a2a; /* Color del borde */
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+ion-item:hover {
+  cursor: pointer;
+}
+
+form {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+ion-button {
+  --background: #a22626;
+  --background-activated: #a22626;
+  --border-radius: 20px;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+ion-button.expand-full {
+  margin-bottom: 1rem;
+}
+
+.custom-title {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente al título */
+}
+
+.text-materia {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
+}
+
+ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
+  font-family: 'Architects Daughter', cursive;
+}
+
+.centrar-boton {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  margin: 0 auto; /* Asegura que el botón se mantiene centrado */
+  width: 30%; /* Asegura que el contenedor del botón ocupe todo el ancho */
+  color: white;
+}
+
+.centrar-boton2 {
+  color: white;
+}
+
+.text-ponde {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
+}
+</style>

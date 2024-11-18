@@ -2,25 +2,30 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Configurar Recordatorio</ion-title>
+        <ion-buttons slot="start">
+          <ion-button @click="$router.push('/horario')" color="primary">
+            <img src='@/assets/img/back.png' name="arrow-back" alt="Botón Horario" style="width: 24px; height: 24px;" />
+          </ion-button>
+        </ion-buttons>
+        <ion-title class="text-center text-2xl font-bold custom-title">RECORDATORIO</ion-title>
       </ion-toolbar>
     </ion-header>
 
     <ion-content>
-      <ion-card>
+      <ion-card class="recordatorio-card">
         <ion-card-header>
           <ion-card-title>Configura tu recordatorio</ion-card-title>
         </ion-card-header>
         <ion-card-content>
           <ion-item>
-            <ion-label position="floating">Selecciona la hora</ion-label>
+            <ion-label position="stacked">Selecciona la hora</ion-label>
             <ion-input
               v-model="horaSeleccionada"
               type="time"  
               @ionChange="onHoraChange"
             ></ion-input>
           </ion-item>
-          <ion-button expand="full" @click="guardarRecordatorio">Guardar Recordatorio</ion-button>
+          <ion-button class="butonR" @click="guardarRecordatorio">Guardar Recordatorio</ion-button>
           <p v-if="mensaje">{{ mensaje }}</p>
         </ion-card-content>
       </ion-card>
@@ -63,7 +68,7 @@ export default defineComponent({
       const { data, error } = await supabase.auth.getSession();
       if (error || !data.session) {
         console.error('Error al obtener la sesión:', error);
-        router.push('/login');
+        router.push('/');
         return;
       }
     });
@@ -79,7 +84,7 @@ export default defineComponent({
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       if (sessionError || !sessionData.session) {
         console.log('No hay sesión activa, redirigiendo...');
-        router.push('/login');
+        router.push('/');
         return;
       }
 
@@ -121,7 +126,44 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Añade cualquier estilo adicional aquí si es necesario */
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+
+body {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
+}
+
+ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
+  font-family: 'Architects Daughter', cursive;
+}
+
+.butonR {
+  color: white;
+}
+
+ion-button {
+  --background: #a22626;
+  --background-activated: #a22626;
+  --border-radius: 20px;
+  margin-top: 1rem;
+}
+
+.recordatorio-card {
+  border: 2px solid #a32323; /* Borde rojo */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 16px; /* Espaciado interno */
+}
+
+.custom-title {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente al título */
+}
+
+.text-materia {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
+}
+
+.text-ponde {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
+}
 </style>
 
 

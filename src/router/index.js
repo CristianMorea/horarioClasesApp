@@ -2,11 +2,9 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { requireAuth } from './authGuard';
 import HomePage from '../views/HomePage.vue';
 import RegistroPage from '../views/RegistroPage.vue';
-import PerfilPage from '../views/PerfilPage.vue';
 import Ponderado from '../views/ponderado.vue';
 import LoginPage from '../views/LoginPage.vue';
 import CalendarioPage from '../views/CalendarioPage.vue';
-import FechaPage from '../views/FechaPage.vue';
 import OlvidoContraseña from '../views/olvidoContraseña.vue';
 import CambiarContraseña from '../views/CambiarContraseña.vue'
 import CrearHorario from '../components/CrearHorario.vue';
@@ -17,13 +15,16 @@ import HorarioDetails from '../components/HorarioDetails.vue';
 import RecordatorioConfiguracion from '../components/RecordatorioConfiguracion.vue';
 import UpdatePerfil from '../views/updatePerfil.vue';
 import BlogPage from '../views/BlogPage.vue';
+import FiltersPage from '../views/FiltersPage.vue';
+import calificaciones from '../views/calificaciones.vue';
+import CardCalificaciones from '../components/CardCalificaciones.vue';
+
 
 const routes = [
   {
     path: '/',
-    name: 'horario',
-    component: HorarioPage,
-    beforeEnter: requireAuth,
+    name: 'loginPage',
+    component: LoginPage,
   },
   
   {
@@ -37,11 +38,10 @@ const routes = [
     name: 'Registro Login',
     component: RegistroPage,
   },
-  
   {
-    path: '/perfil',
-    name: 'Perfil',
-    component: PerfilPage,
+    path: '/filter',
+    name: 'Filtro de busquedas',
+    component: FiltersPage,
   },
   {
     path: '/ponderado',
@@ -49,19 +49,15 @@ const routes = [
     component: Ponderado,
   },
   {
-    path: '/login',
-    name: 'loginPage',
-    component: LoginPage,
+    path: '/horario',
+    name: 'horario',
+    component: HorarioPage,
+    beforeEnter: requireAuth,
   },
   {
     path: '/calendario',
     name: 'Calendario',
     component: CalendarioPage,
-  },
-  {
-    path: '/fecha',
-    name: 'Fecha',
-    component: FechaPage,
   },
   {
     path: '/olvidoPassword',
@@ -74,7 +70,7 @@ const routes = [
     component: CambiarContraseña,
   },
   {
-    path: '/crearhorario', 
+    path: '/crearhorario',
     component: CrearHorario
   },
   {
@@ -102,7 +98,20 @@ const routes = [
     path: '/modificar-perfil',
     name: 'ModificarPerfil',
     component: UpdatePerfil
+  },
+  {
+    path: '/calificaciones',
+    name: 'calificaciones',
+    component: calificaciones
+    
+  },
+  {
+    path: '/card',
+    name: 'card',
+    component: CardCalificaciones
+    
   }
+  
   
 ];
 
