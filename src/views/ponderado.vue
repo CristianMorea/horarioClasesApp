@@ -1,24 +1,22 @@
 <template>
   <ion-page>
+    <!-- Asegúrate de que el content-id del menú coincida con el id del contenido -->
+    <MenuComponent content-id="main-content" />
+    
     <!-- Header con el engranaje y el icono de búsqueda -->
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-button>
-            <ion-icon :icon="settingsOutline"></ion-icon>
+            <ion-menu-button></ion-menu-button>
           </ion-button>
         </ion-buttons>
         <ion-title></ion-title>
-        <ion-buttons slot="end">
-          <ion-button>
-            <ion-icon :icon="searchOutline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
     <!-- Contenido de la página -->
-    <ion-content class="ion-padding">
+    <ion-content id="main-content" class="ion-padding"> <!-- Aquí se asigna el id 'main-content' -->
       <!-- Título "PONDERADO" -->
       <div class="ponderado-title">
         PONDERADO
@@ -48,7 +46,6 @@
 
       <!-- Switch para promedio -->
       <ion-item lines="none" class="average-switch" @ionChange="horarioP">
-        <ion-label>PROMEDIO</ion-label>
         <ion-toggle v-model="showAverage"></ion-toggle>
       </ion-item>
     </ion-content>
@@ -67,6 +64,7 @@ import {
   IonIcon,
   IonTitle,
   IonContent,
+  IonMenuButton,
   IonList,
   IonCard,
   IonItem,
@@ -76,6 +74,7 @@ import {
   IonToggle,
 } from '@ionic/vue';
 import { settingsOutline, searchOutline } from 'ionicons/icons';
+import MenuComponent from "../components/MenuComponent.vue";
 
 export default defineComponent({
   components: {
@@ -85,8 +84,9 @@ export default defineComponent({
     IonButtons,
     IonButton,
     IonIcon,
+    MenuComponent,
+    IonMenuButton,
     IonTitle,
-    IonContent,
     IonList,
     IonCard,
     IonItem,
@@ -171,15 +171,16 @@ ion-label p {
 
 /* Estilo del switch de promedio */
 .average-switch {
-  margin-top: 150px;
+  margin-top: 185px;
   display: flex;
   justify-content: center;
   font-size: 18px;
 }
 
 ion-toggle {
-  --handle-background: #ff0000;
-  --background-checked: #000;
+  --handle-background: hsl(0, 90%, 57%);
+  --background-checked: #000000;
+  margin-left: 135px;
 }
 
 ion-button {

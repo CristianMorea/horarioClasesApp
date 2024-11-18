@@ -2,11 +2,9 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { requireAuth } from './authGuard';
 import HomePage from '../views/HomePage.vue';
 import RegistroPage from '../views/RegistroPage.vue';
-import PerfilPage from '../views/PerfilPage.vue';
 import Ponderado from '../views/ponderado.vue';
 import LoginPage from '../views/LoginPage.vue';
 import CalendarioPage from '../views/CalendarioPage.vue';
-import FechaPage from '../views/FechaPage.vue';
 import OlvidoContraseña from '../views/olvidoContraseña.vue';
 import CambiarContraseña from '../views/CambiarContraseña.vue'
 import CrearHorario from '../components/CrearHorario.vue';
@@ -17,6 +15,7 @@ import HorarioDetails from '../components/HorarioDetails.vue';
 import RecordatorioConfiguracion from '../components/RecordatorioConfiguracion.vue';
 import UpdatePerfil from '../views/updatePerfil.vue';
 import BlogPage from '../views/BlogPage.vue';
+import FiltersPage from '../views/FiltersPage.vue';
 
 const routes = [
 
@@ -37,11 +36,10 @@ const routes = [
     name: 'Registro Login',
     component: RegistroPage,
   },
-  
   {
-    path: '/perfil',
-    name: 'Perfil',
-    component: PerfilPage,
+    path: '/filter',
+    name: 'Filtro de busquedas',
+    component: FiltersPage,
   },
   {
     path: '/ponderado',
@@ -59,11 +57,6 @@ const routes = [
     component: CalendarioPage,
   },
   {
-    path: '/fecha',
-    name: 'Fecha',
-    component: FechaPage,
-  },
-  {
     path: '/olvidoPassword',
     name: 'olvidoContraseña',
     component: OlvidoContraseña,
@@ -74,7 +67,7 @@ const routes = [
     component: CambiarContraseña,
   },
   {
-    path: '/crearhorario', 
+    path: '/crearhorario', /*Falta*/
     component: CrearHorario
   },
   {
@@ -86,11 +79,11 @@ const routes = [
     component: PruebaMenu
   },
   {
-    path: '/horarioeditar', 
+    path: '/horarioeditar', /*Falta*/
     component: HorarioEditar
   },
   {
-    path: '/horariodetails/:id',
+    path: '/horariodetails/:id', /*Falta*/
     name: 'HorarioDetalle',
     component: HorarioDetails
   },
