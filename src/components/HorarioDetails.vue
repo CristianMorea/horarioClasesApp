@@ -66,7 +66,7 @@ export default defineComponent({
 
     // Función para cerrar los detalles y volver al listado
     const cerrarDetalle = () => {
-      router.push('/'); // Cambia la ruta a donde quieres redirigir al cerrar
+      router.push('/horario'); // Cambia la ruta a donde quieres redirigir al cerrar
     };
 
     onMounted(() => {

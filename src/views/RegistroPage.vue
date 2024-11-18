@@ -136,7 +136,7 @@ export default defineComponent({
     };
 
     const handleVolver = () => {
-      router.push('/login');
+      router.push('/');
     };
 
     return {

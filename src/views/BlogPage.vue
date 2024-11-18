@@ -59,7 +59,7 @@ export default {
     const router = useRouter(); // Obtener el router para la navegación
 
     const cerrar = () => {
-      router.push('/'); // Redirigir a la lista de horarios
+      router.push('/horario'); // Redirigir a la lista de horarios
     };
 
     return { cerrar }; // Hacer la función cerrar disponible en la plantilla

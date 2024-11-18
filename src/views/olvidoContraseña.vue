@@ -77,7 +77,7 @@ export default defineComponent({
     };
 
     const goBackToLogin = () => {
-      router.push('/login');
+      router.push('/');
     };
 
     return {

@@ -163,7 +163,7 @@
       };
   
       const redirigirAhorarioPage = () => {
-        router.push('/'); // Navega a la página de horario
+        router.push('/horario'); // Navega a la página de horario
       };
   
       return {
