@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button @click="$router.push('/')" color="primary">
+          <ion-button @click="$router.push('/horario')" color="primary">
             <img src='@/assets/img/back.png' name="arrow-back" alt="Botón Horario" style="width: 24px; height: 24px;" />
           </ion-button>
         </ion-buttons>
@@ -68,7 +68,7 @@ export default defineComponent({
       const { data, error } = await supabase.auth.getSession();
       if (error || !data.session) {
         console.error('Error al obtener la sesión:', error);
-        router.push('/login');
+        router.push('/');
         return;
       }
     });
@@ -84,7 +84,7 @@ export default defineComponent({
       const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
       if (sessionError || !sessionData.session) {
         console.log('No hay sesión activa, redirigiendo...');
-        router.push('/login');
+        router.push('/');
         return;
       }
 

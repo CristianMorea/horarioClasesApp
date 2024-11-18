@@ -24,9 +24,8 @@ const routes = [
 
   {
     path: '/',
-    name: 'horario',
-    component: HorarioPage,
-    beforeEnter: requireAuth,
+    name: 'loginPage',
+    component: LoginPage,
   },
   {
     path: '/home',
@@ -50,9 +49,10 @@ const routes = [
     component: Ponderado,
   },
   {
-    path: '/login',
-    name: 'loginPage',
-    component: LoginPage,
+    path: '/horario',
+    name: 'horario',
+    component: HorarioPage,
+    beforeEnter: requireAuth,
   },
   {
     path: '/calendario',
