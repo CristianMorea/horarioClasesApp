@@ -2,12 +2,12 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Detalles de la Clase</ion-title>
+        <ion-title class="text-center text-2xl font-bold custom-title">DETALLES</ion-title>
       </ion-toolbar>
     </ion-header>
     
     <ion-content v-if="clase">
-      <ion-card>
+      <ion-card class="custom-card">
         <ion-card-header>
           <ion-card-title>{{ clase.nombre }}</ion-card-title>
         </ion-card-header>
@@ -19,13 +19,16 @@
         </ion-card-content>
       </ion-card>
 
-      <!-- Botones de Modificar y Cerrar -->
-      <ion-button expand="full" @click="editarHorario">Modificar</ion-button>
-      <ion-button expand="full" color="secondary" @click="configurarRecordatorio">Configurar Recordatorio</ion-button>
-      <ion-button expand="full" color="primary" @click="cerrarDetalle">Cerrar</ion-button>
+      <!-- Contenedor de botones -->
+      <div class="button-container">
+        <ion-button class="rounded-button" @click="editarHorario">Modificar</ion-button>
+        <ion-button class="rounded-button" @click="configurarRecordatorio">Configurar Recordatorio</ion-button>
+        <ion-button class="rounded-button small-button" @click="cerrarDetalle">Cerrar</ion-button>
+      </div>
     </ion-content>
   </ion-page>
 </template>
+
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
@@ -42,7 +45,7 @@ export default defineComponent({
       const { id } = route.params; // Obtener el ID de la clase desde la URL
       const { data, error } = await supabase
         .from('clases')
-        .select('*, horarios_clases(dia_de_clase)')
+        .select('*, horarios_clases(dia_de_clase)') // Obtiene los datos de la clase y horarios
         .eq('id', id)
         .single(); // Obtener una sola clase
 
@@ -80,3 +83,47 @@ export default defineComponent({
 });
 </script>
 
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+
+/* Fuente personalizada */
+body {
+  font-family: 'Architects Daughter', cursive;
+}
+
+ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
+  font-family: 'Architects Daughter', cursive;
+}
+
+
+/* Estilo del ion-card */
+.custom-card {
+  --background: transparent;
+  border: 2px solid #bb2a2a;
+  border-radius: 20px;
+}
+
+.custom-card ion-card-title {
+  color: #bb2a2a;
+  text-transform: uppercase; /* Convierte el texto a mayúsculas */
+  font-weight: bold; 
+}
+
+/* Contenedor de los botones */
+.button-container {
+  display: flex;
+  flex-direction: column; /* Alinea botones verticalmente */
+  align-items: center; /* Centra horizontalmente */
+  margin-top: 20px; /* Espaciado superior */
+}
+
+/* Botones personalizados */
+.rounded-button {
+  margin-bottom: 10px; /* Espacio entre botones */
+  --background: #bb2a2a;
+  --color: white; /* Texto blanco */
+  width: 80%; /* Ancho del botón */
+  max-width: 300px; /* Ancho máximo del botón */
+  text-align: center;
+}
+</style>
