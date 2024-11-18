@@ -107,7 +107,7 @@ export default defineComponent({
     const currentTime = ref(new Date().toLocaleTimeString());
 
     const horarioP = () => {
-      router.push('/'); // Redirection logic
+      router.push('/horario'); // Redirection logic
     };
 
     return {

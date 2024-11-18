@@ -86,7 +86,7 @@ export default defineComponent({
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
         if (sessionError || !sessionData?.session) {
           console.error('Usuario no logueado');
-          router.push('/login'); 
+          router.push('/'); 
           return;
         }
 
@@ -111,7 +111,7 @@ export default defineComponent({
     };
 
     const cerrar = () => {
-      router.push('/'); // Cambia '/ruta-de-cierre' por la ruta deseada
+      router.push('/horario'); // Cambia '/ruta-de-cierre' por la ruta deseada
     };
 
     const guardarCambios = async () => {
@@ -119,7 +119,7 @@ export default defineComponent({
         const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
         if (sessionError || !sessionData?.session) {
           console.error('Usuario no logueado');
-          router.push('/login');
+          router.push('/');
           return;
         }
 

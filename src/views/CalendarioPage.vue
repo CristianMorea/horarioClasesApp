@@ -149,7 +149,7 @@ export default defineComponent({
     );
 
     const horarioPage = () => {
-      router.push('/'); 
+      router.push('/horario'); 
     };
 
     // Filtrar eventos por fecha seleccionada

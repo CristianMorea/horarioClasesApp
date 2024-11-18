@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button @click="$router.push('/')" color="primary">
+          <ion-button @click="$router.push('/horario')" color="primary">
             <img src='@/assets/img/back.png' name="arrow-back" alt="Botón Horario" style="width: 24px; height: 24px;" />
           </ion-button>
         </ion-buttons>

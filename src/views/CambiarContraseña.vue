@@ -125,7 +125,7 @@ export default defineComponent({
         // Cerrar la sesión después de cambiar la contraseña
         await supabase.auth.signOut();
         
-        router.push('/login');
+        router.push('/');
       } catch (error) {
         console.error('Error inesperado al cambiar la contraseña:', error);
         alert('Hubo un error al intentar cambiar la contraseña. Intenta nuevamente.');
@@ -139,7 +139,7 @@ export default defineComponent({
       const token = getDecodedToken();
       if (!token) {
         alert('No se encontró un token válido en la URL.');
-        router.push('/login');
+        router.push('/');
       }
     });
 
