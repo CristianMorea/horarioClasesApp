@@ -23,6 +23,10 @@ import CardCalificaciones from '../components/CardCalificaciones.vue';
 const routes = [
   {
     path: '/',
+    redirect: '/horario'
+  },
+  {
+    path: '/login',
     name: 'loginPage',
     component: LoginPage,
   },

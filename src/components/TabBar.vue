@@ -5,13 +5,13 @@
         <ion-icon name="home-outline"></ion-icon>
         <ion-label>Inicio</ion-label>
       </ion-tab-button>
-      <ion-tab-button @click="navigateTo('/perfil')" class="tab-button">
+      <ion-tab-button @click="navigateTo('/modificar-perfil')" class="tab-button">
         <ion-icon name="person-outline"></ion-icon>
         <ion-label>Perfil</ion-label>
       </ion-tab-button>
-      <ion-tab-button @click="navigateTo('/ponderado')" class="tab-button">
+      <ion-tab-button @click="navigateTo('/calificaciones')" class="tab-button">
         <ion-icon name="calculator-outline"></ion-icon>
-        <ion-label>Ponderado</ion-label>
+        <ion-label>calificaciones</ion-label>
       </ion-tab-button>
     </div>
   </ion-tab-bar>
@@ -43,6 +43,7 @@ export default {
 </script>
 
 <style scoped>
+
 /* Contenedor de la barra de pestañas */
 .tab-container {
   display: flex;
@@ -57,7 +58,8 @@ export default {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: #000; /* Fondo negro */
+  background-color: solid rgb(255, 252, 252); /* Fondo negro */
+  border: 3px solid #646060;
   width: 90%; /* Ancho adaptable */
   height: 70px; /* Altura de la isla */
   border-radius: 35px; /* Bordes redondeados para elipse */
@@ -70,7 +72,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #fff; /* Botones blancos */
+  color: #050505; /* Botones blancos */
   font-weight: bold;
   text-align: center;
   flex-grow: 1; /* Distribución uniforme dentro de la isla */
@@ -79,7 +81,7 @@ export default {
 .tab-button ion-icon {
   font-size: 1.8rem; /* Tamaño grande para los iconos */
   margin-bottom: 5px; /* Espaciado entre icono y texto */
-  color: #fff; /* Iconos blancos */
+  color: #0a0a0a; /* Iconos blancos */
 }
 
 .tab-button ion-label {
@@ -91,6 +93,7 @@ export default {
   transform: scale(0.1); /* Efecto de reducción al presionar */
   transition: transform 0.2s ease;
 }
+
 </style>
 
 
