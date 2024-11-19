@@ -30,12 +30,14 @@
         </ion-card-content>
       </ion-card>
     </ion-content>
+    <TabBar />
   </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import TabBar from '../components/TabBar.vue';
 import {
   IonPage,
   IonHeader,
@@ -57,6 +59,7 @@ import MenuComponent from "../components/MenuComponent.vue";
 
 export default defineComponent({
   components: {
+    TabBar,
     IonPage,
     IonHeader,
     IonToolbar,
