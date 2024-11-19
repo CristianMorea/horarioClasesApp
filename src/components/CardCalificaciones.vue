@@ -17,8 +17,8 @@
           <!-- Botón para calificaciones -->
           <ion-button
             id="calificaciones-trigger"
-            expand="full"
-            color="primary"
+            
+            
             @click="showCalificaciones"
           >
             Calificaciones
@@ -47,8 +47,8 @@
           <!-- Botón para tareas -->
           <ion-button
             id="tareas-trigger"
-            expand="full"
-            color="secondary"
+            
+            
             @click="showTareas"
           >
             Tareas
@@ -77,8 +77,8 @@
           <!-- Botón para exámenes -->
           <ion-button
             id="examenes-trigger"
-            expand="full"
-            color="tertiary"
+            
+            
             @click="showExamenes"
           >
             Exámenes
@@ -283,6 +283,20 @@
   </script>
   
   <style scoped>
+  @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+
+  body {
+    font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
+  }
+
+  ion-card{
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+   
+    border-radius: 8px; /* Bordes redondeados */
+    padding: 10px; /* Espaciado interno para hacer que el borde se vea mejor */
+  }
   .button-group {
     display: flex;
     flex-direction: column;
@@ -291,7 +305,16 @@
   }
   
   ion-button {
-    margin-bottom: 10px;
+  --background: #a22626;
+  --background-activated: #a22626;
+  --border-radius: 20px;
+  font-weight: bold;
+  margin-top: 1rem;
+  color: white;
+  }
+
+  ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
+  font-family: 'Architects Daughter', cursive;
   }
   
   form {
