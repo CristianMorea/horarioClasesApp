@@ -149,6 +149,10 @@ export default defineComponent({
       router.push('/crearhorario');
     };
 
+    const search = () => {
+      router.push('/filter');
+    };
+
     const ponderadoPage = () => {
       router.push('/ponderado');
     };
@@ -178,13 +182,7 @@ export default defineComponent({
       alertVisible.value = false;
     };
 
-    
-
-    const search = () => {
-      console.log('Buscar acción iniciada');
-      // Aquí puedes abrir un cuadro de búsqueda o filtrar la lista de materias
-      // router.push('/buscar'); // Cambia a la ruta deseada
-    };
+  
 
     onMounted(() => {
       cargarHorario();
