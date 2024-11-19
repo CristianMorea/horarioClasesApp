@@ -1,88 +1,132 @@
 <template>
-  <ion-header>
-    <ion-toolbar>
-      <ion-title class="text-center text-2xl font-bold custom-title">NOTAS</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-page>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button @click="$router.push('/horario')" color="primary">
+            <img src='@/assets/img/back.png' name="arrow-back" alt="Botón Horario" style="width: 24px; height: 24px;" />
+          </ion-button>
+        </ion-buttons>
+        <ion-title class="text-center text-2xl font-bold custom-title">NOTA</ion-title>
+      </ion-toolbar>
+    </ion-header>
 
-  <ion-content>
-    <div class="button-container">
-      <ion-button 
-        @click="mostrarInput = !mostrarInput" 
-        class="custom-button"
-      >
-        {{ mostrarInput ? 'Cancelar' : 'Agregar Nota' }}
-      </ion-button>
-
-      <ion-button 
-        @click="cerrar" 
-        class="custom-button"
-      >
-        Cerrar
-      </ion-button>
-    </div>
-
-    <div v-if="mostrarInput" class="input-container">
-      <ion-textarea
-        v-model="nuevaNota"
-        placeholder="Escribe tu nota aquí..."
-        rows="6"  
-        auto-grow   
-        @keyup.enter="agregarNota"
-        class="textarea-styled"
-      ></ion-textarea>
-      <ion-button @click="agregarNota" class="add-button">Agregar</ion-button>
-    </div>
-
-    <ion-list>
-      <ion-item v-for="(nota, index) in notas" :key="index">
-        <ion-label>{{ nota }}</ion-label>
-        <ion-button slot="end" color="danger" @click="eliminarNota(index)">Eliminar</ion-button>
-      </ion-item>
-    </ion-list>
-  </ion-content>
+    <ion-content>
+      <ion-card class="recordatorio-card">
+        <ion-card-header>
+          <ion-card-title>Configura tu nota</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label position="stacked">Escribe tu nota</ion-label>
+            <ion-input
+              v-model="nota"
+              type="text"  
+              @ionChange="onNotaChange"
+            ></ion-input>
+          </ion-item>
+          <ion-button class="butonR" @click="guardarNota">Guardar Nota</ion-button>
+          <p v-if="mensaje">{{ mensaje }}</p>
+        </ion-card-content>
+      </ion-card>
+    </ion-content>
+  </ion-page>
 </template>
 
-<script>
-import { useRouter } from 'vue-router'; // Importar useRouter para la navegación
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import supabase from '@/supabase';
 
-export default {
-  data() {
-    return {
-      nuevaNota: '',
-      notas: JSON.parse(localStorage.getItem('notas')) || [], // Recuperar notas del localStorage
-      mostrarInput: false, // Controlar la visibilidad del input
-    };
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonButton,
+} from '@ionic/vue';
+
+export default defineComponent({
+  components: {
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonItem,
+    IonLabel,
+    IonInput,
+    IonButton,
   },
-
   setup() {
-    const router = useRouter(); // Obtener el router para la navegación
+    const route = useRoute();
+    const router = useRouter();
+    const nota = ref('');
+    const mensaje = ref('');
 
-    const cerrar = () => {
-      router.push('/horario'); // Redirigir a la lista de horarios
+    onMounted(async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error || !data.session) {
+        console.error('Error al obtener la sesión:', error);
+        router.push('/');
+        return;
+      }
+    });
+
+    const onNotaChange = (event: Event) => {
+      const valor = (event.target as HTMLInputElement).value;
+      nota.value = valor;
     };
 
-    return { cerrar }; // Hacer la función cerrar disponible en la plantilla
-  },
-
-  methods: {
-    agregarNota() {
-      if (this.nuevaNota.trim() !== '') {
-        this.notas.push(this.nuevaNota);
-        this.nuevaNota = ''; // Limpiar el campo de entrada
-        this.guardarNotas(); // Guardar en localStorage
-        this.mostrarInput = false; // Ocultar el input después de agregar
+    const guardarNota = async () => {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData.session) {
+        router.push('/');
+        return;
       }
-    },
-    eliminarNota(index) {
-      this.notas.splice(index, 1); // Eliminar la nota
-      this.guardarNotas(); // Guardar en localStorage
-    },
-    guardarNotas() {
-      localStorage.setItem('notas', JSON.stringify(this.notas)); // Guardar notas en localStorage
-    },
+
+      if (!nota.value) {
+        mensaje.value = 'Por favor ingresa la nota.';
+        return;
+      }
+
+      const { error } = await supabase
+        .from('Notas')
+        .insert([
+          {
+            nota: nota.value, // Solo insertamos la nota
+          },
+        ]);
+
+      if (error) {
+        console.error('Error al guardar la nota:', error);
+        mensaje.value = `Error al guardar la nota: ${error.message}`;
+      } else {
+        mensaje.value = 'Nota guardada con éxito.';
+        nota.value = ''; // Limpiar el campo de la nota después de guardar
+      }
+    };
+
+    return {
+      nota,
+      mensaje,
+      guardarNota,
+      onNotaChange,
+    };
   },
-};
+});
 </script>
 
 <style scoped>
@@ -92,23 +136,25 @@ body {
   font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
 }
 
-/* Estilo para el botón Agregar */
-ion-button {
-  display: block; /* Hace que el botón se trate como un bloque */
-  margin: 20px auto; /* Centra el botón y le da un margen superior e inferior */
-  --background: #6c1e1e; /* Cambia el color de fondo */
-  --color: white; /* Cambia el color del texto */
-  --border-radius: 17px; /* Bordes redondeados */
-  --height: 40px; /* Establece una altura para el botón */
-  --min-width: 150px; /* Establece un ancho mínimo */
-  --font-size: 16px; /* Ajusta el tamaño de la fuente */
+ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
+  font-family: 'Architects Daughter', cursive;
 }
 
-.input-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 10px 0; /* Espaciado superior e inferior */
+.butonR {
+  color: white;
+}
+
+ion-button {
+  --background: #a22626;
+  --background-activated: #a22626;
+  --border-radius: 20px;
+  margin-top: 1rem;
+}
+
+.recordatorio-card {
+  border: 2px solid #a32323; /* Borde rojo */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 16px; /* Espaciado interno */
 }
 
 .custom-title {
@@ -121,70 +167,5 @@ ion-button {
 
 .text-ponde {
   font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
-}
-
-/* Aplica la fuente a todos los componentes de Ionic */
-ion-title, ion-label, ion-input, ion-button, ion-card-title, ion-card-header {
-  font-family: 'Architects Daughter', cursive; /* Asegura que estos componentes también usen la fuente */
-}
-
-ion-textarea {
-  width: 80%; /* Cambié el ancho a 80% */
-  margin-bottom: 10px; /* Espacio debajo del área de texto */
-}
-
-/* Personalización de los botones */
-.custom-button {
-  --height: 40px; /* Establece una altura más pequeña para los botones */
-  --min-width: 120px; /* Establece un ancho mínimo */
-  --border-radius: 15px; /* Redondeo de los bordes */
-  --background: #6c1e1e; /* Cambia el color de fondo a un rojo más oscuro */
-  --color: white; /* Cambia el color del texto */
-  --box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  --font-size: 14px; /* Ajusta el tamaño de la fuente */
-}
-
-.custom-button:hover {
-  --background: #6a1515; /* Cambia el color cuando el botón esté en hover */
-}
-
-/* Alineación de los botones al centro */
-.button-container {
-  display: flex;
-  justify-content: center; /* Centra los botones */
-  gap: 10px; /* Espacio entre los botones */
-}
-
-/* Estilo para el textarea */
-.textarea-styled {
-  border: 2.5px solid #6c1e1e; /* Bordes rojos */
-  border-radius: 17px; /* Bordes redondeados */
-  padding: 10px; /* Espaciado interno */
-  width: 95%; /* Establece un ancho del 80% (puedes ajustarlo como desees) */
-  font-size: 16px; /* Tamaño de fuente */
-  background-color: transparent; /* Color de fondo */
-  margin: 0 auto; /* Centra el textarea horizontalmente */
-  display: block; /* Asegura que el margin auto funcione */
-}
-
-.textarea-styled:focus {
-  outline: none; /* Elimina el borde azul por defecto al enfocar */
-  border-color: #6e1919; /* Cambia el color del borde al enfocar */
-}
-
-
-/* Estilo para el botón "Agregar" */
-.add-button {
-  --height: 40px; /* Altura del botón */
-  --min-width: 120px; /* Ancho mínimo */
-  --border-radius: 15px; /* Bordes redondeados */
-  --background: #6c1e1e; /* Color de fondo rojo */
-  --color: white; /* Color de texto blanco */
-  --font-size: 14px; /* Tamaño de la fuente */
-  --box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
-}
-
-.add-button:hover {
-  --background: #8a2424; /* Color de fondo al pasar el mouse sobre el botón */
 }
 </style>
