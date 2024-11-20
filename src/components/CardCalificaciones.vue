@@ -1,325 +1,147 @@
 <template>
-    <ion-card>
+  <div>
+    <!-- Recorremos la lista de clases y mostramos la información -->
+    <ion-card v-for="(claseItem, index) in clases" :key="index">
       <ion-card-header>
-        <!-- Mostrar el nombre de la clase como título -->
-        <ion-card-title>{{ clase.nombre }}</ion-card-title>
+        <ion-card-title>{{ claseItem.nombre || "Sin nombre" }}</ion-card-title>
       </ion-card-header>
-  
       <ion-card-content>
-        <!-- Mostrar el nombre del profesor -->
-        <p><strong>Profesor:</strong> {{ profesor.nombre }}</p>
-        <p><strong>Ubicación:</strong> {{ clase.ubicacion }}</p>
-        <p><strong>Hora de inicio:</strong> {{ clase.hora_inicio }}</p>
-        <p><strong>Hora de fin:</strong> {{ clase.hora_fin }}</p>
-  
-        <!-- Fila de botones -->
-        <div class="button-group">
-          <!-- Botón para calificaciones -->
-          <ion-button
-            id="calificaciones-trigger"
-            
-            
-            @click="showCalificaciones"
-          >
-            Calificaciones
-          </ion-button>
-          <ion-popover trigger="calificaciones-trigger">
-            <ion-content class="ion-padding">
-              <h2>Calificaciones</h2>
-              <form @submit.prevent="submitCalificaciones">
-                <ion-item>
-                  <ion-label position="floating">Número de Corte</ion-label>
-                  <ion-input v-model="calificacion.numero_corte" type="number" required></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="floating">Porcentaje Corte</ion-label>
-                  <ion-input v-model="calificacion.porcentaje_corte" type="number" step="0.1" required></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="floating">Nota Final</ion-label>
-                  <ion-input v-model="calificacion.nota_final" type="number" step="0.1" required></ion-input>
-                </ion-item>
-                <ion-button expand="full" type="submit" color="primary">Guardar</ion-button>
-              </form>
-            </ion-content>
-          </ion-popover>
-  
-          <!-- Botón para tareas -->
-          <ion-button
-            id="tareas-trigger"
-            
-            
-            @click="showTareas"
-          >
-            Tareas
-          </ion-button>
-          <ion-popover trigger="tareas-trigger">
-            <ion-content class="ion-padding">
-              <h2>Tareas Pendientes</h2>
-              <form @submit.prevent="submitTareas">
-                <ion-item>
-                  <ion-label position="floating">Descripción</ion-label>
-                  <ion-input v-model="tarea.descripcion" required></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="floating">Fecha de Entrega</ion-label>
-                  <ion-datetime v-model="tarea.fecha_entrega" required></ion-datetime>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="floating">Nota</ion-label>
-                  <ion-input v-model="tarea.nota" type="number" step="0.1" required></ion-input>
-                </ion-item>
-                <ion-button expand="full" type="submit" color="secondary">Guardar</ion-button>
-              </form>
-            </ion-content>
-          </ion-popover>
-  
-          <!-- Botón para exámenes -->
-          <ion-button
-            id="examenes-trigger"
-            
-            
-            @click="showExamenes"
-          >
-            Exámenes
-          </ion-button>
-          <ion-popover trigger="examenes-trigger">
-            <ion-content class="ion-padding">
-              <h2>Exámenes Programados</h2>
-              <form @submit.prevent="submitExamenes">
-                <ion-item>
-                  <ion-label position="floating">Descripción</ion-label>
-                  <ion-input v-model="examen.descripcion" required></ion-input>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="floating">Fecha del Examen</ion-label>
-                  <ion-datetime v-model="examen.fecha_examen" required></ion-datetime>
-                </ion-item>
-                <ion-item>
-                  <ion-label position="floating">Nota</ion-label>
-                  <ion-input v-model="examen.nota" type="number" step="0.1" required></ion-input>
-                </ion-item>
-                <ion-button expand="full" type="submit" color="tertiary">Guardar</ion-button>
-              </form>
-            </ion-content>
-          </ion-popover>
-        </div>
+        <p><strong>Ubicación:</strong> {{ claseItem.ubicacion || "No especificada" }}</p>
+        <p><strong>Hora Inicio:</strong> {{ claseItem.hora_inicio || "No especificada" }}</p>
+        <p><strong>Hora Fin:</strong> {{ claseItem.hora_fin || "No especificada" }}</p>
+        <p><strong>Profesor:</strong> {{ claseItem.profesor.nombre || "No asignado" }}</p>
+        <ion-button @click="actualizarDatos">Actualizar</ion-button>
+
+        <!-- Botón flotante añadido -->
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+          <ion-fab-button @click="showPopover">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
       </ion-card-content>
     </ion-card>
-  </template>
-  
-  <script lang="ts">
-  import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonPopover, IonContent, IonItem, IonLabel, IonInput, IonDatetime } from '@ionic/vue';
-  import { defineComponent } from 'vue';
-  import supabase from '../supabase';
-  
-  export default defineComponent({
-    components: {
-      IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonPopover, IonContent, IonItem, IonLabel, IonInput, IonDatetime
-    },
-    data() {
-      return {
-        // Datos de la clase
-        clase: {
-          id: '', // Asegúrate de tener un campo para el ID de la clase (UUID)
-          nombre: '',
-          ubicacion: '',
-          hora_inicio: '',
-          hora_fin: '',
-          profesor_id: '',
-        },
-        profesor: {
-          nombre: '',
-        },
-        // Datos para las ventanas emergentes
-        calificacion: {
-          numero_corte: null,
-          porcentaje_corte: null,
-          nota_final: null,
-        },
-        tarea: {
-          descripcion: '',
-          fecha_entrega: '',
-          nota: null,
-        },
-        examen: {
-          descripcion: '',
-          fecha_examen: '',
-          nota: null,
-        },
-      };
-    },
-    async created() {
-      try {
-        // Consulta para obtener los datos de la clase, incluyendo su ID
-        const { data, error } = await supabase
-          .from('clases')
-          .select('id, nombre, ubicacion, hora_inicio, hora_fin, profesor_id')
-          .limit(1); // Limita a un solo registro si sólo necesitas uno
-  
-        if (error) throw error;
-  
-        if (data && data.length > 0) {
-          this.clase = {
-            id: data[0].id, // Asegúrate de tener el ID de la clase (UUID)
-            nombre: data[0].nombre || '',
-            ubicacion: data[0].ubicacion || '',
-            hora_inicio: data[0].hora_inicio || '',
-            hora_fin: data[0].hora_fin || '',
-            profesor_id: data[0].profesor_id || '',
-          };
-  
-          // Ahora que tenemos el ID de la clase, obtenemos los datos del profesor
-          await this.getProfesor(data[0].profesor_id);
-        } else {
-          console.error('No se encontraron registros.');
-        }
-      } catch (err) {
-        console.error('Error al obtener los datos desde Supabase:', err);
-      }
-    },
-    methods: {
-      // Obtener el nombre del profesor
-      async getProfesor(profesorId: string) {
-        try {
-          const { data, error } = await supabase
-            .from('profesores')
-            .select('nombre')
-            .eq('id', profesorId)
-            .single(); // Traemos solo un profesor
-  
-          if (error) throw error;
-  
-          if (data) {
-            this.profesor.nombre = data.nombre || '';
-          } else {
-            console.error('No se encontró el profesor.');
-          }
-        } catch (err) {
-          console.error('Error al obtener los datos del profesor:', err);
-        }
-      },
-  
-      // Mostrar calificaciones
-      showCalificaciones() {
-        console.log('Mostrar calificaciones');
-      },
-  
-      // Mostrar tareas
-      showTareas() {
-        console.log('Mostrar tareas');
-      },
-  
-      // Mostrar exámenes
-      showExamenes() {
-        console.log('Mostrar exámenes');
-      },
-  
-      // Guardar calificación
-      async submitCalificaciones() {
-        // Asegurarse de que tenemos el ID de la clase
-        if (!this.clase.id) {
-          console.error('No se ha encontrado el ID de la clase.');
-          return;
-        }
-  
-        try {
-          const { error } = await supabase.from('calificaciones').insert([{
-            clase_id: this.clase.id,  // Usamos el ID de la clase (UUID)
-            numero_corte: this.calificacion.numero_corte,
-            porcentaje_corte: this.calificacion.porcentaje_corte,
-            nota_final: this.calificacion.nota_final,
-          }]);
-  
-          if (error) {
-            console.error('Error al guardar la calificación:', error);
-          } else {
-            console.log('Calificación guardada correctamente');
-          }
-        } catch (err) {
-          console.error('Error al intentar guardar la calificación:', err);
-        }
-      },
-  
-      // Guardar tarea
-      async submitTareas() {
-        try {
-          const { error } = await supabase.from('tareas').insert([{
-            descripcion: this.tarea.descripcion,
-            fecha_entrega: this.tarea.fecha_entrega,
-            nota: this.tarea.nota,
-          }]);
-  
-          if (error) {
-            console.error('Error al guardar la tarea:', error);
-          } else {
-            console.log('Tarea guardada correctamente');
-          }
-        } catch (err) {
-          console.error('Error al intentar guardar la tarea:', err);
-        }
-      },
-  
-      // Guardar examen
-      async submitExamenes() {
-        try {
-          const { error } = await supabase.from('examenes').insert([{
-            descripcion: this.examen.descripcion,
-            fecha_examen: this.examen.fecha_examen,
-            nota: this.examen.nota,
-          }]);
-  
-          if (error) {
-            console.error('Error al guardar el examen:', error);
-          } else {
-            console.log('Examen guardado correctamente');
-          }
-        } catch (err) {
-          console.error('Error al intentar guardar el examen:', err);
-        }
-      }
+
+    <!-- Popover con las opciones -->
+    <ion-popover :is-open="popoverOpen" @ionPopoverDidDismiss="popoverOpen = false">
+      <ion-list>
+        <ion-item button @click="handleOptionClick('Tarea')">Tarea</ion-item>
+        <ion-item button @click="handleOptionClick('Examen')">Examen</ion-item>
+        <ion-item button @click="handleOptionClick('Calificaciones')">Calificaciones</ion-item>
+      </ion-list>
+    </ion-popover>
+  </div>
+</template>
+
+<script setup lang="ts">
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonButton,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonPopover,
+  IonList,
+  IonItem
+} from '@ionic/vue';
+import { ref, onMounted } from 'vue';
+import supabase from '../supabase';
+import { addIcons } from 'ionicons';
+import { add } from 'ionicons/icons'; // Importar el icono "add" de Ionicons
+
+addIcons({ add }); // Registrar el icono "add"
+
+// Datos reactivos
+const clases = ref<Array<any>>([]); // Lista de clases
+const popoverOpen = ref(false); // Estado para controlar si el popover está abierto
+
+// Función para obtener las clases asociadas al usuario autenticado
+const obtenerClases = async () => {
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError) throw userError;
+    if (!user) throw new Error('Usuario no autenticado.');
+
+    // Consulta para obtener todas las clases del usuario
+    const { data, error } = await supabase
+      .from('clases')
+      .select('id, nombre, ubicacion, hora_inicio, hora_fin, profesor_id')
+      .eq('id_usuario', user.id); // Usamos 'id_usuario' para obtener las clases del usuario
+
+    if (error) {
+      console.error('Error al obtener las clases:', error);
+      return;
     }
-  });
-  </script>
-  
-  <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
 
-  body {
-    font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
-  }
+    if (!data || data.length === 0) {
+      console.error('No se encontraron clases para este usuario.');
+      return;
+    }
 
-  ion-card{
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1rem;
-   
-    border-radius: 8px; /* Bordes redondeados */
-    padding: 10px; /* Espaciado interno para hacer que el borde se vea mejor */
+    // Asignamos las clases a la variable reactiva
+    clases.value = await Promise.all(
+      data.map(async (clase: any) => {
+        // Obtenemos los datos del profesor si tiene un profesor_id
+        if (clase.profesor_id) {
+          const profesor = await obtenerProfesor(clase.profesor_id);
+          return { ...clase, profesor };
+        }
+        return { ...clase, profesor: { nombre: 'No asignado' } };
+      })
+    );
+  } catch (err) {
+    console.error('Error al obtener los datos de las clases:', err);
   }
-  .button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  
-  ion-button {
-  --background: #a22626;
-  --background-activated: #a22626;
-  --border-radius: 20px;
-  font-weight: bold;
-  margin-top: 1rem;
-  color: white;
-  }
+};
 
-  ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
-  font-family: 'Architects Daughter', cursive;
+// Función para obtener los datos del profesor
+const obtenerProfesor = async (profesorId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('profesores')
+      .select('nombre')
+      .eq('id', profesorId)
+      .single();
+
+    if (error) throw error;
+    if (!data) throw new Error('No se encontró el profesor.');
+
+    return data;
+  } catch (err) {
+    console.error('Error al obtener los datos del profesor:', err);
+    return { nombre: 'No asignado' };
   }
-  
-  form {
-    display: flex;
-    flex-direction: column ;
-    gap: 10px;
-  }
-  </style>
+};
+
+// Función para actualizar los datos de las clases
+const actualizarDatos = async () => {
+  await obtenerClases();
+};
+
+// Función para mostrar el popover
+const showPopover = () => {
+  popoverOpen.value = true;
+};
+
+// Función para manejar la selección de una opción en el popover
+const handleOptionClick = (option: string) => {
+  console.log(`Opción seleccionada: ${option}`);
+  // Cerrar el popover después de seleccionar una opción
+  popoverOpen.value = false;
+};
+
+// Cargamos los datos al montar el componente
+onMounted(obtenerClases);
+</script>
+
+<style scoped>
+p {
+  margin: 8px 0;
+}
+</style>
