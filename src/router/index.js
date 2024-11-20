@@ -18,7 +18,7 @@ import BlogPage from '../views/BlogPage.vue';
 import FiltersPage from '../views/FiltersPage.vue';
 import calificaciones from '../views/calificaciones.vue';
 import Tareas from '../views/Tareas.vue';
-import Periodo from '../components/Periodo.vue';
+import examen from '../views/Examen.vue';
 
 
 
@@ -118,9 +118,9 @@ const routes = [
     component: Tareas
   },
   {
-    path: '/periodo',
-    name: 'periodo',
-    component: Periodo
+    path: '/examen',
+    name: 'examen',
+    component: examen
   }
   
   
