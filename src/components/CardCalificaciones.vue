@@ -1,85 +1,147 @@
-<script lang="ts">
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonLabel, IonInput, IonDatetime } from '@ionic/vue';
-import { defineComponent } from 'vue';
+<template>
+  <div>
+    <!-- Recorremos la lista de clases y mostramos la información -->
+    <ion-card v-for="(claseItem, index) in clases" :key="index">
+      <ion-card-header>
+        <ion-card-title>{{ claseItem.nombre || "Sin nombre" }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p><strong>Ubicación:</strong> {{ claseItem.ubicacion || "No especificada" }}</p>
+        <p><strong>Hora Inicio:</strong> {{ claseItem.hora_inicio || "No especificada" }}</p>
+        <p><strong>Hora Fin:</strong> {{ claseItem.hora_fin || "No especificada" }}</p>
+        <p><strong>Profesor:</strong> {{ claseItem.profesor.nombre || "No asignado" }}</p>
+        <ion-button @click="actualizarDatos">Actualizar</ion-button>
+
+        <!-- Botón flotante añadido -->
+        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+          <ion-fab-button @click="showPopover">
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Popover con las opciones -->
+    <ion-popover :is-open="popoverOpen" @ionPopoverDidDismiss="popoverOpen = false">
+      <ion-list>
+        <ion-item button @click="handleOptionClick('Tarea')">Tarea</ion-item>
+        <ion-item button @click="handleOptionClick('Examen')">Examen</ion-item>
+        <ion-item button @click="handleOptionClick('Calificaciones')">Calificaciones</ion-item>
+      </ion-list>
+    </ion-popover>
+  </div>
+</template>
+
+<script setup lang="ts">
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonButton,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonPopover,
+  IonList,
+  IonItem
+} from '@ionic/vue';
+import { ref, onMounted } from 'vue';
 import supabase from '../supabase';
+import { addIcons } from 'ionicons';
+import { add } from 'ionicons/icons'; // Importar el icono "add" de Ionicons
 
-export default defineComponent({
-  components: {
-    IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonButton, IonLabel, IonInput, IonDatetime
-  },
-  data() {
-    return {
-      // Datos de la clase
-      clase: {
-        id: '', 
-        nombre: '',
-        ubicacion: '',
-        hora_inicio: '',
-        hora_fin: '',
-        profesor_id: '',
-      },
-      profesor: {
-        nombre: '',
-      },
-    };
-  },
-  async created() {
-    try {
-      // Obtén el usuario autenticado
-      const user = supabase.auth.user();
-      if (user) {
-        // Consulta para obtener las clases asociadas al profesor del usuario autenticado
-        const { data, error } = await supabase
-          .from('clases')
-          .select('id, nombre, ubicacion, hora_inicio, hora_fin, profesor_id')
-          .eq('profesor_id', user.id)  // Filtra por el ID del profesor (usuario autenticado)
-          .limit(1); // Limita a un solo registro si solo necesitas uno
+addIcons({ add }); // Registrar el icono "add"
 
-        if (error) throw error;
+// Datos reactivos
+const clases = ref<Array<any>>([]); // Lista de clases
+const popoverOpen = ref(false); // Estado para controlar si el popover está abierto
 
-        if (data && data.length > 0) {
-          this.clase = {
-            id: data[0].id,
-            nombre: data[0].nombre || '',
-            ubicacion: data[0].ubicacion || '',
-            hora_inicio: data[0].hora_inicio || '',
-            hora_fin: data[0].hora_fin || '',
-            profesor_id: data[0].profesor_id || '',
-          };
+// Función para obtener las clases asociadas al usuario autenticado
+const obtenerClases = async () => {
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-          // Ahora que tenemos el ID de la clase, obtenemos los datos del profesor
-          await this.getProfesor(data[0].profesor_id);
-        } else {
-          console.error('No se encontraron clases para este usuario.');
-        }
-      } else {
-        console.error('No hay usuario autenticado.');
-      }
-    } catch (err) {
-      console.error('Error al obtener los datos desde Supabase:', err);
+    if (userError) throw userError;
+    if (!user) throw new Error('Usuario no autenticado.');
+
+    // Consulta para obtener todas las clases del usuario
+    const { data, error } = await supabase
+      .from('clases')
+      .select('id, nombre, ubicacion, hora_inicio, hora_fin, profesor_id')
+      .eq('id_usuario', user.id); // Usamos 'id_usuario' para obtener las clases del usuario
+
+    if (error) {
+      console.error('Error al obtener las clases:', error);
+      return;
     }
-  },
-  methods: {
-    // Obtener el nombre del profesor
-    async getProfesor(profesorId: string) {
-      try {
-        const { data, error } = await supabase
-          .from('profesores')
-          .select('nombre')
-          .eq('id', profesorId)
-          .single(); // Traemos solo un profesor
 
-        if (error) throw error;
+    if (!data || data.length === 0) {
+      console.error('No se encontraron clases para este usuario.');
+      return;
+    }
 
-        if (data) {
-          this.profesor.nombre = data.nombre || '';
-        } else {
-          console.error('No se encontró el profesor.');
+    // Asignamos las clases a la variable reactiva
+    clases.value = await Promise.all(
+      data.map(async (clase: any) => {
+        // Obtenemos los datos del profesor si tiene un profesor_id
+        if (clase.profesor_id) {
+          const profesor = await obtenerProfesor(clase.profesor_id);
+          return { ...clase, profesor };
         }
-      } catch (err) {
-        console.error('Error al obtener los datos del profesor:', err);
-      }
-    },
+        return { ...clase, profesor: { nombre: 'No asignado' } };
+      })
+    );
+  } catch (err) {
+    console.error('Error al obtener los datos de las clases:', err);
   }
-});
+};
+
+// Función para obtener los datos del profesor
+const obtenerProfesor = async (profesorId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('profesores')
+      .select('nombre')
+      .eq('id', profesorId)
+      .single();
+
+    if (error) throw error;
+    if (!data) throw new Error('No se encontró el profesor.');
+
+    return data;
+  } catch (err) {
+    console.error('Error al obtener los datos del profesor:', err);
+    return { nombre: 'No asignado' };
+  }
+};
+
+// Función para actualizar los datos de las clases
+const actualizarDatos = async () => {
+  await obtenerClases();
+};
+
+// Función para mostrar el popover
+const showPopover = () => {
+  popoverOpen.value = true;
+};
+
+// Función para manejar la selección de una opción en el popover
+const handleOptionClick = (option: string) => {
+  console.log(`Opción seleccionada: ${option}`);
+  // Cerrar el popover después de seleccionar una opción
+  popoverOpen.value = false;
+};
+
+// Cargamos los datos al montar el componente
+onMounted(obtenerClases);
 </script>
+
+<style scoped>
+p {
+  margin: 8px 0;
+}
+</style>
