@@ -37,7 +37,6 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import supabase from '@/supabase';
-import { v4 as uuidv4 } from 'uuid'; // Importar la librería para generar UUID
 
 import {
   IonPage,
@@ -107,7 +106,6 @@ export default defineComponent({
         .from('Notas')
         .insert([
           {
-            id: uuidv4(),  // Generar un UUID para el id
             nota: nota.value, // Solo insertamos la nota
           },
         ]);
