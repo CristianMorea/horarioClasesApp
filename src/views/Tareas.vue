@@ -1,91 +1,130 @@
 <template>
-    <ion-page>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Tareas</ion-title>
-        </ion-toolbar>
-      </ion-header>
+    <div class="form-container">
+      <form @submit.prevent="guardarTarea" class="form">
+        <label for="nombre">Nombre de la tarea:</label>
+        <input type="text" v-model="nombre" id="nombre" required class="input-field" />
   
-      <ion-content>
-        <MenuComponent />
+        <label for="descripcion">Descripción:</label>
+        <textarea v-model="descripcion" id="descripcion" required class="input-field"></textarea>
   
-        <form @submit.prevent="guardarTarea">
-          <ion-item>
-            <ion-label position="floating">Nombre</ion-label>
-            <ion-input v-model="nombre" type="text" required></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Descripción</ion-label>
-            <ion-input v-model="descripcion" type="text" required></ion-input>
-          </ion-item>
+        <label for="fecha_entrega">Fecha de entrega:</label>
+        <input type="date" v-model="fecha_entrega" id="fecha_entrega" required class="input-field" />
   
-          <ion-item>
-            <ion-label>¿Está terminada?</ion-label>
-            <ion-checkbox v-model="terminada" slot="start"></ion-checkbox>
-          </ion-item>
+        <label for="estado">Estado:</label>
+        <select v-model="estado" id="estado" required class="input-field">
+          <option value="true">Completada</option>
+          <option value="false">Pendiente</option>
+        </select>
   
-          <!-- Componente Periodo -->
-          <Periodo v-model="periodoSeleccionado" />
+        <label for="periodo">Periodo (UUID):</label>
+        <input type="text" v-model="periodo" id="periodo" required class="input-field" />
   
-          <ion-button expand="full" type="submit">Guardar</ion-button>
-        </form>
-      </ion-content>
-    </ion-page>
+        <button type="submit" class="submit-button">Guardar tarea</button>
+      </form>
+    </div>
   </template>
   
-  <script lang="ts">
-  import { defineComponent, ref } from 'vue';
-  import supabase from '../supabase';
-  import MenuComponent from '../components/MenuComponent.vue';
-  import Periodo from '../components/Periodo.vue'; // Importar el componente Periodo
+  <script>
+  import supabase from '@/supabase';
   
-  export default defineComponent({
-    components: {
-      MenuComponent,
-      Periodo, // Usar el componente Periodo
-    },
-    setup() {
-      const descripcion = ref('');
-      const nombre = ref('');
-      const terminada = ref(false);
-      const periodoSeleccionado = ref(null); // Este valor se vincula con Periodo.vue
-  
-      // Función para guardar la tarea
-      const guardarTarea = async () => {
-        if (!descripcion.value || !nombre.value || !periodoSeleccionado.value) {
-          alert('Por favor complete todos los campos.');
-          return;
-        }
-  
-        try {
-          const { error } = await supabase.from('tareas').insert([{
-            descripcion: descripcion.value,
-            terminada: terminada.value,
-            nombre: nombre.value,
-            periodo_id: periodoSeleccionado.value,  // Guardamos el id del periodo seleccionado
-          }]);
-  
-          if (error) throw error;
-          alert('Tarea guardada exitosamente!');
-          // Limpia los campos después de guardar
-          descripcion.value = '';
-          nombre.value = '';
-          terminada.value = false;
-          periodoSeleccionado.value = null;
-        } catch (error) {
-          console.error('Error al guardar la tarea:', error);
-          alert('Hubo un error al guardar la tarea.');
-        }
-      };
-  
+  export default {
+    data() {
       return {
-        descripcion,
-        nombre,
-        terminada,
-        periodoSeleccionado,
-        guardarTarea,
+        nombre: '',
+        descripcion: '',
+        fecha_entrega: '',
+        estado: false,
+        periodo: '', // Aquí se asume que el periodo es un UUID que debes obtener previamente
       };
     },
-  });
+    methods: {
+      async guardarTarea() {
+        const { data, error } = await supabase
+          .from('tareas')
+          .insert([
+            {
+              nombre: this.nombre,
+              descripcion: this.descripcion,
+              fecha_entrega: this.fecha_entrega,
+              estado: this.estado,
+              periodo: this.periodo,
+            },
+          ]);
+  
+        if (error) {
+          console.error('Error al insertar tarea:', error.message);
+        } else {
+          console.log('Tarea guardada exitosamente:', data);
+          // Resetear el formulario si lo deseas
+          this.nombre = '';
+          this.descripcion = '';
+          this.fecha_entrega = '';
+          this.estado = false;
+          this.periodo = '';
+        }
+      },
+    },
+  };
   </script>
+  
+  <style scoped>
+  /* Estilos generales */
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  .form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .input-field:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .submit-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .submit-button:focus {
+    outline: none;
+  }
+  </style>
   
