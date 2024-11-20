@@ -1,66 +1,124 @@
 <template>
-    <div class="form-container">
-      <form @submit.prevent="guardarTarea" class="form">
-        <label for="nombre">Nombre de la tarea:</label>
-        <input 
-          type="text" 
-          v-model="tarea.nombre" 
-          id="nombre" 
-          required 
-          class="input-field" 
-        />
+    <ion-page>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+          </ion-buttons>
+          <ion-title>Crear Nueva Tarea</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      
+      <ion-content class="ion-padding">
+        <form @submit.prevent="guardarTarea">
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Nombre de la Tarea</ion-label>
+              <ion-input 
+                v-model="tarea.nombre" 
+                type="text" 
+                required
+              ></ion-input>
+            </ion-item>
   
-        <label for="descripcion">Descripción:</label>
-        <textarea 
-          v-model="tarea.descripcion" 
-          id="descripcion" 
-          required 
-          class="input-field"
-        ></textarea>
+            <ion-item>
+              <ion-label position="floating">Descripción</ion-label>
+              <ion-textarea 
+                v-model="tarea.descripcion" 
+                required
+              ></ion-textarea>
+            </ion-item>
   
-        <label for="fecha_entrega">Fecha de entrega:</label>
-        <input 
-          type="date" 
-          v-model="tarea.fecha_entrega" 
-          id="fecha_entrega" 
-          required 
-          class="input-field" 
-        />
+            <ion-item>
+              <ion-label position="floating">Fecha de Entrega</ion-label>
+              <ion-datetime 
+                v-model="tarea.fecha_entrega"
+                display-format="DD/MM/YYYY"
+                picker-format="DD MMM YYYY"
+                required
+              ></ion-datetime>
+            </ion-item>
   
-        <label for="estado">Estado:</label>
-        <select 
-          v-model="tarea.estado" 
-          id="estado" 
-          required 
-          class="input-field"
-        >
-          <option :value="true">Completada</option>
-          <option :value="false">Pendiente</option>
-        </select>
+            <ion-item>
+              <ion-label>Número de Período</ion-label>
+              <ion-select 
+                v-model="tarea.numeroPeriodo"
+                placeholder="Seleccionar Período"
+                required
+              >
+                <ion-select-option :value="1">Período 1</ion-select-option>
+                <ion-select-option :value="2">Período 2</ion-select-option>
+                <ion-select-option :value="3">Período 3</ion-select-option>
+              </ion-select>
+            </ion-item>
   
-        <label for="numeroPeriodo">Periodo (ID numérico):</label>
-        <input 
-          type="number" 
-          v-model="tarea.numeroPeriodo" 
-          id="numeroPeriodo" 
-          required 
-          class="input-field" 
-        />
+            <ion-item>
+              <ion-label>Estado</ion-label>
+              <ion-toggle 
+                v-model="tarea.estado"
+              ></ion-toggle>
+            </ion-item>
+          </ion-list>
   
-        <button 
-          type="submit" 
-          class="submit-button"
-        >
-          Guardar tarea
-        </button>
-      </form>
-    </div>
+          <div class="ion-padding">
+            <ion-button 
+              expand="block" 
+              type="submit" 
+              color="primary"
+            >
+              Guardar Tarea
+            </ion-button>
+          </div>
+        </form>
+      </ion-content>
+    </ion-page>
   </template>
   
   <script>
+  import { 
+    IonPage, 
+    IonHeader, 
+    IonToolbar, 
+    IonButtons, 
+    IonBackButton, 
+    IonTitle, 
+    IonContent, 
+    IonList, 
+    IonItem, 
+    IonLabel, 
+    IonInput, 
+    IonTextarea,
+    IonDatetime,
+    IonSelect,
+    IonSelectOption,
+    IonToggle,
+    IonButton,
+    toastController
+  } from '@ionic/vue';
+  import { defineComponent } from 'vue';
   import supabase from "@/supabase";
   
-  export default {
+  export default defineComponent({
+    name: 'CrearTareaPage',
+    components: {
+      IonPage,
+      IonHeader,
+      IonToolbar,
+      IonButtons,
+      IonBackButton,
+      IonTitle,
+      IonContent,
+      IonList,
+      IonItem,
+      IonLabel,
+      IonInput,
+      IonTextarea,
+      IonDatetime,
+      IonSelect,
+      IonSelectOption,
+      IonToggle,
+      IonButton
+    },
     data() {
       return {
         tarea: {
@@ -68,36 +126,48 @@
           descripcion: "",
           fecha_entrega: "",
           estado: false,
-          numeroPeriodo: null,  // Se mantiene el tipo numérico
-        },
+          numeroPeriodo: null,
+        }
       };
     },
     methods: {
       async guardarTarea() {
         try {
-          // Validar datos antes de enviarlos
-          if (!this.tarea.nombre || !this.tarea.descripcion || !this.tarea.fecha_entrega || this.tarea.numeroPeriodo == null) {
-            alert("Por favor, completa todos los campos.");
+          // Validación de campos
+          if (!this.tarea.nombre || !this.tarea.descripcion || 
+              !this.tarea.fecha_entrega || this.tarea.numeroPeriodo == null) {
+            const toast = await toastController.create({
+              message: 'Por favor, completa todos los campos.',
+              duration: 2000,
+              color: 'warning'
+            });
+            await toast.present();
             return;
           }
   
-          // Enviar datos a la tabla `tareas` en Supabase
-          const { data, error } = await supabase.from("tareas").insert([
-            {
-              nombre: this.tarea.nombre,
-              descripcion: this.tarea.descripcion,
-              fecha_entrega: this.tarea.fecha_entrega,
-              estado: this.tarea.estado,
-              Periodo: this.tarea.numeroPeriodo,  // Usando 'Periodo' correctamente
-            }
-          ]);
+          // Inserción en Supabase
+          const { data, error } = await supabase.from("tareas").insert([{
+            nombre: this.tarea.nombre,
+            descripcion: this.tarea.descripcion,
+            fecha_entrega: this.tarea.fecha_entrega,
+            estado: this.tarea.estado,
+            Periodo: this.tarea.numeroPeriodo,
+          }]);
   
           if (error) {
-            console.error("Error al insertar tarea:", error.message);
-            alert("Hubo un error al guardar la tarea.");
+            const toast = await toastController.create({
+              message: 'Error al guardar la tarea: ' + error.message,
+              duration: 3000,
+              color: 'danger'
+            });
+            await toast.present();
           } else {
-            console.log("Tarea guardada exitosamente:", data);
-            alert("Tarea guardada exitosamente.");
+            const toast = await toastController.create({
+              message: 'Tarea guardada exitosamente',
+              duration: 2000,
+              color: 'success'
+            });
+            await toast.present();
   
             // Resetear formulario
             this.tarea = {
@@ -105,19 +175,37 @@
               descripcion: "",
               fecha_entrega: "",
               estado: false,
-              numeroPeriodo: null,  // Restablecer al valor inicial
+              numeroPeriodo: null,
             };
+  
+            // Opcional: navegar a otra página o realizar otra acción
+            this.$router.push('/tareas');
           }
         } catch (error) {
-          console.error("Error al guardar tarea:", error);
-          alert("Ocurrió un error inesperado.");
+          const toast = await toastController.create({
+            message: 'Ocurrió un error inesperado: ' + error,
+            duration: 3000,
+            color: 'danger'
+          });
+          await toast.present();
         }
       },
-    },
-  };
+    }
+  });
   </script>
   
   <style scoped>
-  /* Estilos ya presentes, no se modifican */
-  </style>
+  ion-list {
+    background: transparent;
+  }
   
+  ion-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    margin-bottom: 16px;
+  }
+  
+  ion-button {
+    margin-top: 20px;
+  }
+  </style>
