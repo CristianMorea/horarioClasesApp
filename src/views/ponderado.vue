@@ -48,6 +48,7 @@
       <ion-item lines="none" class="average-switch" @ionChange="horarioP">
         <ion-toggle v-model="showAverage"></ion-toggle>
       </ion-item>
+      
     </ion-content>
   </ion-page>
 </template>
@@ -171,16 +172,18 @@ ion-label p {
 
 /* Estilo del switch de promedio */
 .average-switch {
-  margin-top: 185px;
+  margin-top: 150px;
   display: flex;
   justify-content: center;
   font-size: 18px;
+  
 }
 
 ion-toggle {
   --handle-background: hsl(0, 90%, 57%);
   --background-checked: #000000;
   margin-left: 135px;
+
 }
 
 ion-button {
