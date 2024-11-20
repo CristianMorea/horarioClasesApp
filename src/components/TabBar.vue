@@ -1,7 +1,8 @@
 <template>
+  <div style="background-color: transparent; position: fixed; bottom: 0; width: 100%; z-index: 9;">
   <ion-tab-bar slot="bottom" class="tab-container">
     <div class="tab-island">
-      <ion-tab-button @click="navigateTo('/')" class="tab-button">
+      <ion-tab-button @click="navigateTo('/horario')" class="tab-button">
         <ion-icon name="home-outline"></ion-icon>
         <ion-label>Inicio</ion-label>
       </ion-tab-button>
@@ -15,6 +16,7 @@
       </ion-tab-button>
     </div>
   </ion-tab-bar>
+  </div>
 </template>
 
 <script>
@@ -54,23 +56,26 @@ export default {
 }
 
 /* Isla negra para contener los botones */
+/* Isla blanca para contener los botones */
 .tab-island {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: solid rgb(255, 252, 252); /* Fondo negro */
+  background-color: rgb(255, 252, 252); /* Fondo blanco */
   border: 3px solid #646060;
   width: 90%; /* Ancho adaptable */
-  height: 70px; /* Altura de la isla */
+  height: 60px; /* Altura de la isla */
   border-radius: 35px; /* Bordes redondeados para elipse */
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3); /* Sombra para efecto flotante */
+  box-shadow: b b; /* Sombra para efecto flotante */
 }
+
 
 /* Botones dentro de la isla */
 .tab-button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: -18px;
   justify-content: center;
   color: #050505; /* Botones blancos */
   font-weight: bold;

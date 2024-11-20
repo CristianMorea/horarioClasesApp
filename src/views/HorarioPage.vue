@@ -12,14 +12,18 @@
             <ion-icon :icon="searchOutline"></ion-icon>
           </ion-button>
         </ion-buttons>
-      </ion-toolbar>
+      </ion-toolbar> 
     </ion-header>
 
     <ion-content id="main-content" class="flex-grow">
+      <div class="image-container">
+        <div class="overlay-title">NOTAS</div> 
         <img :src="notaImage" @click="notaEdit" class="custom-button" style="cursor: pointer;"/>
+      </div>
         <div class="font-bold text-title">MATERIAS</div>
 
       <div class="clases-container" v-if="clases.length > 0">
+        <div class="scrollable-content">
         <ion-item v-for="(clase, index) in clases" :key="index" class="item-clase">
           <ion-label @click="verDetalle(clase.id)">
             <h2 class="text-lg font-bold text-materia">{{ clase.nombre ? clase.nombre.toUpperCase() : 'Sin Nombre' }}</h2>
@@ -32,6 +36,7 @@
             Eliminar
           </ion-button>
         </ion-item>
+        </div>
       </div>
 
       <ion-card v-else>
@@ -69,7 +74,7 @@
 
     <div class="left-button-container">
       <img :src="lapizImage" @click="editarP" class="button-image" style="cursor: pointer;"/>
-      <ion-button color="danger" class="rounded-button vertical-button" @click="ponderadoPage">
+      <ion-button class="rounded-button vertical-button" @click="ponderadoPage">
         <div class="vertical-text font-bold text-ponde">PONDERADO</div>
       </ion-button>
     </div>
@@ -223,6 +228,31 @@ body {
   
 }
 
+.scrollable-content {
+  border: 3px solid transparent;
+  max-height: 397px; /* Ajusta la altura máxima de la lista de materias */
+  overflow-y: auto;  /* Habilita el scroll solo verticalmente */
+  padding-right: 10px; /* Agrega un poco de espacio si es necesario para la barra de desplazamiento */
+  border-radius: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+
+.overlay-title {
+  margin-left: 185px;
+  pointer-events: none; 
+  top: 14.5%;
+  position: absolute;
+  font-family: 'Architects Daughter', sans-serif; /* La misma fuente que los títulos */
+  font-weight: bold; /* Negrita */
+  color: #bb2a2a;
+  font-size: 1.5rem; /* Ajusta el tamaño de fuente según lo necesites */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Sombra para dar mayor contraste */
+}
+
+
+
 ion-item.item-clase {
   border-radius: 30px; /* Borde redondeado de cada materia */
   background-color: #868181; /* Color de fondo para las materias */
@@ -244,9 +274,10 @@ ion-item.item-clase {
 .vertical-button {
   height: 130px; /* Ajusta la altura del botón vertical */
   width: 45px; /* Ajusta el ancho si es necesario */
-  border-radius: 45px; /* Aplica el borde redondeado aquí */
+  border-radius: 16px; /* Aplica el borde redondeado aquí */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
-  
+  --background: #bb2a2a;
+  border: 3px solid #000000;
 }
 
 .small-button {
@@ -261,6 +292,7 @@ ion-item.item-clase {
   margin-left: 2px; /* Espacio entre los botones */
   border-radius: 15px; /* Ajusta el valor para el redondeado de los bordes */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
+  border: 2px solid #000000;
 }
 
 .vertical-text {
@@ -268,10 +300,6 @@ ion-item.item-clase {
   transform: rotate(180deg); /* Rota el texto para que quede correctamente alineado */
   color:#f0f0f0
   
-}
-
-.custom-title {
-  color: #000000; /* Color rojo */
 }
 
 ion-content {
@@ -301,6 +329,7 @@ ion-icon {
   font-weight: bold; /* Esto asegura que el texto esté en negrita */
   font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
 }
+
 
 .text-materia {
   color: #bb2a2a; /* Cambia este color al que desees */

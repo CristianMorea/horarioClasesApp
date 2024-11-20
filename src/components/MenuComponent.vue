@@ -127,7 +127,7 @@ ion-item {
 
 ion-item:hover {
   --background: var(--ion-color-primary-shade, #e0e0e0);
-  color: var(--ion-color-primary, #3880ff);
+  color: var(--ion-color-primary, #ff4d4d);
 }
 
 /* Íconos */
