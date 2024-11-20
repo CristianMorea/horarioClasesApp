@@ -17,7 +17,9 @@ import UpdatePerfil from '../views/updatePerfil.vue';
 import BlogPage from '../views/BlogPage.vue';
 import FiltersPage from '../views/FiltersPage.vue';
 import calificaciones from '../views/calificaciones.vue';
-import CardCalificaciones from '../components/CardCalificaciones.vue';
+import Tareas from '../views/Tareas.vue';
+import Periodo from '../components/Periodo.vue';
+
 
 
 const routes = [
@@ -111,10 +113,14 @@ const routes = [
     
   },
   {
-    path: '/card',
-    name: 'card',
-    component: CardCalificaciones
-    
+    path: '/tareas',
+    name: 'tareas',
+    component: Tareas
+  },
+  {
+    path: '/periodo',
+    name: 'periodo',
+    component: Periodo
   }
   
   
