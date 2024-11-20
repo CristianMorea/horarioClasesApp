@@ -95,7 +95,6 @@ export default defineComponent({
       }
 
       try {
-        // Solo se registra el usuario en auth.users (autenticación)
         const { data, error: authError } = await supabase.auth.signUp({
           email: correo.value,
           password: contraseña.value,
@@ -113,8 +112,22 @@ export default defineComponent({
           return;
         }
 
+        const { error: dbError } = await supabase.from('usuarios').insert([{
+          id: user.id,
+          nombre_usuario: nombre.value,
+          correo: correo.value,
+          apellido: apellido.value || null,
+          telefono: telefono.value || null,
+        }]);
+
+        if (dbError) {
+          console.error('Error al insertar en la tabla usuarios:', dbError);
+          alert(`Error al guardar los datos: ${dbError.message}`);
+          return;
+        }
+
         alert('Usuario registrado con éxito, por favor verifica tu correo');
-        router.push('/login');
+        router.push('/Confirmar');
 
       } catch (error) {
         console.error('Error al registrar el usuario:', error.message);
@@ -123,7 +136,7 @@ export default defineComponent({
     };
 
     const handleVolver = () => {
-      router.push('/');
+      router.push('/login');
     };
 
     return {
