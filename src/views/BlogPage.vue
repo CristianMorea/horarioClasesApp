@@ -151,8 +151,12 @@ ion-button {
   margin-top: 1rem;
 }
 
+ion-card-title {
+  color: rgb(124, 124, 124);
+
+}
+
 .recordatorio-card {
-  border: 2px solid #a32323; /* Borde rojo */
   border-radius: 10px; /* Bordes redondeados */
   padding: 16px; /* Espaciado interno */
 }

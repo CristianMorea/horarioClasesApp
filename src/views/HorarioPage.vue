@@ -230,12 +230,13 @@ body {
 
 .scrollable-content {
   border: 3px solid transparent;
-  max-height: 397px; /* Ajusta la altura máxima de la lista de materias */
+  max-height: 379px; /* Ajusta la altura máxima de la lista de materias */
   overflow-y: auto;  /* Habilita el scroll solo verticalmente */
   padding-right: 10px; /* Agrega un poco de espacio si es necesario para la barra de desplazamiento */
   border-radius: 30px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: 10px;
+  
 }
 
 
@@ -274,7 +275,7 @@ ion-item.item-clase {
 .vertical-button {
   height: 130px; /* Ajusta la altura del botón vertical */
   width: 45px; /* Ajusta el ancho si es necesario */
-  border-radius: 16px; /* Aplica el borde redondeado aquí */
+  border-radius: 7px; /* Aplica el borde redondeado aquí */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
   --background: #bb2a2a;
   border: 3px solid #000000;

@@ -16,7 +16,7 @@
             <ion-label position="stacked">Nombre Completo</ion-label>
             <ion-input v-model="nombre_usuario" placeholder="Nombre Completo"></ion-input>
           </ion-item>
-          <ion-item>
+          <ion-item>  
             <ion-label position="stacked">Correo Electrónico</ion-label>
             <ion-input v-model="correo" type="email" placeholder="Correo"></ion-input>
           </ion-item>
