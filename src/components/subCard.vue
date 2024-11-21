@@ -19,6 +19,12 @@
                 <span v-else>Pendiente</span>
               </p>
             </ion-label>
+            <ion-button 
+              color="danger" 
+              slot="end" 
+              @click="eliminarTarea(tarea.id_tareas)">
+              Eliminar
+            </ion-button>
           </ion-item>
         </ion-list>
       </ion-card-content>
@@ -50,6 +56,12 @@
                 <span v-else>Pendiente</span>
               </p>
             </ion-label>
+            <ion-button 
+              color="danger" 
+              slot="end" 
+              @click="eliminarExamen(examen.id)">
+              Eliminar
+            </ion-button>
           </ion-item>
         </ion-list>
       </ion-card-content>
@@ -113,6 +125,44 @@ const obtenerExamenes = async (idClase: string) => {
   }
 };
 
+// Función para eliminar una tarea
+const eliminarTarea = async (idTarea: string) => {
+  try {
+    const { error } = await supabase
+      .from('tareas')
+      .delete()
+      .eq('id_tareas', idTarea);
+
+    if (error) {
+      console.error('Error al eliminar la tarea:', error);
+      return;
+    }
+
+    tareas.value = tareas.value.filter(tarea => tarea.id_tareas !== idTarea);
+  } catch (err) {
+    console.error('Error al eliminar la tarea:', err);
+  }
+};
+
+// Función para eliminar un examen
+const eliminarExamen = async (idExamen: string) => {
+  try {
+    const { error } = await supabase
+      .from('examenes')
+      .delete()
+      .eq('id', idExamen);
+
+    if (error) {
+      console.error('Error al eliminar el examen:', error);
+      return;
+    }
+
+    examenes.value = examenes.value.filter(examen => examen.id !== idExamen);
+  } catch (err) {
+    console.error('Error al eliminar el examen:', err);
+  }
+};
+
 // Cargar las tareas y exámenes cuando cambie el ID de la clase
 watch(
   () => props.idClase,
@@ -137,5 +187,9 @@ ion-card-title {
 
 p {
   margin: 4px 0;
+}
+
+ion-button {
+  margin-left: 10px;
 }
 </style>

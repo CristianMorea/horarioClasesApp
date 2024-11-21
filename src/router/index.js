@@ -126,26 +126,10 @@ const routes = [
     component: examen
   },
   {
-    path: '/examen',
-    name: 'examen',
-    component: examen
-  },
-  {
     path: '/verDeveres',
     name: 'verExamenesTareas',
     component: verExamenesTareas
-  },
-  {
-    path: '/cardPrincipal',
-    name: 'cardPrincipal',
-    component: CardPrincipal
-  },
-  {
-    path: '/cardSecundaria',
-    name: 'cardSecundaria',
-    component: SubCard
   }
-  
   
 ];
 

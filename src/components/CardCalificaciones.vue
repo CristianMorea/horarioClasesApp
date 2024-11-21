@@ -47,6 +47,7 @@ import {
   IonItem
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'; // Importa useRouter
 import supabase from '../supabase';
 import { addIcons } from 'ionicons';
 import { add } from 'ionicons/icons'; // Importar el icono "add" de Ionicons
@@ -56,6 +57,7 @@ addIcons({ add }); // Registrar el icono "add"
 // Datos reactivos
 const clases = ref<Array<any>>([]); // Lista de clases
 const popoverOpen = ref(false); // Estado para controlar si el popover está abierto
+const router = useRouter(); // Inicializamos el router
 
 // Función para obtener las clases asociadas al usuario autenticado
 const obtenerClases = async () => {
@@ -132,6 +134,15 @@ const showPopover = () => {
 // Función para manejar la selección de una opción en el popover
 const handleOptionClick = (option: string) => {
   console.log(`Opción seleccionada: ${option}`);
+  // Redirigimos según la opción seleccionada
+  if (option === 'Tarea') {
+    router.push('/tareas'); // Redirige a la ruta /tareas
+  } else if (option === 'Examen') {
+    router.push('/examen'); // Redirige a la ruta /examen
+  } else if (option === 'Calificaciones') {
+    router.push('/calificaciones'); // Redirige a la ruta /calificaciones
+  }
+
   // Cerrar el popover después de seleccionar una opción
   popoverOpen.value = false;
 };
