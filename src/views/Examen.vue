@@ -238,8 +238,8 @@ export default defineComponent({
             nota: null,
           };
 
-          // Navegar
-          this.$router.push('/verExamenes');
+          
+          this.$router.push('/verDeveres');
         }
       } catch (error) {
         const toast = await toastController.create({
