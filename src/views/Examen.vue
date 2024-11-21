@@ -49,7 +49,24 @@
               <ion-select-option :value="1">Período 1</ion-select-option>
               <ion-select-option :value="2">Período 2</ion-select-option>
               <ion-select-option :value="3">Período 3</ion-select-option>
-              <ion-select-option :value="4">Período 4</ion-select-option>
+           
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Clase</ion-label>
+            <ion-select 
+              v-model="examen.id_clase"
+              placeholder="Seleccionar Clase"
+              required
+            >
+              <ion-select-option 
+                v-for="clase in clases" 
+                :key="clase.id" 
+                :value="clase.id"
+              >
+                {{ clase.nombre }}
+              </ion-select-option>
             </ion-select>
           </ion-item>
 
@@ -128,15 +145,34 @@ export default defineComponent({
         fecha_examen: "",
         estado: false,
         Periodo: null,
-      }
+        id_clase: null,  // Nuevo campo para almacenar la clase seleccionada
+      },
+      clases: [],  // Array para almacenar las clases obtenidas desde la base de datos
     };
   },
   methods: {
+    // Método para obtener las clases desde la base de datos
+    async obtenerClases() {
+      try {
+        const { data, error } = await supabase.from('clases').select('id, nombre');
+        if (error) throw error;
+        this.clases = data;
+      } catch (error) {
+        const toast = await toastController.create({
+          message: 'Error al cargar las clases: ' + error.message,
+          duration: 3000,
+          color: 'danger'
+        });
+        await toast.present();
+      }
+    },
+
+    // Método para guardar el examen en la base de datos
     async guardarExamen() {
       try {
         // Validación de campos
         if (!this.examen.nombre || !this.examen.descripcion || 
-            !this.examen.fecha_examen || this.examen.Periodo == null) {
+            !this.examen.fecha_examen || this.examen.Periodo == null || this.examen.id_clase == null) {
           const toast = await toastController.create({
             message: 'Por favor, completa todos los campos.',
             duration: 2000,
@@ -153,6 +189,7 @@ export default defineComponent({
           fecha_examen: this.examen.fecha_examen,
           estado: this.examen.estado,
           Periodo: this.examen.Periodo,
+          id_clase: this.examen.id_clase,  // Guardamos la relación con la clase
         }]);
 
         if (error) {
@@ -177,10 +214,11 @@ export default defineComponent({
             fecha_examen: "",
             estado: false,
             Periodo: null,
+            id_clase: null,
           };
 
           // Opcional: navegar a otra página o realizar otra acción
-          this.$router.push('/examenes');
+          this.$router.push('/cardPrincipal');
         }
       } catch (error) {
         const toast = await toastController.create({
@@ -191,6 +229,10 @@ export default defineComponent({
         await toast.present();
       }
     },
+  },
+  created() {
+    // Cargar las clases al cargar la página
+    this.obtenerClases();
   }
 });
 </script>
