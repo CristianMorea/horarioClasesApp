@@ -6,39 +6,66 @@
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>Inicio</ion-title>
+        <ion-title>Ver Deveres</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content id="main-content">
-      Tap the button in the toolbar to open the menu.
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <ion-content id="main-content" class="ion-padding" scroll-y="true">
+      <div>
+        <!-- Mostramos las clases asociadas al usuario -->
+        <ion-card v-for="(claseItem, index) in clases" :key="index">
+          <ion-card-header>
+            <!-- Mostramos el nombre de la clase -->
+            <ion-card-title>{{ claseItem.nombre || "Sin nombre" }}</ion-card-title>
+          </ion-card-header>
+
+          <!-- Llamamos al componente subCard y le pasamos el ID de la clase -->
+          <sub-card :idClase="claseItem.id" />
+        </ion-card>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import supabase from '../supabase';
+import SubCard from '../components/subCard.vue'; // Importamos el componente subCard
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonButtons, IonMenuButton, IonContent } from '@ionic/vue'; // Importa los componentes necesarios
-import MenuComponent from '../components/MenuComponent.vue';
 
-export default defineComponent({
-  components: {
-    MenuComponent,
-    IonPage,       // Asegúrate de importar IonPage
-    IonHeader,     // Asegúrate de importar IonHeader
-    IonToolbar,    // Asegúrate de importar IonToolbar
-    IonTitle,      // Asegúrate de importar IonTitle
-    IonButtons,    // Asegúrate de importar IonButtons
-    IonMenuButton, // Asegúrate de importar IonMenuButton
-    IonContent,    // Asegúrate de importar IonContent
-  },
-});
+// Datos reactivos
+const clases = ref<Array<any>>([]);
+const router = useRouter();
+
+// Función para obtener las clases asociadas al usuario autenticado
+const obtenerClases = async () => {
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError) throw userError;
+    if (!user) throw new Error('Usuario no autenticado.');
+
+    const { data, error } = await supabase
+      .from('clases')
+      .select('id, nombre')
+      .eq('id_usuario', user.id);
+
+    if (error) {
+      console.error('Error al obtener las clases:', error);
+      return;
+    }
+
+    clases.value = data || [];
+  } catch (err) {
+    console.error('Error al obtener las clases:', err);
+  }
+};
+
+// Cargamos las clases al montar el componente
+onMounted(obtenerClases);
 </script>
 
 <style scoped>
@@ -50,6 +77,8 @@ export default defineComponent({
   top: 50%;
   transform: translateY(-50%);
 }
+
+ion-card {
+  margin-bottom: 16px;
+}
 </style>
-
-

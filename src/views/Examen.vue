@@ -218,7 +218,7 @@ export default defineComponent({
           };
 
           // Opcional: navegar a otra página o realizar otra acción
-          this.$router.push('/cardPrincipal');
+          this.$router.push('/verDeveres');
         }
       } catch (error) {
         const toast = await toastController.create({
