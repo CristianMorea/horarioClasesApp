@@ -19,6 +19,9 @@ import FiltersPage from '../views/FiltersPage.vue';
 import calificaciones from '../views/calificaciones.vue';
 import Tareas from '../views/Tareas.vue';
 import examen from '../views/Examen.vue';
+import verExamenesTareas from '../views/verExamenesTareas.vue'
+import CardPrincipal from '../components/cardPrincipal.vue';
+import SubCard from '../components/subCard.vue';
 
 
 
@@ -121,6 +124,26 @@ const routes = [
     path: '/examen',
     name: 'examen',
     component: examen
+  },
+  {
+    path: '/examen',
+    name: 'examen',
+    component: examen
+  },
+  {
+    path: '/verDeveres',
+    name: 'verExamenesTareas',
+    component: verExamenesTareas
+  },
+  {
+    path: '/cardPrincipal',
+    name: 'cardPrincipal',
+    component: CardPrincipal
+  },
+  {
+    path: '/cardSecundaria',
+    name: 'cardSecundaria',
+    component: SubCard
   }
   
   
