@@ -26,7 +26,7 @@
       <ion-list>
         <ion-item button @click="handleOptionClick('Tarea')">Tarea</ion-item>
         <ion-item button @click="handleOptionClick('Examen')">Examen</ion-item>
-        <ion-item button @click="handleOptionClick('Calificaciones')">Calificaciones</ion-item>
+        <ion-item button @click="handleOptionClick('Deveres')">Deveres</ion-item>
       </ion-list>
     </ion-popover>
   </div>
@@ -141,6 +141,8 @@ const handleOptionClick = (option: string) => {
     router.push('/examen'); // Redirige a la ruta /examen
   } else if (option === 'Calificaciones') {
     router.push('/calificaciones'); // Redirige a la ruta /calificaciones
+  } else if (option === 'Deveres'){
+    router.push('/verDeveres')
   }
 
   // Cerrar el popover después de seleccionar una opción

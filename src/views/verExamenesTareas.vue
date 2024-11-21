@@ -6,12 +6,13 @@
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>Ver deveres</ion-title>
+        <ion-title>Ver Deveres</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content id="main-content">
+    <ion-content id="main-content" class="ion-padding" scroll-y="true">
       <div>
+        <!-- Mostramos las clases asociadas al usuario -->
         <ion-card v-for="(claseItem, index) in clases" :key="index">
           <ion-card-header>
             <!-- Mostramos el nombre de la clase -->
@@ -30,9 +31,11 @@
 import { ref, onMounted } from 'vue';
 import supabase from '../supabase';
 import SubCard from '../components/subCard.vue'; // Importamos el componente subCard
+import { useRouter } from 'vue-router';
 
 // Datos reactivos
 const clases = ref<Array<any>>([]);
+const router = useRouter();
 
 // Función para obtener las clases asociadas al usuario autenticado
 const obtenerClases = async () => {
