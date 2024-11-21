@@ -12,6 +12,7 @@
     <ion-content class="ion-padding">
       <form @submit.prevent="guardarExamen">
         <ion-list>
+          <!-- Nombre del examen -->
           <ion-item>
             <ion-label position="floating">Nombre del Examen</ion-label>
             <ion-input 
@@ -21,6 +22,7 @@
             ></ion-input>
           </ion-item>
 
+          <!-- Descripción -->
           <ion-item>
             <ion-label position="floating">Descripción</ion-label>
             <ion-textarea 
@@ -29,6 +31,7 @@
             ></ion-textarea>
           </ion-item>
 
+          <!-- Fecha del examen -->
           <ion-item>
             <ion-label position="floating">Fecha del Examen</ion-label>
             <ion-datetime 
@@ -39,6 +42,7 @@
             ></ion-datetime>
           </ion-item>
 
+          <!-- Período -->
           <ion-item>
             <ion-label>Período</ion-label>
             <ion-select 
@@ -49,10 +53,10 @@
               <ion-select-option :value="1">Período 1</ion-select-option>
               <ion-select-option :value="2">Período 2</ion-select-option>
               <ion-select-option :value="3">Período 3</ion-select-option>
-           
             </ion-select>
           </ion-item>
 
+          <!-- Clase asociada -->
           <ion-item>
             <ion-label>Clase</ion-label>
             <ion-select 
@@ -70,6 +74,21 @@
             </ion-select>
           </ion-item>
 
+          <!-- Nota -->
+          <ion-item>
+            <ion-label position="floating">Nota</ion-label>
+            <ion-input 
+              v-model.number="examen.nota" 
+              type="number" 
+              min="0" 
+              max="5" 
+              step="0.1" 
+              placeholder="Ingresa la nota"
+              required
+            ></ion-input>
+          </ion-item>
+
+          <!-- Estado -->
           <ion-item>
             <ion-label>Estado</ion-label>
             <ion-toggle 
@@ -145,13 +164,13 @@ export default defineComponent({
         fecha_examen: "",
         estado: false,
         Periodo: null,
-        id_clase: null,  // Nuevo campo para almacenar la clase seleccionada
+        id_clase: null,
+        nota: null,
       },
       clases: [],  // Array para almacenar las clases obtenidas desde la base de datos
     };
   },
   methods: {
-    // Método para obtener las clases desde la base de datos
     async obtenerClases() {
       try {
         const { data, error } = await supabase.from('clases').select('id, nombre');
@@ -167,12 +186,12 @@ export default defineComponent({
       }
     },
 
-    // Método para guardar el examen en la base de datos
     async guardarExamen() {
       try {
-        // Validación de campos
+        // Validar que todos los campos estén completos
         if (!this.examen.nombre || !this.examen.descripcion || 
-            !this.examen.fecha_examen || this.examen.Periodo == null || this.examen.id_clase == null) {
+            !this.examen.fecha_examen || this.examen.Periodo == null || 
+            this.examen.id_clase == null || this.examen.nota == null) { // Validar nota
           const toast = await toastController.create({
             message: 'Por favor, completa todos los campos.',
             duration: 2000,
@@ -189,21 +208,22 @@ export default defineComponent({
           fecha_examen: this.examen.fecha_examen,
           estado: this.examen.estado,
           Periodo: this.examen.Periodo,
-          id_clase: this.examen.id_clase,  // Guardamos la relación con la clase
+          id_clase: this.examen.id_clase,
+          nota: this.examen.nota,
         }]);
 
         if (error) {
           const toast = await toastController.create({
             message: 'Error al guardar el examen: ' + error.message,
             duration: 3000,
-            color: 'danger'
+            color: 'danger',
           });
           await toast.present();
         } else {
           const toast = await toastController.create({
             message: 'Examen guardado exitosamente',
             duration: 2000,
-            color: 'success'
+            color: 'success',
           });
           await toast.present();
 
@@ -215,25 +235,25 @@ export default defineComponent({
             estado: false,
             Periodo: null,
             id_clase: null,
+            nota: null,
           };
 
-          // Opcional: navegar a otra página o realizar otra acción
-          this.$router.push('/verDeveres');
+          // Navegar
+          this.$router.push('/verExamenes');
         }
       } catch (error) {
         const toast = await toastController.create({
-          message: 'Ocurrió un error inesperado: ' + error,
+          message: 'Error inesperado: ' + error,
           duration: 3000,
-          color: 'danger'
+          color: 'danger',
         });
         await toast.present();
       }
     },
   },
-  created() {
-    // Cargar las clases al cargar la página
+  mounted() {
     this.obtenerClases();
-  }
+  },
 });
 </script>
 
@@ -243,8 +263,6 @@ ion-list {
 }
 
 ion-item {
-  --padding-start: 0;
-  --inner-padding-end: 0;
   margin-bottom: 16px;
 }
 
