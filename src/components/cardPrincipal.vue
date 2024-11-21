@@ -1,17 +1,18 @@
-<!-- carPrincipal.vue -->
 <template>
-  <div>
-    <!-- Recorremos la lista de clases y mostramos el título -->
-    <ion-card v-for="(claseItem, index) in clases" :key="index">
-      <ion-card-header>
-        <!-- Mostramos el nombre de la clase -->
-        <ion-card-title>{{ claseItem.nombre || "Sin nombre" }}</ion-card-title>
-      </ion-card-header>
+  <ion-content>
+    <div>
+      <!-- Recorremos la lista de clases y mostramos el título -->
+      <ion-card v-for="(claseItem, index) in clases" :key="index">
+        <ion-card-header>
+          <!-- Mostramos el nombre de la clase -->
+          <ion-card-title>{{ claseItem.nombre || "Sin nombre" }}</ion-card-title>
+        </ion-card-header>
 
-      <!-- Llamamos al componente subCard y le pasamos el ID de la clase -->
-      <sub-card :idClase="claseItem.id" />
-    </ion-card>
-  </div>
+        <!-- Llamamos al componente subCard y le pasamos el ID de la clase -->
+        <sub-card :idClase="claseItem.id" />
+      </ion-card>
+    </div>
+  </ion-content>
 </template>
 
 <script setup lang="ts">
@@ -52,3 +53,16 @@ const obtenerClases = async () => {
 // Cargamos las clases al montar el componente
 onMounted(obtenerClases);
 </script>
+
+<style scoped>
+ion-content {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+}
+
+ion-card {
+  margin-bottom: 16px;
+}
+</style>
