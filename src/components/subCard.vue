@@ -96,10 +96,11 @@ const obtenerTareas = async (idClase: string) => {
       .eq('id_clase', idClase);
 
     if (error) {
-      console.error('Error al obtener las tareas:', error);
+      console.error('Error al obtener las tareas:', error.message);
       return;
     }
 
+    console.log('Tareas obtenidas:', data); // Log para verificar datos
     tareas.value = data || [];
   } catch (err) {
     console.error('Error al obtener las tareas:', err);
@@ -115,10 +116,11 @@ const obtenerExamenes = async (idClase: string) => {
       .eq('id_clase', idClase);
 
     if (error) {
-      console.error('Error al obtener los exámenes:', error);
+      console.error('Error al obtener los exámenes:', error.message);
       return;
     }
 
+    console.log('Exámenes obtenidos:', data); // Log para verificar datos
     examenes.value = data || [];
   } catch (err) {
     console.error('Error al obtener los exámenes:', err);
@@ -134,7 +136,7 @@ const eliminarTarea = async (idTarea: string) => {
       .eq('id_tareas', idTarea);
 
     if (error) {
-      console.error('Error al eliminar la tarea:', error);
+      console.error('Error al eliminar la tarea:', error.message);
       return;
     }
 
@@ -153,7 +155,7 @@ const eliminarExamen = async (idExamen: string) => {
       .eq('id', idExamen);
 
     if (error) {
-      console.error('Error al eliminar el examen:', error);
+      console.error('Error al eliminar el examen:', error.message);
       return;
     }
 
