@@ -1,20 +1,20 @@
 <template>
   <div>
     <!-- Recorremos la lista de clases y mostramos la información -->
-    <ion-card v-for="(claseItem, index) in clases" :key="index">
+    <ion-card class="border" v-for="(claseItem, index) in clases" :key="index">
       <ion-card-header>
         <ion-card-title>{{ claseItem.nombre || "Sin nombre" }}</ion-card-title>
       </ion-card-header>
-      <ion-card-content>
+      <ion-card-content class="colors">
         <p><strong>Ubicación:</strong> {{ claseItem.ubicacion || "No especificada" }}</p>
         <p><strong>Hora Inicio:</strong> {{ claseItem.hora_inicio || "No especificada" }}</p>
         <p><strong>Hora Fin:</strong> {{ claseItem.hora_fin || "No especificada" }}</p>
         <p><strong>Profesor:</strong> {{ claseItem.profesor.nombre || "No asignado" }}</p>
-        <ion-button @click="actualizarDatos">Actualizar</ion-button>
+        <ion-button class="butonA">Actualizar</ion-button>
 
         <!-- Botón flotante añadido -->
-        <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-          <ion-fab-button @click="showPopover">
+        <ion-fab vertical="bottom" slot="fixed">
+          <ion-fab-button class="plus" @click="showPopover">
             <ion-icon name="add"></ion-icon>
           </ion-fab-button>
         </ion-fab>
@@ -154,7 +154,55 @@ onMounted(obtenerClases);
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+
+body {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
+}
+
+.custom-title {
+    font-family: "Architects Daughter", cursive;
+  }
+
+ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
+  font-family: 'Architects Daughter', cursive;
+}
+
 p {
   margin: 8px 0;
 }
+
+.butonA{
+  --background: #a22626; /* Verde */
+  --background-hover: #a22626; /* Verde oscuro */
+  --color: #ffffff;
+  height: 50px; /* Altura ajustada */
+  font-size: 12px; /* Tamaño de texto reducido */
+  padding: 0 12px; /* Reducción del relleno */
+  width: 160px; /* Ancho ajustado */
+}
+
+ion-button {
+  --background: #a22626;
+  --background-activated: #a22626;
+  --border-radius: 40px;
+  margin-top: 1rem;
+}
+
+.plus {
+  --background: #a22626; /* Verde */
+  --color: white;
+  margin-left: 90px;
+  position: relative;
+  top: -10px; /* Sube el botón 10px */
+}
+
+.colors{
+  color: rgb(48, 48, 48);
+}
+
+.border{
+  border-radius: 40px;
+}
+
 </style>

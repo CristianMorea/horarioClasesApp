@@ -8,13 +8,13 @@
         <ion-buttons slot="start">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title>Calificaciones</ion-title>
+        <ion-title class="text-center text-2xl font-bold custom-title">CALIFICACIONES</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
+    <ion-content >
       <!-- Componente de la tarjeta -->
-      <CardCalificaciones />
+      <CardCalificaciones/>
     </ion-content>
 
     <!-- Componente de la barra de navegación -->
@@ -47,5 +47,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Agrega estilos específicos aquí si son necesarios */
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+
+body {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
+}
+
+.custom-title {
+    font-family: "Architects Daughter", cursive;
+  }
+
+ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
+  font-family: 'Architects Daughter', cursive;
+}
+
 </style>
+
