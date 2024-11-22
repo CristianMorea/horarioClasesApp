@@ -73,9 +73,9 @@
       />
     </ion-content>
 
-    <div class="left-button-container">
+    <div class="left-button-container ">
       <img :src="lapizImage" @click="editarP" class="button-image" style="cursor: pointer;"/>
-      <ion-button class="rounded-button vertical-button" @click="ponderadoPage">
+      <ion-button class="rounded-button border vertical-button" @click="ponderadoPage">
         <div class="vertical-text font-bold text-ponde">PONDERADO</div>
       </ion-button>
     </div>
@@ -276,10 +276,8 @@ ion-item.item-clase {
 .vertical-button {
   height: 130px; /* Ajusta la altura del botón vertical */
   width: 45px; /* Ajusta el ancho si es necesario */
-  border-radius: 7px; /* Aplica el borde redondeado aquí */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
+  --border-radius: 14px; /* Aplica el borde redondeado aquí */
   --background: #bb2a2a;
-  border: 3px solid #000000;
 }
 
 .small-button {
@@ -302,6 +300,11 @@ ion-item.item-clase {
   transform: rotate(180deg); /* Rota el texto para que quede correctamente alineado */
   color:#f0f0f0
   
+}
+
+.border{
+  border-radius: 16px; 
+  border: 3px solid #000000;
 }
 
 ion-content {
