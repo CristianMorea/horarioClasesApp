@@ -29,6 +29,36 @@
           <p v-if="mensaje">{{ mensaje }}</p>
         </ion-card-content>
       </ion-card>
+
+
+      <!-- Lista de notas guardadas -->
+      <div class="scrollable-content">
+      <ion-card class="recordatorio-card2">
+        <ion-card-header>
+          <ion-card-title>Notas Guardadas</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item v-for="(nota, index) in notas" :key="index">
+            <ion-label>
+              <h2 class="text-lg font-bold">{{ nota.nota }}</h2>
+              <p class="text-gray-400">Creada el: {{ nota.fecha_creacion }}</p>
+              <p class="text-gray-400">Vence el: {{ nota.fecha_vencimiento }}</p>
+            </ion-label>
+            <ion-button 
+              slot="end" 
+              color="danger" 
+              @click="eliminarNota(nota.id)"
+            >
+              Eliminar
+            </ion-button>
+          </ion-item>
+          <p v-if="notas.length === 0" class="text-center text-gray-500">
+            No hay notas guardadas.
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
     </ion-content>
   </ion-page>
 </template>
@@ -73,11 +103,83 @@ export default defineComponent({
     IonButton,
   },
   setup() {
-    const route = useRoute();
     const router = useRouter();
     const nota = ref('');
     const mensaje = ref('');
+    const notas = ref([]); // Cambiar de string a array
 
+    // Método para cargar las notas guardadas
+    const cargarNotas = async () => {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData.session) {
+        router.push('/');
+        return;
+      }
+
+      const usuarioId = sessionData.session.user.id;
+      const { data, error } = await supabase
+        .from('Notas')
+        .select('*')
+        .eq('usuario_id', usuarioId);
+
+      if (error) {
+        console.error('Error al cargar las notas:', error);
+        mensaje.value = 'Error al cargar las notas.';
+      } else {
+        notas.value = data || [];
+      }
+    };
+
+    // Método para eliminar una nota
+    const eliminarNota = async (id: number) => {
+      const { error } = await supabase.from('Notas').delete().eq('id', id);
+
+      if (error) {
+        console.error('Error al eliminar la nota:', error);
+        mensaje.value = 'Error al eliminar la nota.';
+      } else {
+        mensaje.value = 'Nota eliminada con éxito.';
+        cargarNotas(); // Recargar las notas después de eliminar
+      }
+    };
+
+    // Método para guardar una nueva nota
+    const guardarNota = async () => {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData.session) {
+        router.push('/');
+        return;
+      }
+
+      const usuarioId = sessionData.session.user.id;
+
+      if (!nota.value) {
+        mensaje.value = 'Por favor ingresa la nota.';
+        return;
+      }
+
+      const { error } = await supabase
+        .from('Notas')
+        .insert([
+          {
+            nota: nota.value,
+            usuario_id: usuarioId,
+            fecha_vencimiento: new Date().toISOString().split('T')[0],
+            fecha_creacion: new Date().toLocaleTimeString('en-US', { hour12: false }),
+          },
+        ]);
+
+      if (error) {
+        console.error('Error al guardar la nota:', error);
+        mensaje.value = `Error al guardar la nota: ${error.message}`;
+      } else {
+        mensaje.value = 'Nota guardada con éxito.';
+        nota.value = '';
+        cargarNotas(); // Recargar la lista de notas después de guardar
+      }
+    };
+
+    // Invocar la carga de notas al montar el componente
     onMounted(async () => {
       const { data, error } = await supabase.auth.getSession();
       if (error || !data.session) {
@@ -85,57 +187,20 @@ export default defineComponent({
         router.push('/');
         return;
       }
+      await cargarNotas(); // Corrección del typo
     });
-
-    const onNotaChange = (event: Event) => {
-      const valor = (event.target as HTMLInputElement).value;
-      nota.value = valor;
-    };
-
-    const guardarNota = async () => {
-  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-  if (sessionError || !sessionData.session) {
-    router.push('/');
-    return;
-  }
-
-  const usuarioId = sessionData.session.user.id; // Obtén el ID del usuario actual
-
-  if (!nota.value) {
-    mensaje.value = 'Por favor ingresa la nota.';
-    return;
-  }
-
-  const { error } = await supabase
-    .from('Notas')
-    .insert([
-      {
-        nota: nota.value,
-        usuario_id: usuarioId, // Vincula la nota al usuario
-        fecha_vencimiento: new Date().toISOString().split('T')[0], // Fecha actual
-        fecha_creacion: new Date().toLocaleTimeString('en-US', { hour12: false }), // Hora actual
-      },
-    ]);
-
-  if (error) {
-    console.error('Error al guardar la nota:', error);
-    mensaje.value = `Error al guardar la nota: ${error.message}`;
-  } else {
-    mensaje.value = 'Nota guardada con éxito.';
-    nota.value = ''; // Limpiar el campo de la nota después de guardar
-  }
-};
-
 
     return {
       nota,
       mensaje,
+      notas,
       guardarNota,
-      onNotaChange,
+      eliminarNota,
     };
   },
 });
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
@@ -164,9 +229,29 @@ ion-card-title {
 
 }
 
+.scrollable-content {
+  border: 3px solid transparent;
+  max-height: 480px; /* Ajusta la altura máxima de la lista de materias */
+  overflow-y: auto;  /* Habilita el scroll solo verticalmente */
+  padding-right: 10px; /* Agrega un poco de espacio si es necesario para la barra de desplazamiento */
+  border-radius: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 0px;
+  margin-left: 10px; /* Reduce el espacio a la izquierda */
+  margin-right: 10px; /* Reduce el espacio a la derecha */
+}
+
+
 .recordatorio-card {
   border-radius: 10px; /* Bordes redondeados */
-  padding: 16px; /* Espaciado interno */
+  padding: 0px; /* Espaciado interno */
+  margin-left: 10px; /* Espaciado lateral izquierdo */
+  margin-right: 10px; /* Espaciado lateral derecho */
+  
+}
+
+.recordatorio-card2 {
+  height: 170px; /* Ajusta según lo necesites */
 }
 
 .custom-title {
