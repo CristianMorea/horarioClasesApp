@@ -20,6 +20,12 @@
               </p>
             </ion-label>
             <ion-button 
+              color="primary" 
+              slot="end" 
+              @click="editarTarea(tarea)">
+              Editar
+            </ion-button>
+            <ion-button 
               color="danger" 
               slot="end" 
               @click="eliminarTarea(tarea.id_tareas)">
@@ -57,6 +63,12 @@
               </p>
             </ion-label>
             <ion-button 
+              color="primary" 
+              slot="end" 
+              @click="editarExamen(examen)">
+              Editar
+            </ion-button>
+            <ion-button 
               color="danger" 
               slot="end" 
               @click="eliminarExamen(examen.id)">
@@ -86,6 +98,8 @@ const props = defineProps<{ idClase: string }>();
 // Datos reactivos
 const tareas = ref<Array<any>>([]);
 const examenes = ref<Array<any>>([]);
+const tareaEditar = ref<any>(null);
+const examenEditar = ref<any>(null);
 
 // Función para obtener las tareas asociadas a una clase
 const obtenerTareas = async (idClase: string) => {
@@ -163,6 +177,20 @@ const eliminarExamen = async (idExamen: string) => {
   } catch (err) {
     console.error('Error al eliminar el examen:', err);
   }
+};
+
+// Función para manejar la edición de una tarea
+const editarTarea = (tarea: any) => {
+  tareaEditar.value = { ...tarea };
+  console.log('Tarea a editar:', tareaEditar.value);
+  // Aquí puedes abrir un modal o redirigir a otra vista para editar la tarea
+};
+
+// Función para manejar la edición de un examen
+const editarExamen = (examen: any) => {
+  examenEditar.value = { ...examen };
+  console.log('Examen a editar:', examenEditar.value);
+  // Aquí puedes abrir un modal o redirigir a otra vista para editar el examen
 };
 
 // Cargar las tareas y exámenes cuando cambie el ID de la clase
