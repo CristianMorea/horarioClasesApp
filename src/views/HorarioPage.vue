@@ -1,3 +1,4 @@
+<!-- HorarioPage.vue -->
 <template>
   <ion-page class="h-screen bg-white flex">
     <MenuComponent/>
@@ -306,6 +307,7 @@ ion-item.item-clase {
 ion-content {
   padding: 0; /* Elimina el padding por defecto */
   margin: 0; /* Elimina el margen por defecto */
+  
 }
 
 .custom-button {

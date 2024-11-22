@@ -1,28 +1,31 @@
+<!-- TabBar -->
 <template>
-  <ion-tabs>
-    <!-- Contenido principal de las tabs -->
-    <ion-router-outlet></ion-router-outlet>
-
-    <!-- Barra de navegación inferior -->
-    <ion-tab-bar slot="bottom" class="tab-container">
-      <ion-tab-button tab="horario" href="/horario" class="tab-button">
-        <ion-icon name="home-outline"></ion-icon>
-        <ion-label>Inicio</ion-label>
-      </ion-tab-button>
-      <ion-tab-button tab="modificar-perfil" href="/modificar-perfil" class="tab-button">
-        <ion-icon name="person-outline"></ion-icon>
-        <ion-label>Perfil</ion-label>
-      </ion-tab-button>
-      <ion-tab-button tab="calificaciones" href="/calificaciones" class="tab-button">
-        <ion-icon name="calculator-outline"></ion-icon>
-        <ion-label>Calificaciones</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
+    <!-- Envolvemos en ion-tabs -->
+    <ion-tabs>
+      <ion-router-outlet></ion-router-outlet> <!-- Añadimos el outlet aquí -->
+      
+      <ion-tab-bar slot="bottom" class="tab-container">
+        <div class="tab-island">
+          <ion-tab-button @click="navigateTo('/horario')" class="tab-button">
+            <ion-icon name="home-outline"></ion-icon>
+            <ion-label>Inicio</ion-label>
+          </ion-tab-button>
+          <ion-tab-button @click="navigateTo('/modificar-perfil')" class="tab-button">
+            <ion-icon name="person-outline"></ion-icon>
+            <ion-label>Perfil</ion-label>
+          </ion-tab-button>
+          <ion-tab-button @click="navigateTo('/calificaciones')" class="tab-button">
+            <ion-icon name="calculator-outline"></ion-icon>
+            <ion-label>Calificaciones</ion-label>
+          </ion-tab-button>
+        </div>
+      </ion-tab-bar>
+    </ion-tabs>
 </template>
 
 <script>
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/vue';
+import { useRouter } from 'vue-router';
 
 export default {
   components: {
@@ -31,10 +34,22 @@ export default {
     IonTabButton,
     IonIcon,
     IonLabel,
-    IonRouterOutlet,
+    IonRouterOutlet, // Importamos IonRouterOutlet
+  },
+  setup() {
+    const router = useRouter();
+
+    const navigateTo = (route) => {
+      router.push(route);
+    };
+
+    return {
+      navigateTo,
+    };
   },
 };
 </script>
+
 
 <style scoped>
 
@@ -45,6 +60,7 @@ export default {
   align-items: center;
   padding: 10px 0; /* Espaciado alrededor de la barra */
   --background: transparent;
+  
 }
 
 /* Isla negra para contener los botones */
