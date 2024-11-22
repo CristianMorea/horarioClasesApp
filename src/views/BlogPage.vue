@@ -52,10 +52,12 @@ import {
   IonLabel,
   IonInput,
   IonButton,
+  IonButtons,
 } from '@ionic/vue';
 
 export default defineComponent({
   components: {
+    IonButtons,
     IonPage,
     IonHeader,
     IonToolbar,
@@ -91,33 +93,39 @@ export default defineComponent({
     };
 
     const guardarNota = async () => {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError || !sessionData.session) {
-        router.push('/');
-        return;
-      }
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError || !sessionData.session) {
+    router.push('/');
+    return;
+  }
 
-      if (!nota.value) {
-        mensaje.value = 'Por favor ingresa la nota.';
-        return;
-      }
+  const usuarioId = sessionData.session.user.id; // Obtén el ID del usuario actual
 
-      const { error } = await supabase
-        .from('Notas')
-        .insert([
-          {
-            nota: nota.value, // Solo insertamos la nota
-          },
-        ]);
+  if (!nota.value) {
+    mensaje.value = 'Por favor ingresa la nota.';
+    return;
+  }
 
-      if (error) {
-        console.error('Error al guardar la nota:', error);
-        mensaje.value = `Error al guardar la nota: ${error.message}`;
-      } else {
-        mensaje.value = 'Nota guardada con éxito.';
-        nota.value = ''; // Limpiar el campo de la nota después de guardar
-      }
-    };
+  const { error } = await supabase
+    .from('Notas')
+    .insert([
+      {
+        nota: nota.value,
+        usuario_id: usuarioId, // Vincula la nota al usuario
+        fecha_vencimiento: new Date().toISOString().split('T')[0], // Fecha actual
+        fecha_creacion: new Date().toLocaleTimeString('en-US', { hour12: false }), // Hora actual
+      },
+    ]);
+
+  if (error) {
+    console.error('Error al guardar la nota:', error);
+    mensaje.value = `Error al guardar la nota: ${error.message}`;
+  } else {
+    mensaje.value = 'Nota guardada con éxito.';
+    nota.value = ''; // Limpiar el campo de la nota después de guardar
+  }
+};
+
 
     return {
       nota,
