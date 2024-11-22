@@ -1,37 +1,45 @@
 <template>
-  <ion-tabs>
-    <!-- Contenido principal de las tabs -->
-    <ion-router-outlet></ion-router-outlet>
-
-    <!-- Barra de navegación inferior -->
-    <ion-tab-bar slot="bottom" class="tab-container">
-      <ion-tab-button tab="horario" href="/horario" class="tab-button">
+  <div style="background-color: transparent; position: fixed; bottom: 0; width: 100%; z-index: 9;">
+  <ion-tab-bar slot="bottom" class="tab-container">
+    <div class="tab-island">
+      <ion-tab-button @click="navigateTo('/horario')" class="tab-button">
         <ion-icon name="home-outline"></ion-icon>
         <ion-label>Inicio</ion-label>
       </ion-tab-button>
-      <ion-tab-button tab="modificar-perfil" href="/modificar-perfil" class="tab-button">
+      <ion-tab-button @click="navigateTo('/modificar-perfil')" class="tab-button">
         <ion-icon name="person-outline"></ion-icon>
         <ion-label>Perfil</ion-label>
       </ion-tab-button>
-      <ion-tab-button tab="calificaciones" href="/calificaciones" class="tab-button">
+      <ion-tab-button @click="navigateTo('/calificaciones')" class="tab-button">
         <ion-icon name="calculator-outline"></ion-icon>
-        <ion-label>Calificaciones</ion-label>
+        <ion-label>calificaciones</ion-label>
       </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
+    </div>
+  </ion-tab-bar>
+  </div>
 </template>
 
 <script>
-import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel, IonRouterOutlet } from '@ionic/vue';
+import { IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/vue';
+import { useRouter } from 'vue-router';
 
 export default {
   components: {
-    IonTabs,
     IonTabBar,
     IonTabButton,
     IonIcon,
     IonLabel,
-    IonRouterOutlet,
+  },
+  setup() {
+    const router = useRouter();
+
+    const navigateTo = (route) => {
+      router.push(route);
+    };
+
+    return {
+      navigateTo,
+    };
   },
 };
 </script>
