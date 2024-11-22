@@ -250,7 +250,6 @@ ion-card {
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 1rem;
-  border: 2px solid #bb2a2a; /* Color del borde */
   border-radius: 8px; /* Bordes redondeados */
   padding: 10px; /* Espaciado interno para hacer que el borde se vea mejor */
 }
