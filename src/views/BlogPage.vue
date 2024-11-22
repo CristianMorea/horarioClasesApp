@@ -8,6 +8,7 @@
           </ion-button>
         </ion-buttons>
         <ion-title class="text-center text-2xl font-bold custom-title">NOTA</ion-title>
+     
       </ion-toolbar>
     </ion-header>
 
