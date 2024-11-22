@@ -22,6 +22,7 @@ import examen from '../views/Examen.vue';
 import verExamenesTareas from '../views/verExamenesTareas.vue'
 import CardPrincipal from '../components/cardPrincipal.vue';
 import SubCard from '../components/subCard.vue';
+import EditarTarea from '../views/EditarTarea.vue';
 
 
 
@@ -129,6 +130,11 @@ const routes = [
     path: '/verDeveres',
     name: 'verExamenesTareas',
     component: verExamenesTareas
+  },
+  {
+    path: '/EditarTareas',
+    name: 'EditarTareas',
+    component: EditarTarea
   }
   
 ];

@@ -1,73 +1,29 @@
 <template>
   <div>
-    <!-- Mostrar las tareas asociadas a esta clase -->
-    <ion-card v-if="tareas && tareas.length > 0">
-      <ion-card-header>
-        <ion-card-title>Tareas de la clase</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list>
-          <ion-item v-for="(tarea, index) in tareas" :key="index">
-            <ion-label>
-              <h3>{{ tarea.nombre }}</h3>
-              <p>{{ tarea.descripcion }}</p>
-              <p><strong>Fecha de entrega:</strong> {{ tarea.fecha_entrega }}</p>
-              <p><strong>Periodo:</strong> {{ tarea.periodo }}</p>
-              <p>
-                <strong>Estado:</strong>
-                <span v-if="tarea.estado">Completada</span>
-                <span v-else>Pendiente</span>
-              </p>
-            </ion-label>
-            <ion-button 
-              color="danger" 
-              slot="end" 
-              @click="eliminarTarea(tarea.id_tareas)">
-              Eliminar
-            </ion-button>
-          </ion-item>
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Si no hay tareas, mostrar un mensaje -->
+    <!-- Componente genérico para mostrar tareas -->
+    <DataCard 
+      v-if="tareas.length > 0" 
+      :titulo="'Tareas de la clase'" 
+      :items="tareas" 
+      @editar="editarTarea" 
+      @eliminar="eliminarTarea"
+      entidad="tareas"
+    />
     <ion-card v-else>
       <ion-card-content>
         <p>No hay tareas asociadas a esta clase.</p>
       </ion-card-content>
     </ion-card>
 
-    <!-- Mostrar los exámenes asociados a esta clase -->
-    <ion-card v-if="examenes && examenes.length > 0">
-      <ion-card-header>
-        <ion-card-title>Exámenes de la clase</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-list>
-          <ion-item v-for="(examen, index) in examenes" :key="index">
-            <ion-label>
-              <h3>{{ examen.nombre }}</h3>
-              <p>{{ examen.descripcion }}</p>
-              <p><strong>Fecha del examen:</strong> {{ examen.fecha_examen }}</p>
-              <p><strong>Periodo:</strong> {{ examen.periodo }}</p>
-              <p>
-                <strong>Estado:</strong>
-                <span v-if="examen.estado">Realizado</span>
-                <span v-else>Pendiente</span>
-              </p>
-            </ion-label>
-            <ion-button 
-              color="danger" 
-              slot="end" 
-              @click="eliminarExamen(examen.id)">
-              Eliminar
-            </ion-button>
-          </ion-item>
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
-
-    <!-- Si no hay exámenes, mostrar un mensaje -->
+    <!-- Componente genérico para mostrar exámenes -->
+    <DataCard 
+      v-if="examenes.length > 0" 
+      :titulo="'Exámenes de la clase'" 
+      :items="examenes" 
+      @editar="editarExamen" 
+      @eliminar="eliminarExamen"
+      entidad="examenes"
+    />
     <ion-card v-else>
       <ion-card-content>
         <p>No hay exámenes asociados a esta clase.</p>
@@ -79,99 +35,80 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import supabase from '../supabase';
+import DataCard from './DataCard.vue';
 
-// Prop para recibir el ID de la clase
+// Props para recibir datos
 const props = defineProps<{ idClase: string }>();
 
-// Datos reactivos
+// Variables reactivas
 const tareas = ref<Array<any>>([]);
 const examenes = ref<Array<any>>([]);
+const tareaEditar = ref<any>(null);
+const examenEditar = ref<any>(null);
 
-// Función para obtener las tareas asociadas a una clase
-const obtenerTareas = async (idClase: string) => {
+// Función genérica para obtener datos de una tabla
+const obtenerDatos = async (tabla: string, idClase: string, setDatos: (data: any[]) => void) => {
   try {
     const { data, error } = await supabase
-      .from('tareas')
-      .select('id_tareas, nombre, descripcion, fecha_entrega, estado, "Periodo"')
+      .from(tabla)
+      .select('*') // Seleccionar todo; puede ajustarse según los campos necesarios
       .eq('id_clase', idClase);
 
     if (error) {
-      console.error('Error al obtener las tareas:', error.message);
+      console.error(`Error al obtener datos de ${tabla}:`, error.message);
       return;
     }
 
-    console.log('Tareas obtenidas:', data); // Log para verificar datos
-    tareas.value = data || [];
+    console.log(`${tabla} obtenidos:`, data);
+    setDatos(data || []);
   } catch (err) {
-    console.error('Error al obtener las tareas:', err);
+    console.error(`Error al obtener datos de ${tabla}:`, err);
   }
 };
 
-// Función para obtener los exámenes asociados a una clase
-const obtenerExamenes = async (idClase: string) => {
+// Funciones para obtener tareas y exámenes
+const obtenerTareas = () => obtenerDatos('tareas', props.idClase, data => (tareas.value = data));
+const obtenerExamenes = () => obtenerDatos('examenes', props.idClase, data => (examenes.value = data));
+
+// Función genérica para eliminar un registro
+const eliminarRegistro = async (tabla: string, id: string, actualizarLista: (id: string) => void) => {
   try {
-    const { data, error } = await supabase
-      .from('examenes')
-      .select('id, descripcion, fecha_examen, nombre, estado, "Periodo"')
-      .eq('id_clase', idClase);
-
+    const { error } = await supabase.from(tabla).delete().eq('id', id);
     if (error) {
-      console.error('Error al obtener los exámenes:', error.message);
+      console.error(`Error al eliminar en ${tabla}:`, error.message);
       return;
     }
-
-    console.log('Exámenes obtenidos:', data); // Log para verificar datos
-    examenes.value = data || [];
+    actualizarLista(id);
   } catch (err) {
-    console.error('Error al obtener los exámenes:', err);
+    console.error(`Error al eliminar en ${tabla}:`, err);
   }
 };
 
-// Función para eliminar una tarea
-const eliminarTarea = async (idTarea: string) => {
-  try {
-    const { error } = await supabase
-      .from('tareas')
-      .delete()
-      .eq('id_tareas', idTarea);
+// Funciones específicas para eliminar tareas y exámenes
+const eliminarTarea = (id: string) => eliminarRegistro('tareas', id, idEliminado => {
+  tareas.value = tareas.value.filter(t => t.id_tareas !== idEliminado);
+});
+const eliminarExamen = (id: string) => eliminarRegistro('examenes', id, idEliminado => {
+  examenes.value = examenes.value.filter(e => e.id !== idEliminado);
+});
 
-    if (error) {
-      console.error('Error al eliminar la tarea:', error.message);
-      return;
-    }
-
-    tareas.value = tareas.value.filter(tarea => tarea.id_tareas !== idTarea);
-  } catch (err) {
-    console.error('Error al eliminar la tarea:', err);
-  }
+// Funciones para editar tareas y exámenes
+const editarTarea = (tarea: any) => {
+  tareaEditar.value = { ...tarea };
+  console.log('Tarea a editar:', tareaEditar.value);
+};
+const editarExamen = (examen: any) => {
+  examenEditar.value = { ...examen };
+  console.log('Examen a editar:', examenEditar.value);
 };
 
-// Función para eliminar un examen
-const eliminarExamen = async (idExamen: string) => {
-  try {
-    const { error } = await supabase
-      .from('examenes')
-      .delete()
-      .eq('id', idExamen);
-
-    if (error) {
-      console.error('Error al eliminar el examen:', error.message);
-      return;
-    }
-
-    examenes.value = examenes.value.filter(examen => examen.id !== idExamen);
-  } catch (err) {
-    console.error('Error al eliminar el examen:', err);
-  }
-};
-
-// Cargar las tareas y exámenes cuando cambie el ID de la clase
+// Cargar datos al cambiar el ID de la clase
 watch(
   () => props.idClase,
   (newId) => {
     if (newId) {
-      obtenerTareas(newId);
-      obtenerExamenes(newId);
+      obtenerTareas();
+      obtenerExamenes();
     }
   },
   { immediate: true }
