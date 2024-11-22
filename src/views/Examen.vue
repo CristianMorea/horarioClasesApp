@@ -171,19 +171,39 @@ export default defineComponent({
     };
   },
   methods: {
+    
     async obtenerClases() {
       try {
-        const { data, error } = await supabase.from('clases').select('id, nombre');
-        if (error) throw error;
-        this.clases = data;
-      } catch (error) {
-        const toast = await toastController.create({
-          message: 'Error al cargar las clases: ' + error.message,
-          duration: 3000,
-          color: 'danger'
-        });
-        await toast.present();
-      }
+    // Obtener usuario actual
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+
+    if (userError) throw userError;
+    if (!userData) throw new Error('Usuario no autenticado.');
+
+    const user = userData.user;
+
+    // Consulta para obtener las clases asociadas al usuario
+    const { data: clasesData, error } = await supabase
+      .from('clases')
+      .select('id, nombre, ubicacion, hora_inicio, hora_fin, profesor_id')
+      .eq('id_usuario', user.id); // Filtramos por el ID del usuario
+
+    if (error) {
+      console.error('Error al obtener las clases:', error);
+      return;
+    }
+
+    if (!clasesData || clasesData.length === 0) {
+      console.warn('No se encontraron clases asociadas a este usuario.');
+      this.clases = []; // Asigna un arreglo vacío si no hay clases
+      return;
+    }
+
+    // Asignar las clases obtenidas al estado
+    this.clases = clasesData;
+  } catch (error) {
+    console.error('Error inesperado al obtener las clases:', error);
+  }
     },
 
     async guardarExamen() {
