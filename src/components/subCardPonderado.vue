@@ -10,6 +10,22 @@
         </ion-select>
       </ion-item>
   
+      <!-- Mostrar la nota final -->
+      <ion-card>
+        <ion-card-content class="ion-text-center">
+          <h2>Nota Final del Periodo</h2>
+          <h1 style="font-size: 2em; margin: 10px 0;">
+            {{ calcularNotaFinal().toFixed(2) }}
+          </h1>
+          <p>
+            <small>
+              (Tareas: {{ calcularPonderadoTareas().toFixed(2) }} x 40% + 
+              Exámenes: {{ calcularPonderadoExamenes().toFixed(2) }} x 60%)
+            </small>
+          </p>
+        </ion-card-content>
+      </ion-card>
+  
       <!-- Mostrar las tareas asociadas a esta clase -->
       <ion-card v-if="tareas.length > 0">
         <ion-card-header>
@@ -76,6 +92,18 @@
   const tareas = ref<Array<any>>([]);
   const examenes = ref<Array<any>>([]);
   const selectedPeriodo = ref<number>(2);
+  
+  // Constantes para los porcentajes
+  const PORCENTAJE_TAREAS = 0.4;  // 40%
+  const PORCENTAJE_EXAMENES = 0.6; // 60%
+  
+  // Función para calcular la nota final
+  const calcularNotaFinal = () => {
+    const ponderadoTareas = calcularPonderadoTareas();
+    const ponderadoExamenes = calcularPonderadoExamenes();
+    
+    return (ponderadoTareas * PORCENTAJE_TAREAS) + (ponderadoExamenes * PORCENTAJE_EXAMENES);
+  };
   
   // Función para calcular el ponderado de tareas
   const calcularPonderadoTareas = () => {
