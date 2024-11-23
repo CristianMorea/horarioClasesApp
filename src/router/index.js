@@ -136,7 +136,6 @@ const routes = [
     name: 'EditarTareas',
     component: EditarTarea
   }
-  
 ];
 
 const router = createRouter({
