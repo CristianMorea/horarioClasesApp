@@ -1,198 +1,84 @@
 <template>
   <ion-page>
-    <!-- Asegúrate de que el content-id del menú coincida con el id del contenido -->
-    <MenuComponent content-id="main-content" />
-    
-    <!-- Header con el engranaje y el icono de búsqueda -->
+    <MenuComponent />
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button>
-            <ion-menu-button></ion-menu-button>
-          </ion-button>
+          <ion-menu-button></ion-menu-button>
         </ion-buttons>
-        <ion-title></ion-title>
+        <ion-title>Ponderado</ion-title>
       </ion-toolbar>
     </ion-header>
 
-    <!-- Contenido de la página -->
-    <ion-content id="main-content" class="ion-padding"> <!-- Aquí se asigna el id 'main-content' -->
-      <!-- Título "PONDERADO" -->
-      <div class="ponderado-title">
-        PONDERADO
-      </div>
+    <ion-content id="main-content" class="ion-padding" scroll-y="true">
+      <div>
+        <!-- Mostramos las clases asociadas al usuario -->
+        <ion-card v-for="(claseItem, index) in clases" :key="index">
+          <ion-card-header>
+            <!-- Mostramos el nombre de la clase -->
+            <ion-card-title>{{ claseItem.nombre || "Sin nombre" }}</ion-card-title>
+          </ion-card-header>
 
-      <!-- Nota final -->
-      <div class="final-note-container">
-        <div class="final-note-title">NOTA FINAL</div>
-        <div class="final-note-value">0.00</div>
-      </div>
-
-      <!-- Lista de materias -->
-      <ion-list>
-        <ion-card v-for="(subject, index) in subjects" :key="index" class="subject-card">
-          <ion-item lines="none">
-            <ion-avatar slot="start">
-              <img src="@/assets/img/icono1.png" />
-            </ion-avatar>
-            <ion-label>
-              <h2>{{ subject.name }}</h2>
-              <p>Nota: {{ subject.note }}</p>
-            </ion-label>
-            <ion-note slot="end">{{ currentTime }}</ion-note>
-          </ion-item>
+          <!-- Llamamos al componente subCardPonderado y le pasamos el ID de la clase -->
+          <sub-card-ponderado :idClase="claseItem.id" />
         </ion-card>
-      </ion-list>
-
-      <!-- Switch para promedio -->
-      <ion-item lines="none" class="average-switch" @ionChange="horarioP">
-        <ion-toggle v-model="showAverage"></ion-toggle>
-      </ion-item>
-      
+      </div>
     </ion-content>
   </ion-page>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import supabase from '../supabase';
+import SubCardPonderado from '../components/subCardPonderado.vue'; // Importamos el componente subCardPonderado
 import { useRouter } from 'vue-router';
-import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
-  IonButton,
-  IonIcon,
-  IonTitle,
-  IonContent,
-  IonMenuButton,
-  IonList,
-  IonCard,
-  IonItem,
-  IonAvatar,
-  IonLabel,
-  IonNote,
-  IonToggle,
-} from '@ionic/vue';
-import { settingsOutline, searchOutline } from 'ionicons/icons';
-import MenuComponent from "../components/MenuComponent.vue";
 
-export default defineComponent({
-  components: {
-    IonPage,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonIcon,
-    MenuComponent,
-    IonMenuButton,
-    IonTitle,
-    IonList,
-    IonCard,
-    IonItem,
-    IonAvatar,
-    IonLabel,
-    IonNote,
-    IonToggle,
-  },
-  setup() {
-    const router = useRouter();
-    const showAverage = ref(false); // Reactive variable for the toggle
-    const subjects = ref([
-      { name: 'Matemáticas', note: '85.00' },
-      { name: 'Historia', note: '90.00' },
-      { name: 'Ciencias', note: '78.50' },
-      { name: 'Literatura', note: '92.00' },
-    ]);
-    const currentTime = ref(new Date().toLocaleTimeString());
+// Datos reactivos
+const clases = ref<Array<any>>([]);
+const router = useRouter();
 
-    const horarioP = () => {
-      router.push('/horario'); // Redirection logic
-    };
+// Función para obtener las clases asociadas al usuario autenticado
+const obtenerClases = async () => {
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-    return {
-      showAverage,
-      subjects,
-      currentTime,
-      horarioP,
-      settingsOutline, // Icono de configuración
-      searchOutline,   // Icono de búsqueda
-    };
-  },
-});
+    if (userError) throw userError;
+    if (!user) throw new Error('Usuario no autenticado.');
+
+    const { data, error } = await supabase
+      .from('clases')
+      .select('id, nombre')
+      .eq('id_usuario', user.id);
+
+    if (error) {
+      console.error('Error al obtener las clases:', error);
+      return;
+    }
+
+    clases.value = data || [];
+  } catch (err) {
+    console.error('Error al obtener las clases:', err);
+  }
+};
+
+// Cargamos las clases al montar el componente
+onMounted(obtenerClases);
 </script>
 
 <style scoped>
-/* Estilos del título "PONDERADO" */
-.ponderado-title {
+#container {
   text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-  font-family: 'Comic Sans MS', cursive, sans-serif; /* Estilo divertido como en la imagen */
-  margin-top: 10px;
-  margin-bottom: 20px;
-  color: #555;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-/* Estilo para la nota final */
-.final-note-container {
-  text-align: center;
-  margin: 20px 0;
-}
-
-.final-note-title {
-  font-size: 16px;
-  color: #9e9e9e;
-}
-
-.final-note-value {
-  font-size: 40px;
-  color: #9e9e9e;
-  font-weight: bold;
-}
-
-/* Estilo para las tarjetas de materias */
-.subject-card {
-  --background: #f3f3f3;
-  margin-bottom: 20px;
-  border-radius: 10px;
-}
-
-ion-label h2 {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-ion-label p {
-  font-size: 14px;
-  color: #888;
-}
-
-/* Estilo del switch de promedio */
-.average-switch {
-  margin-top: 150px;
-  display: flex;
-  justify-content: center;
-  font-size: 18px;
-  
-}
-
-ion-toggle {
-  --handle-background: hsl(0, 90%, 57%);
-  --background-checked: #000000;
-  margin-left: 135px;
-
-}
-
-ion-button {
-  --color: #888;
-}
-
-ion-avatar img {
-  border-radius: 50%;
-  background: #fff;
-  padding: 5px;
+ion-card {
+  margin-bottom: 16px;
 }
 </style>
