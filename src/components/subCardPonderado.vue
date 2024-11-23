@@ -14,13 +14,16 @@
       <ion-card v-if="tareas.length > 0">
         <ion-card-header>
           <ion-card-title>Tareas de la clase</ion-card-title>
+          <ion-card-subtitle>
+            Ponderado de tareas: {{ calcularPonderadoTareas().toFixed(2) }}
+          </ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
           <ion-list>
             <ion-item v-for="(tarea, index) in tareas" :key="index">
               <ion-label>
                 <h3>{{ tarea.nombre }}</h3>
-                <p><strong>Nota:</strong> {{ tarea.nota }}</p>
+                <p><strong>Nota:</strong> {{ tarea.nota || 'Sin calificar' }}</p>
               </ion-label>
             </ion-item>
           </ion-list>
@@ -38,13 +41,16 @@
       <ion-card v-if="examenes.length > 0">
         <ion-card-header>
           <ion-card-title>Exámenes de la clase</ion-card-title>
+          <ion-card-subtitle>
+            Ponderado de exámenes: {{ calcularPonderadoExamenes().toFixed(2) }}
+          </ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
           <ion-list>
             <ion-item v-for="(examen, index) in examenes" :key="index">
               <ion-label>
                 <h3>{{ examen.nombre }}</h3>
-                <p><strong>Nota:</strong> {{ examen.nota }}</p>
+                <p><strong>Nota:</strong> {{ examen.nota || 'Sin calificar' }}</p>
               </ion-label>
             </ion-item>
           </ion-list>
@@ -69,7 +75,29 @@
   // Datos reactivos
   const tareas = ref<Array<any>>([]);
   const examenes = ref<Array<any>>([]);
-  const selectedPeriodo = ref<number>(2); // Cambiado a number sin null
+  const selectedPeriodo = ref<number>(2);
+  
+  // Función para calcular el ponderado de tareas
+  const calcularPonderadoTareas = () => {
+    if (tareas.value.length === 0) return 0;
+    
+    const tareasConNota = tareas.value.filter(tarea => tarea.nota != null);
+    if (tareasConNota.length === 0) return 0;
+    
+    const sumNotas = tareasConNota.reduce((sum, tarea) => sum + (tarea.nota || 0), 0);
+    return sumNotas / tareasConNota.length;
+  };
+  
+  // Función para calcular el ponderado de exámenes
+  const calcularPonderadoExamenes = () => {
+    if (examenes.value.length === 0) return 0;
+    
+    const examenesConNota = examenes.value.filter(examen => examen.nota != null);
+    if (examenesConNota.length === 0) return 0;
+    
+    const sumNotas = examenesConNota.reduce((sum, examen) => sum + (examen.nota || 0), 0);
+    return sumNotas / examenesConNota.length;
+  };
   
   // Función para manejar el cambio de período
   const handlePeriodChange = (event: CustomEvent) => {
@@ -143,4 +171,3 @@
     }
   }, { immediate: true });
   </script>
-  
