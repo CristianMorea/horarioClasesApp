@@ -79,6 +79,16 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import supabase from '../supabase';
+import {
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonButton
+} from '@ionic/vue';
 
 // Prop para recibir el ID de la clase
 const props = defineProps<{ idClase: string }>();
