@@ -10,7 +10,7 @@
         <p><strong>Hora Inicio:</strong> {{ claseItem.hora_inicio || "No especificada" }}</p>
         <p><strong>Hora Fin:</strong> {{ claseItem.hora_fin || "No especificada" }}</p>
         <p><strong>Profesor:</strong> {{ claseItem.profesor.nombre || "No asignado" }}</p>
-        <ion-button class="butonA">Actualizar</ion-button>
+        <ion-button class="butonA" @click="abrirModalEdicion(claseItem)">Actualizar</ion-button>
 
         <!-- Botón flotante añadido -->
         <ion-fab vertical="bottom" slot="fixed">
@@ -20,6 +20,57 @@
         </ion-fab>
       </ion-card-content>
     </ion-card>
+
+    <!-- Modal de edición -->
+    <ion-modal :is-open="modalAbierto" @didDismiss="cerrarModal">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Editar Clase</ion-title>
+          <ion-buttons slot="end">
+            <ion-button @click="cerrarModal">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <form @submit.prevent="guardarCambios">
+          <ion-item>
+            <ion-label position="stacked">Nombre de la clase</ion-label>
+            <ion-input v-model="claseEditando.nombre" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Ubicación</ion-label>
+            <ion-input v-model="claseEditando.ubicacion" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Hora de inicio</ion-label>
+            <ion-input type="time" v-model="claseEditando.hora_inicio" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Hora de fin</ion-label>
+            <ion-input type="time" v-model="claseEditando.hora_fin" required></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Profesor</ion-label>
+            <ion-select v-model="claseEditando.profesor_id" required>
+              <ion-select-option v-for="profesor in profesores" :key="profesor.id" :value="profesor.id">
+                {{ profesor.nombre }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <div class="ion-padding">
+            <ion-button type="submit" expand="block" class="butonA">
+              Guardar cambios
+            </ion-button>
+          </div>
+        </form>
+      </ion-content>
+    </ion-modal>
 
     <!-- Popover con las opciones -->
     <ion-popover :is-open="popoverOpen" @ionPopoverDidDismiss="popoverOpen = false">
@@ -44,20 +95,100 @@ import {
   IonIcon,
   IonPopover,
   IonList,
-  IonItem
+  IonItem,
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonContent,
+  IonLabel,
+  IonInput,
+  IonSelect,
+  IonSelectOption,
+  alertController
 } from '@ionic/vue';
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'; // Importa useRouter
+import { useRouter } from 'vue-router';
 import supabase from '../supabase';
 import { addIcons } from 'ionicons';
-import { add } from 'ionicons/icons'; // Importar el icono "add" de Ionicons
+import { add } from 'ionicons/icons';
 
-addIcons({ add }); // Registrar el icono "add"
+addIcons({ add });
 
 // Datos reactivos
-const clases = ref<Array<any>>([]); // Lista de clases
-const popoverOpen = ref(false); // Estado para controlar si el popover está abierto
-const router = useRouter(); // Inicializamos el router
+const clases = ref<Array<any>>([]);
+const popoverOpen = ref(false);
+const router = useRouter();
+const modalAbierto = ref(false);
+const claseEditando = ref<any>({});
+const profesores = ref<Array<any>>([]);
+
+// Función para obtener los profesores
+const obtenerProfesores = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('profesores')
+      .select('id, nombre');
+
+    if (error) throw error;
+    profesores.value = data || [];
+  } catch (err) {
+    console.error('Error al obtener los profesores:', err);
+  }
+};
+
+// Función para abrir el modal de edición
+const abrirModalEdicion = (clase: any) => {
+  claseEditando.value = { ...clase };
+  modalAbierto.value = true;
+};
+
+// Función para cerrar el modal
+const cerrarModal = () => {
+  modalAbierto.value = false;
+  claseEditando.value = {};
+};
+
+// Función para guardar los cambios
+const guardarCambios = async () => {
+  try {
+    const { error } = await supabase
+      .from('clases')
+      .update({
+        nombre: claseEditando.value.nombre,
+        ubicacion: claseEditando.value.ubicacion,
+        hora_inicio: claseEditando.value.hora_inicio,
+        hora_fin: claseEditando.value.hora_fin,
+        profesor_id: claseEditando.value.profesor_id
+      })
+      .eq('id', claseEditando.value.id);
+
+    if (error) throw error;
+
+    // Mostrar alerta de éxito
+    const alert = await alertController.create({
+      header: 'Éxito',
+      message: 'La clase se ha actualizado correctamente',
+      buttons: ['OK']
+    });
+    await alert.present();
+
+    // Cerrar modal y actualizar datos
+    cerrarModal();
+    await obtenerClases();
+  } catch (err) {
+    console.error('Error al guardar los cambios:', err);
+    
+    // Mostrar alerta de error
+    const alert = await alertController.create({
+      header: 'Error',
+      message: 'No se pudo actualizar la clase. Por favor, intente de nuevo.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+};
 
 // Función para obtener las clases asociadas al usuario autenticado
 const obtenerClases = async () => {
@@ -70,26 +201,20 @@ const obtenerClases = async () => {
     if (userError) throw userError;
     if (!user) throw new Error('Usuario no autenticado.');
 
-    // Consulta para obtener todas las clases del usuario
     const { data, error } = await supabase
       .from('clases')
       .select('id, nombre, ubicacion, hora_inicio, hora_fin, profesor_id')
-      .eq('id_usuario', user.id); // Usamos 'id_usuario' para obtener las clases del usuario
+      .eq('id_usuario', user.id);
 
-    if (error) {
-      console.error('Error al obtener las clases:', error);
-      return;
-    }
+    if (error) throw error;
 
     if (!data || data.length === 0) {
       console.error('No se encontraron clases para este usuario.');
       return;
     }
 
-    // Asignamos las clases a la variable reactiva
     clases.value = await Promise.all(
       data.map(async (clase: any) => {
-        // Obtenemos los datos del profesor si tiene un profesor_id
         if (clase.profesor_id) {
           const profesor = await obtenerProfesor(clase.profesor_id);
           return { ...clase, profesor };
@@ -102,7 +227,6 @@ const obtenerClases = async () => {
   }
 };
 
-// Función para obtener los datos del profesor
 const obtenerProfesor = async (profesorId: string) => {
   try {
     const { data, error } = await supabase
@@ -121,48 +245,40 @@ const obtenerProfesor = async (profesorId: string) => {
   }
 };
 
-// Función para actualizar los datos de las clases
-const actualizarDatos = async () => {
-  await obtenerClases();
-};
-
-// Función para mostrar el popover
 const showPopover = () => {
   popoverOpen.value = true;
 };
 
-// Función para manejar la selección de una opción en el popover
 const handleOptionClick = (option: string) => {
-  console.log(`Opción seleccionada: ${option}`);
-  // Redirigimos según la opción seleccionada
   if (option === 'Tarea') {
-    router.push('/tareas'); // Redirige a la ruta /tareas
+    router.push('/tareas');
   } else if (option === 'Examen') {
-    router.push('/examen'); // Redirige a la ruta /examen
+    router.push('/examen');
   } else if (option === 'Calificaciones') {
-    router.push('/calificaciones'); // Redirige a la ruta /calificaciones
+    router.push('/calificaciones');
   } else if (option === 'Deveres'){
-    router.push('/verDeveres')
+    router.push('/verDeveres');
   }
-
-  // Cerrar el popover después de seleccionar una opción
   popoverOpen.value = false;
 };
 
 // Cargamos los datos al montar el componente
-onMounted(obtenerClases);
+onMounted(() => {
+  obtenerClases();
+  obtenerProfesores();
+});
 </script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
 
 body {
-  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
+  font-family: 'Architects Daughter', cursive;
 }
 
 .custom-title {
-    font-family: "Architects Daughter", cursive;
-  }
+  font-family: "Architects Daughter", cursive;
+}
 
 ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
   font-family: 'Architects Daughter', cursive;
@@ -172,14 +288,14 @@ p {
   margin: 8px 0;
 }
 
-.butonA{
-  --background: #a22626; /* Verde */
-  --background-hover: #a22626; /* Verde oscuro */
+.butonA {
+  --background: #a22626;
+  --background-hover: #a22626;
   --color: #ffffff;
-  height: 50px; /* Altura ajustada */
-  font-size: 12px; /* Tamaño de texto reducido */
-  padding: 0 12px; /* Reducción del relleno */
-  width: 160px; /* Ancho ajustado */
+  height: 50px;
+  font-size: 12px;
+  padding: 0 12px;
+  width: 160px;
 }
 
 ion-button {
@@ -190,19 +306,18 @@ ion-button {
 }
 
 .plus {
-  --background: #a22626; /* Verde */
+  --background: #a22626;
   --color: white;
   margin-left: 90px;
   position: relative;
-  top: -10px; /* Sube el botón 10px */
+  top: -10px;
 }
 
-.colors{
+.colors {
   color: rgb(48, 48, 48);
 }
 
-.border{
+.border {
   border-radius: 40px;
 }
-
 </style>
