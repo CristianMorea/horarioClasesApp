@@ -88,14 +88,11 @@
           </ion-item>
         </ion-list>
 
-
+        <!-- Botón para guardar -->
+        <ion-button expand="block" type="submit" >Guardar Tarea</ion-button>
       </form>
     </div>
     </ion-content>
-            <!-- Botón para guardar -->
-            <div>
-          <ion-button expand="block" type="submit" >Guardar Tarea</ion-button>
-        </div>
   </ion-page>
 </template>
 
@@ -293,7 +290,7 @@ ion-item {
 
 .scrollable-content {
   border: 3px solid transparent;
-  max-height: 713px; /* Ajusta la altura máxima de la lista de materias */
+  max-height: 775px; /* Ajusta la altura máxima de la lista de materias */
   overflow-y: auto;  /* Habilita el scroll solo verticalmente */
   padding-right: 10px; /* Agrega un poco de espacio si es necesario para la barra de desplazamiento */
   border-radius: 30px;
