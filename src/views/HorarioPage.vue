@@ -1,4 +1,3 @@
-<!-- HorarioPage.vue -->
 <template>
   <ion-page class="h-screen bg-white flex">
     <MenuComponent/>
@@ -16,7 +15,7 @@
       </ion-toolbar> 
     </ion-header>
 
-    <ion-content id="main-content" class="flex-grow">
+    <ion-content id="main-content" class="flex-grow relative">
       <div class="image-container">
         <div class="overlay-title">NOTAS</div> 
         <img :src="notaImage" @click="notaEdit" class="custom-button" style="cursor: pointer;"/>
@@ -131,17 +130,58 @@ export default defineComponent({
     const lapizImageRef = ref(lapizImage);
 
     const cargarHorario = async () => {
-      const { data, error } = await supabase
-        .from('clases')
-        .select(`*,
-          horarios_clases (dia_de_clase)`);
+      try {
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
 
-      if (error) {
-        mensaje.value = 'Error al cargar el horario: ' + error.message;
-      } else {
-        clases.value = data;
+        if (userError) throw userError;
+        if (!user) throw new Error('Usuario no autenticado.');
+
+        const { data, error } = await supabase
+          .from('clases')
+          .select('id, nombre, ubicacion, hora_inicio, hora_fin, profesor_id')
+          .eq('id_usuario', user.id);
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          console.error('No se encontraron clases para este usuario.');
+          return;
+        }
+
+        clases.value = await Promise.all(
+          data.map(async (clase: any) => {
+            if (clase.profesor_id) {
+              const profesor = await obtenerProfesor(clase.profesor_id);
+              return { ...clase, profesor };
+            }
+            return { ...clase, profesor: { nombre: 'No asignado' } };
+          })
+        );
+      } catch (err) {
+        console.error('Error al obtener los datos de las clases:', err);
       }
     };
+
+const obtenerProfesor = async (profesorId: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('profesores')
+      .select('nombre')
+      .eq('id', profesorId)
+      .single();
+
+    if (error) throw error;
+    if (!data) throw new Error('No se encontró el profesor.');
+
+    return data;
+  } catch (err) {
+    console.error('Error al obtener los datos del profesor:', err);
+    return { nombre: 'No asignado' };
+  }
+};
 
     const verDetalle = (id) => {
       router.push(`/horariodetails/${id}`);
@@ -240,7 +280,6 @@ body {
   
 }
 
-
 .overlay-title {
   margin-left: 185px;
   pointer-events: none; 
@@ -252,8 +291,6 @@ body {
   font-size: 1.5rem; /* Ajusta el tamaño de fuente según lo necesites */
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Sombra para dar mayor contraste */
 }
-
-
 
 ion-item.item-clase {
   border-radius: 30px; /* Borde redondeado de cada materia */
@@ -310,7 +347,6 @@ ion-item.item-clase {
 ion-content {
   padding: 0; /* Elimina el padding por defecto */
   margin: 0; /* Elimina el margen por defecto */
-  
 }
 
 .custom-button {
