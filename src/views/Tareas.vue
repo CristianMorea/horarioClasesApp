@@ -3,31 +3,36 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
+          <ion-button @click="redirigirAhorarioPage" color="primary">
+                <img src='@/assets/img/back.png' name="arrow-back" alt="Botón Horario" style="width: 24px; height: 24px;" />
+            </ion-button>
           <ion-back-button></ion-back-button>
         </ion-buttons>
-        <ion-title>Crear Nueva Tarea</ion-title>
+        <ion-title class="text-center text-2xl font-bold custom-title">Nueva Tarea</ion-title>
       </ion-toolbar>
     </ion-header>
 
+    
     <ion-content class="ion-padding">
+      <div class="scrollable-content">
       <form @submit.prevent="guardarTarea">
         <ion-list>
           <!-- Nombre de la tarea -->
           <ion-item>
-            <ion-label position="floating">Nombre de la Tarea</ion-label>
+            <ion-label position="stacked">Nombre de la Tarea</ion-label>
             <ion-input v-model="tarea.nombre" type="text" required></ion-input>
           </ion-item>
 
           <!-- Descripción -->
           <ion-item>
-            <ion-label position="floating">Descripción</ion-label>
+            <ion-label position="stacked">Descripción</ion-label>
             <ion-textarea v-model="tarea.descripcion" required></ion-textarea>
           </ion-item>
 
           <!-- Fecha de entrega -->
           <ion-item>
-            <ion-label position="floating">Fecha de Entrega</ion-label>
-            <ion-datetime 
+            <ion-label position="stacked">Fecha de Entrega</ion-label>
+            <ion-datetime class="fecha"
               v-model="tarea.fecha_entrega" 
               display-format="DD/MM/YYYY" 
               picker-format="DD MMM YYYY" 
@@ -72,7 +77,7 @@
 
           <!-- Nota (condicional) -->
           <ion-item v-if="tarea.estado">
-            <ion-label position="floating">Nota</ion-label>
+            <ion-label position="stacked">Nota</ion-label>
             <ion-input 
               v-model.number="tarea.nota" 
               type="number" 
@@ -83,12 +88,14 @@
           </ion-item>
         </ion-list>
 
-        <!-- Botón para guardar -->
-        <div class="ion-padding">
-          <ion-button expand="block" type="submit" color="primary">Guardar Tarea</ion-button>
-        </div>
+
       </form>
+    </div>
     </ion-content>
+            <!-- Botón para guardar -->
+            <div>
+          <ion-button expand="block" type="submit" >Guardar Tarea</ion-button>
+        </div>
   </ion-page>
 </template>
 
@@ -247,16 +254,35 @@ export default defineComponent({
   } catch (error) {
     console.error('Error inesperado al obtener las clases:', error);
   }
-}
+},
+    // Redirigir a la página de horario
+    redirigirAhorarioPage() {
+      this.$router.push('/calificaciones'); // Navega a la página de horario
 
   },
+},
   mounted() {
     this.obtenerClases();
   },
+  
 });
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+
+body {
+  font-family: 'Architects Daughter', cursive; /* Aplica la fuente a todo el cuerpo */
+}
+
+.fecha{
+  background: transparent;
+}
+
+ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
+  font-family: 'Architects Daughter', cursive;
+}
+
 ion-list {
   background: transparent;
 }
@@ -265,7 +291,24 @@ ion-item {
   margin-bottom: 16px;
 }
 
-ion-button {
-  margin-top: 20px;
+.scrollable-content {
+  border: 3px solid transparent;
+  max-height: 713px; /* Ajusta la altura máxima de la lista de materias */
+  overflow-y: auto;  /* Habilita el scroll solo verticalmente */
+  padding-right: 10px; /* Agrega un poco de espacio si es necesario para la barra de desplazamiento */
+  border-radius: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  padding: 0px;
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-top: -7px;
+  background-color: transparent;
 }
+
+ion-button {
+  margin-top: 10px;
+  --background: #bf1a1a ; /* Cambia el color de fondo del botón */
+  color: white;
+}
+
 </style>
