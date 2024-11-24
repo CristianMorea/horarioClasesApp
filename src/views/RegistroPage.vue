@@ -127,7 +127,7 @@ export default defineComponent({
         }
 
         alert('Usuario registrado con éxito, por favor verifica tu correo');
-        router.push('/Confirmar');
+        router.push('/login');
 
       } catch (error) {
         console.error('Error al registrar el usuario:', error.message);
