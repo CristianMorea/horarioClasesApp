@@ -196,8 +196,11 @@ export default defineComponent({
           return;
         }
 
+
         // Mostrar mensaje de éxito y redirigir
         alert('Cuenta creada exitosamente. Ya puedes iniciar sesión.');
+     
+
         router.push('/login');
 
       } catch (error) {

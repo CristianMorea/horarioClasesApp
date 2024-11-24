@@ -129,29 +129,55 @@ export default defineComponent({
     const mensaje = ref('');
     const router = useRouter(); // Obtener el enrutador
 
-    const cargarClases = async () => {
-      const { data, error } = await supabase
-        .from('clases')
-        .select('*');
-
-      if (error) {
-        console.error('Error al cargar clases:', error.message);
-      } else {
-        clases.value = data;
-      }
-    };
-
     const cargarProfesores = async () => {
-      const { data, error } = await supabase
-        .from('profesores')
-        .select('id, nombre');
+      try {
+        const { data, error } = await supabase
+          .from('profesores')
+          .select('id, nombre');
 
-      if (error) {
-        console.error('Error al cargar profesores:', error.message);
-      } else {
-        profesores.value = data;
+        if (error) throw error;
+        profesores.value = data || [];
+      } catch (err) {
+        console.error('Error al obtener los profesores:', err);
       }
     };
+
+// Función para obtener las clases asociadas al usuario autenticado
+const cargarClases = async () => {
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError) throw userError;
+    if (!user) throw new Error('Usuario no autenticado.');
+
+    const { data, error } = await supabase
+      .from('clases')
+      .select('id, nombre, ubicacion, hora_inicio, hora_fin, profesor_id')
+      .eq('id_usuario', user.id);
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      console.error('No se encontraron clases para este usuario.');
+      return;
+    }
+
+    clases.value = await Promise.all(
+      data.map(async (clase: any) => {
+        if (clase.profesor_id) {
+          const profesor = await cargarProfesores(clase.profesor_id);
+          return { ...clase, profesor };
+        }
+        return { ...clase, profesor: { nombre: 'No asignado' } };
+      })
+    );
+  } catch (err) {
+    console.error('Error al obtener los datos de las clases:', err);
+  }
+};
 
     const seleccionarClase = (clase) => {
       claseSeleccionada.value = { ...clase }; // Crear una copia del horario seleccionado

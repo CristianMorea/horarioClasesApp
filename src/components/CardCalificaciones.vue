@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="scrollable-content">
     <!-- Recorremos la lista de clases y mostramos la información -->
     <ion-card class="border" v-for="(claseItem, index) in clases" :key="index">
       <ion-card-header>
@@ -20,6 +21,7 @@
         </ion-fab>
       </ion-card-content>
     </ion-card>
+  </div>
 
     <!-- Modal de edición -->
     <ion-modal :is-open="modalAbierto" @didDismiss="cerrarModal">
@@ -308,9 +310,23 @@ ion-button {
 .plus {
   --background: #a22626;
   --color: white;
-  margin-left: 90px;
+  margin-left: 60px;
   position: relative;
   top: -10px;
+}
+
+.scrollable-content {
+  border: 3px solid transparent;
+  max-height: 717px; /* Ajusta la altura máxima de la lista de materias */
+  overflow-y: auto;  /* Habilita el scroll solo verticalmente */
+  padding-right: 10px; /* Agrega un poco de espacio si es necesario para la barra de desplazamiento */
+  border-radius: 30px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  padding: 0px;
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-top: 9px;
+  background-color: transparent;
 }
 
 .colors {
