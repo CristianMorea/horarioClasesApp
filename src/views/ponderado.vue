@@ -118,7 +118,7 @@ ion-title, ion-label, ion-button, ion-item, ion-card-title, ion-card-content {
 
 ion-button {
   width: 150px; /* Ajusta el ancho del botón */
-  height: 45px; /* Ajusta la altura del botón */
+  height: 20px; /* Ajusta la altura del botón */
   color: white; /* Cambia el color del texto */
   --border-radius: 25px; /* Aplica bordes redondeados */
   border-radius: 25px; /* Aplica bordes redondeados */
