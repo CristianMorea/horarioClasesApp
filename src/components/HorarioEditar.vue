@@ -294,7 +294,6 @@ ion-item {
   --border-color: rgba(0, 0, 0, 0.08);
   margin: 0.5rem 0;
   border-radius: 8px;
-  border: 2px solid #bb2a2a; /* Color del borde */
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
 }
 
