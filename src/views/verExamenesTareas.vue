@@ -81,4 +81,5 @@ onMounted(obtenerClases);
 ion-card {
   margin-bottom: 16px;
 }
+
 </style>
