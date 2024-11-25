@@ -84,7 +84,7 @@
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombras suaves */
     font-family: 'Architects Daughter', cursive; /* Fuente manuscrita */
-    padding: 16px;
+    padding: 45px;
   }
   
   .nota-card ion-card-title {
