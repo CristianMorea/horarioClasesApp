@@ -1,100 +1,87 @@
 <template>
-  <swiper
-    :slides-per-view="1"
-    :space-between="20"
-    :loop="notas.length > 1"
-    :autoplay="{ delay: 3000 }"
-  >
-    <swiper-slide v-for="nota in notas" :key="nota.id_notas">
-      <ion-card class="nota-card">
+      <ion-menu side="end" content-id="main-content">
+       <ion-header>
+          <ion-toolbar>
+            <ion-title class="text-center text-2xl font-bold custom-title">NOTIFICACIONES</ion-title>
+          </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding" >
+        <ion-card v-for="recordatorio in recordatorios" :key="recordatorio.id" class="recordatorio-card">
         <ion-card-header>
-          <ion-card-title>{{ nota.nota }}</ion-card-title>
+          <ion-card-title>Clase: {{ recordatorio.clase_id?.nombre || 'Sin nombre' }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <p>Creada: {{ formatDate(nota.fecha_creacion) }}</p>
-          <p>Vence: {{ formatDate(nota.fecha_vencimiento) }}</p>
+          <p>Hora: {{ recordatorio.tiempo_recordatorio }}</p>
         </ion-card-content>
       </ion-card>
-    </swiper-slide>
-  </swiper>
-  <p v-if="mensaje">{{ mensaje }}</p>
+      <p v-if="recordatorios.length === 0">No tienes recordatorios pendientes.</p>
+
+      </ion-content>
+    </ion-menu>
+
 </template>
 
-<script>
-import {
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-} from '@ionic/vue';
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css';
-import 'swiper/css/autoplay';
-import { ref, onMounted } from 'vue';
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+import { IonButtons,IonMenuButton,IonMenu,IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonCardHeader, IonCardTitle, IonCardContent } from '@ionic/vue';
 import supabase from '@/supabase';
 
-export default {
-  name: 'NotesCarousel',
+export default defineComponent({
   components: {
+    IonButtons,
+    IonMenuButton,
+    IonMenu,
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
     IonCard,
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
-    Swiper,
-    SwiperSlide,
   },
   setup() {
-    const notas = ref([]);
-    const mensaje = ref('');
+    const recordatorios = ref([]); // Lista de recordatorios del usuario
 
-    onMounted(async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (sessionData?.session) {
-        const usuarioId = sessionData.session.user.id;
-
-        const { data, error } = await supabase
-          .from('Notas')
-          .select('*')
-          .eq('usuario_id', usuarioId);
-
-        if (error) {
-          console.error('Error al obtener las notas:', error);
-          mensaje.value = 'Error al cargar tus notas.';
-        } else {
-          notas.value = data;
-        }
+    const obtenerRecordatorios = async () => {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !sessionData.session) {
+        console.error('Error al obtener la sesión:', sessionError);
+        return;
       }
+
+      const { user } = sessionData.session;
+
+      // Consulta los recordatorios del usuario
+      const { data, error } = await supabase
+        .from('recordatorios')
+        .select(`id, clase_id (nombre), tiempo_recordatorio`) // Ajusta según las columnas de tu tabla
+        .eq('usuario_id', user.id);
+
+      if (error) {
+        console.error('Error al obtener los recordatorios:', error);
+        return;
+      }
+
+      recordatorios.value = data || [];
+    };
+
+    onMounted(() => {
+      obtenerRecordatorios();
     });
 
-    const formatDate = (date) => new Date(date).toLocaleDateString();
-
     return {
-      notas,
-      mensaje,
-      formatDate,
+      recordatorios,
     };
   },
-};
+});
 </script>
 
-<style>
-.nota-card {
-  background-color: #fef3c7; /* Amarillo claro */
-  border: 1px dashed #f59e0b; /* Línea de borde tipo papel */
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombras suaves */
-  font-family: 'Architects Daughter', cursive; /* Fuente manuscrita */
-  padding: 16px;
-}
-
-.nota-card ion-card-title {
-  color: #92400e; /* Tono oscuro */
-  font-weight: bold;
-}
-
-.nota-card ion-card-content p {
-  margin: 4px 0;
-  font-size: 14px;
+<style scoped>
+.recordatorio-card {
+  margin: 10px;
+  padding: 10px;
 }
 </style>
 
