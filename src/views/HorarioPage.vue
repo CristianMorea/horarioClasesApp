@@ -1,6 +1,7 @@
 <template>
   <ion-page class="h-screen bg-white flex">
     <MenuComponent/>
+    <Notificaciones/>
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
@@ -8,11 +9,13 @@
         </ion-buttons>
         <ion-title class="text-center text-2xl font-bold custom-title">Mi Horario</ion-title>
         <ion-buttons slot="end">
-          <ion-button @click="search">
-            <ion-icon :icon="searchOutline"></ion-icon>
+          <ion-button @click="abrirMenuNotificaciones">
+            <ion-icon slot="icon-only" :icon="notifications"></ion-icon>
+            
           </ion-button>
         </ion-buttons>
-      </ion-toolbar> 
+
+       </ion-toolbar> 
     </ion-header>
 
     <ion-content id="main-content" class="flex-grow relative">
@@ -93,15 +96,17 @@ import notaImage from '@/assets/img/Notas.png';
 import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
   IonItem, IonLabel, IonButton, IonCard, IonCardHeader,
-  IonCardTitle, IonCardContent, IonAlert, IonToast,IonMenuButton,IonButtons,IonIcon
+  IonCardTitle, IonCardContent, IonAlert, IonToast,IonMenuButton,IonButtons,IonIcon,menuController,
 } from '@ionic/vue';
-import { settingsOutline, searchOutline } from 'ionicons/icons';
+import { settingsOutline, searchOutline, notifications, } from 'ionicons/icons';
 import MenuComponent from '../components/MenuComponent.vue';
 import TabBar from '../components/TabBar.vue';
 import carrusel from '../components/carrusel.vue';
+import Notificaciones from '../components/Notificaciones.vue';
 
 export default defineComponent({
   components: {
+    Notificaciones,
     carrusel,
     TabBar,
     IonIcon,
@@ -230,6 +235,9 @@ const obtenerProfesor = async (profesorId: string) => {
 
       alertVisible.value = false;
     };
+    const abrirMenuNotificaciones = async () => {
+        await menuController.open('notificaciones-menu');
+      };
 
   
 
@@ -238,6 +246,7 @@ const obtenerProfesor = async (profesorId: string) => {
     });
 
     return {
+      abrirMenuNotificaciones,
       clases,
       mensaje,
       alertVisible,
@@ -254,6 +263,7 @@ const obtenerProfesor = async (profesorId: string) => {
       abrirOtraVista, // Añadir la función aquí
       settingsOutline,
       searchOutline,
+      notifications,
     };
   },
 });
