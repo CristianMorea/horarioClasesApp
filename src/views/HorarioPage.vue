@@ -16,11 +16,8 @@
     </ion-header>
 
     <ion-content id="main-content" class="flex-grow relative">
-      <div class="image-container">
-        <div class="overlay-title">NOTAS</div> 
-        <img :src="notaImage" @click="notaEdit" class="custom-button" style="cursor: pointer;"/>
-      </div>
-        <div class="font-bold text-title">MATERIAS</div>
+      <carrusel />
+      <div class="font-bold text-title">MATERIAS</div>
 
       <div class="clases-container" v-if="clases.length > 0">
         <div class="scrollable-content">
@@ -97,9 +94,11 @@ import {
 import { settingsOutline, searchOutline } from 'ionicons/icons';
 import MenuComponent from '../components/MenuComponent.vue';
 import TabBar from '../components/TabBar.vue';
+import carrusel from '../components/carrusel.vue';
 
 export default defineComponent({
   components: {
+    carrusel,
     TabBar,
     IonIcon,
     IonButtons,
