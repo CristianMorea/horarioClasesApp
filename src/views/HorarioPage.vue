@@ -5,12 +5,12 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
+          <ion-menu-button class="boton-menu"></ion-menu-button>
         </ion-buttons>
         <ion-title class="text-center text-2xl font-bold custom-title">Mi Horario</ion-title>
         <ion-buttons slot="end">
           <ion-button @click="abrirMenuNotificaciones">
-            <ion-icon slot="icon-only" :icon="notifications"></ion-icon>
+            <ion-icon  class="boton-menu" slot="icon-only" :icon="notifications"></ion-icon>
             
           </ion-button>
         </ion-buttons>
@@ -388,10 +388,6 @@ ion-content {
   border: 3px solid #7b7676; /* Borde de 2px con color rojo oscuro */
 }
 
-ion-icon {
-  color: #000000; /* Cambia este valor por el color que desees */
-  
-}
 
 .text-title {
   margin-left: 32%;

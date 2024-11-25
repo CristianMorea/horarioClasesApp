@@ -33,32 +33,30 @@
 
 
       <!-- Lista de notas guardadas -->
+      <ion-title>Notas Guardadas</ion-title>
       <div class="scrollable-content">
-      <ion-card class="recordatorio-card2">
-        <ion-card-header>
-          <ion-card-title>Notas Guardadas</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-item v-for="(nota, index) in notas" :key="index">
-            <ion-label>
-              <h2 class="text-lg font-bold">{{ nota.nota }}</h2>
-              <p class="text-gray-400">Creada el: {{ nota.fecha_creacion }}</p>
-              <p class="text-gray-400">Vence el: {{ nota.fecha_vencimiento }}</p>
-            </ion-label>
-            <ion-button 
-              slot="end" 
-              color="danger" 
-              @click="eliminarNota(nota.id)"
-            >
-              Eliminar
-            </ion-button>
-          </ion-item>
-          <p v-if="notas.length === 0" class="text-center text-gray-500">
-            No hay notas guardadas.
-          </p>
-        </ion-card-content>
-      </ion-card>
-    </div>
+        <ion-item v-for="(item, index) in notas" :key="index"> 
+          <ion-card class="recordatorio-card2">
+            <ion-card-content>
+              <ion-label>
+                  <h2 class="text-lg font-bold">{{ item.nota }}</h2>
+                  <p class="text-gray-400">Creada el: {{ item.fecha_creacion }}</p>
+                  <p class="text-gray-400">Vence el: {{ item.fecha_vencimiento }}</p>
+              </ion-label>
+              <ion-button 
+                  slot="end" 
+                  color="danger" 
+                  @click="eliminarNota(item.id_notas)"
+                >
+                  Eliminar
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+            <p v-if="notas.length === 0" class="text-center text-gray-500">
+              No hay notas guardadas.
+            </p>
+      </div>
 
     </ion-content>
   </ion-page>
@@ -127,13 +125,14 @@ export default defineComponent({
         console.error('Error al cargar las notas:', error);
         mensaje.value = 'Error al cargar las notas.';
       } else {
+        console.log('Notas cargadas desde Supabase:', data);
         notas.value = data || [];
       }
     };
 
     // Método para eliminar una nota
-    const eliminarNota = async (id: number) => {
-      const { error } = await supabase.from('Notas').delete().eq('id', id);
+    const eliminarNota = async (id: string) => {
+      const { error } = await supabase.from('Notas').delete().eq('id_notas', id);
 
       if (error) {
         console.error('Error al eliminar la nota:', error);
@@ -252,7 +251,8 @@ ion-card-title {
 }
 
 .recordatorio-card2 {
-  height: 170px; /* Ajusta según lo necesites */
+  width: 500px;
+  height: auto; /* Ajusta según lo necesites */
 }
 
 .custom-title {

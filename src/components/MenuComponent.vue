@@ -165,12 +165,16 @@ body.dark ion-item:hover {
 }
 
 body.dark ion-icon {
-  color: #b0b0b0;
+  color: #f8f7f7;
 }
 
 body.dark ion-item:hover ion-icon {
   color: var(--ion-color-light, #ffffff);
 }
+body.dark .boton-menu{
+  color: #ebedf0;
+}
+
 </style>
 
 
