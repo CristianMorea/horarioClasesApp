@@ -231,7 +231,7 @@ ion-card-title {
 
 .scrollable-content {
   border: 3px solid transparent;
-  max-height: 480px; /* Ajusta la altura máxima de la lista de materias */
+  max-height: 470px; /* Ajusta la altura máxima de la lista de materias */
   overflow-y: auto;  /* Habilita el scroll solo verticalmente */
   padding-right: 10px; /* Agrega un poco de espacio si es necesario para la barra de desplazamiento */
   border-radius: 30px;
