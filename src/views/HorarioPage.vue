@@ -18,12 +18,10 @@
        </ion-toolbar> 
     </ion-header>
 
+    <div class="custom-carrusel">
+        <carrusel />
+    </div>
     <ion-content id="main-content" class="flex-grow relative">
-      <carrusel />
-      <ion-button class="add-note-button" @click="notaEdit">
-        <ion-icon name="add-circle-outline" slot="icon-only"></ion-icon>
-      </ion-button>
-
       <div class="font-bold text-title">MATERIAS</div>
 
       <div class="clases-container" v-if="clases.length > 0">
@@ -81,6 +79,7 @@
       <ion-button class="rounded-button border vertical-button" @click="ponderadoPage">
         <div class="vertical-text font-bold text-ponde">PONDERADO</div>
       </ion-button>
+      <img :src="notasImage" @click="notaEdit" class="button-image2" style="cursor: pointer;"/>
     </div>
     <TabBar />
   </ion-page>
@@ -92,6 +91,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import supabase from '../supabase';
 import lapizImage from '@/assets/img/Lapiz.png';
+import notasImage from '@/assets/img/Notas.png';
 import notaImage from '@/assets/img/Notas.png';
 import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
@@ -136,6 +136,7 @@ export default defineComponent({
     const router = useRouter();
     const notaImageRef = ref(notaImage);
     const lapizImageRef = ref(lapizImage);
+    const notasImageRef = ref(notasImage);
 
     const cargarHorario = async () => {
       try {
@@ -256,6 +257,7 @@ const obtenerProfesor = async (profesorId: string) => {
       editarP,
       notaImage : notaImageRef,
       lapizImage: lapizImageRef,
+      notasImage: notasImageRef,
       confirmarEliminacion,
       eliminarClase,
       ponderadoPage,
@@ -282,9 +284,15 @@ body {
   
 }
 
+.custom-carrusel{
+  width: 87%;
+  height: 0%;
+  margin-left: 51px;
+}
+
 .scrollable-content {
   border: 3px solid transparent;
-  max-height: 379px; /* Ajusta la altura máxima de la lista de materias */
+  max-height: 390px; /* Ajusta la altura máxima de la lista de materias */
   overflow-y: auto;  /* Habilita el scroll solo verticalmente */
   padding-right: 10px; /* Agrega un poco de espacio si es necesario para la barra de desplazamiento */
   border-radius: 30px;
@@ -318,7 +326,7 @@ ion-item.item-clase {
 
 .left-button-container {
   position: absolute;
-  top: 19%;
+  top: 21.8%;
   left: 5.7px;
   transform: translateY(-50%); /* Centra el botón verticalmente */
 }
@@ -343,6 +351,14 @@ ion-item.item-clase {
   border-radius: 15px; /* Ajusta el valor para el redondeado de los bordes */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
   border: 2px solid #000000;
+}
+
+.button-image2 {
+  height: 50px; /* Ajusta la altura deseada */
+  width: 45px; /* Mantiene la proporción de la imagen */
+  margin-left: 2px; /* Espacio entre los botones */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra de la imagen */
+  border-radius: 10px;
 }
 
 .vertical-text {
@@ -379,7 +395,7 @@ ion-icon {
 
 .text-title {
   margin-left: 32%;
-  margin-top: 15px; 
+  margin-top: 275px; 
   font-size: 30px;
   font-weight: bold; /* Esto asegura que el texto esté en negrita */
   font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
@@ -415,16 +431,18 @@ ion-icon {
   font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
 }
 
+.botonB{
+  margin-left: 30px;
+}
+
 .add-note-button {
-  bottom: 20px; /* Ajusta según la posición deseada */
-  right: 20px; /* Ajusta según la posición deseada */
   --background: #bb2a2a; /* Color de fondo */
-  --color: white; /* Color del icono */
-  width: 60px; /* Tamaño del botón */
-  height: 60px; /* Tamaño del botón */
+  width: 50px; /* Tamaño del botón */
+  height: 50px; /* Tamaño del botón */
   border-radius: 50%; /* Redondear el botón */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra para dar relieve */
 }
+
 
 /* Asegúrate de ajustar otros estilos según sea necesario */
 </style>
