@@ -17,6 +17,10 @@
 
     <ion-content id="main-content" class="flex-grow relative">
       <carrusel />
+      <ion-button class="add-note-button" @click="notaEdit">
+        <ion-icon name="add-circle-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+
       <div class="font-bold text-title">MATERIAS</div>
 
       <div class="clases-container" v-if="clases.length > 0">
@@ -399,6 +403,17 @@ ion-icon {
 
 .text-ponde {
   font-family: 'Architects Daughter', cursive; /* Aplica la fuente a los títulos de las materias */
+}
+
+.add-note-button {
+  bottom: 20px; /* Ajusta según la posición deseada */
+  right: 20px; /* Ajusta según la posición deseada */
+  --background: #bb2a2a; /* Color de fondo */
+  --color: white; /* Color del icono */
+  width: 60px; /* Tamaño del botón */
+  height: 60px; /* Tamaño del botón */
+  border-radius: 50%; /* Redondear el botón */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra para dar relieve */
 }
 
 /* Asegúrate de ajustar otros estilos según sea necesario */
